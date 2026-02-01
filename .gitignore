@@ -1,0 +1,30 @@
+# Build directories
+build/
+cmake-build-*/
+out/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.cache/
+
+# Compile database
+compile_commands.json
+
+# macOS
+.DS_Store
+
+# Test artifacts
+Testing/
+
+# Coverage
+*.gcov
+*.gcda
+*.gcno
+coverage/
+
+# Logs
+*.log

@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # Development environment with full toolchain
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+      platforms:
+        - linux/amd64
+    image: klstream:dev
+    container_name: klstream-dev
+    platform: linux/amd64
+    volumes:
+      - .:/workspace:cached
+      - build-cache:/workspace/build
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+    cap_add:
+      - SYS_PTRACE  # For debugging
+    security_opt:
+      - seccomp:unconfined  # For perf tools
+    command: /bin/bash
+
+  # Build and test runner
+  build:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+      platforms:
+        - linux/amd64
+    image: klstream:builder
+    platform: linux/amd64
+
+  # Production runtime
+  runtime:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+      platforms:
+        - linux/amd64
+    image: klstream:runtime
+    platform: linux/amd64
+    container_name: klstream-runtime
+
+volumes:
+  build-cache:
+    driver: local
