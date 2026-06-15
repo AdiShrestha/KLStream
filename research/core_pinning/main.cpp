@@ -10,7 +10,7 @@
 using namespace klstream;
 using namespace std::chrono;
 
-struct AffinityConfig {
+struct ExperimentAffinityConfig {
     CoreAffinity source;
     CoreAffinity compute;  // Map, Filter, Aggregate
     CoreAffinity sink;
@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
     std::string mode = "optimised";
     if (argc > 1) mode = argv[1];
 
-    AffinityConfig cfg;
+    ExperimentAffinityConfig cfg;
     if (mode == "all_any") {
         cfg = { CoreAffinity::Any, CoreAffinity::Any, CoreAffinity::Any };
     } else if (mode == "all_perf") {
