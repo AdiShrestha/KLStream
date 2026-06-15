@@ -121,20 +121,20 @@ TEST(OperatorsTest, TumblingCountWindow_Fires) {
 // Test 5: Operator_BlockedWhenOutputFull
 TEST(OperatorsTest, Operator_BlockedWhenOutputFull) {
     SPSCQueue<Event<uint64_t>> q_in(16);
-    SPSCQueue<Event<uint64_t>> q_out(2); // capacity 2
+    SPSCQueue<Event<uint64_t>> q_out(4); // capacity 4 -> holds 3
     
     MapOperator<uint64_t, uint64_t> map_op(
         "map", &q_in, &q_out, [](uint64_t x) { return x; });
         
-    q_in.try_push(Event<uint64_t>::make(1));
-    q_in.try_push(Event<uint64_t>::make(2));
-    q_in.try_push(Event<uint64_t>::make(3));
+    EXPECT_TRUE(q_in.try_push(Event<uint64_t>::make(1)));
+    EXPECT_TRUE(q_in.try_push(Event<uint64_t>::make(2)));
+    EXPECT_TRUE(q_in.try_push(Event<uint64_t>::make(3)));
+    EXPECT_TRUE(q_in.try_push(Event<uint64_t>::make(4))); // push 4
     
-    EXPECT_EQ(map_op.tick(), OpStatus::Processed);
-    EXPECT_EQ(map_op.tick(), OpStatus::Processed); // q_out is now full (if cap is 2)
-    // wait, rigtorp queue capacity is exact if we use capacity 2. Let's check try_push.
-    // Next tick should fail to push.
-    EXPECT_EQ(map_op.tick(), OpStatus::Blocked);
+    EXPECT_EQ(map_op.tick(), OpStatus::Processed); // out holds 1
+    EXPECT_EQ(map_op.tick(), OpStatus::Processed); // out holds 2
+    EXPECT_EQ(map_op.tick(), OpStatus::Processed); // out holds 3 (full)
+    EXPECT_EQ(map_op.tick(), OpStatus::Blocked);   // blocked
     
     auto val = q_out.pop();
     ASSERT_TRUE(val.has_value());
@@ -144,7 +144,7 @@ TEST(OperatorsTest, Operator_BlockedWhenOutputFull) {
 
 // Test 6: SourceOperator_PendingRetry
 TEST(OperatorsTest, SourceOperator_PendingRetry) {
-    SPSCQueue<Event<uint64_t>> q_out(2);
+    SPSCQueue<Event<uint64_t>> q_out(4); // capacity 4 -> holds 3
     
     uint64_t seq_val = 0;
     SourceOperator<uint64_t> src_op(
@@ -154,15 +154,16 @@ TEST(OperatorsTest, SourceOperator_PendingRetry) {
             return true;
         });
         
-    EXPECT_EQ(src_op.tick(), OpStatus::Processed);
-    EXPECT_EQ(src_op.tick(), OpStatus::Processed); // Queue is full
+    EXPECT_EQ(src_op.tick(), OpStatus::Processed); // q_out holds 1
+    EXPECT_EQ(src_op.tick(), OpStatus::Processed); // q_out holds 2
+    EXPECT_EQ(src_op.tick(), OpStatus::Processed); // q_out holds 3 (full)
     EXPECT_EQ(src_op.tick(), OpStatus::Blocked);
     
     // Ensure seq_val hasn't been incremented unnecessarily
-    EXPECT_EQ(seq_val, 3ULL); 
+    EXPECT_EQ(seq_val, 4ULL); 
     
     q_out.pop();
     
     EXPECT_EQ(src_op.tick(), OpStatus::Processed);
-    EXPECT_EQ(seq_val, 3ULL); // Should push the same cached event
+    EXPECT_EQ(seq_val, 4ULL); // Should push the same cached event
 }
