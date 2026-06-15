@@ -1,52 +1,17 @@
-cmake_minimum_required(VERSION 3.20)
+enable_testing()
 
-# Tests directory CMakeLists.txt
-
-# Try to find GoogleTest, or use FetchContent
-include(FetchContent)
-
-FetchContent_Declare(
-    googletest
-    GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG v1.14.0
+set(TEST_SOURCES
+    test_spsc_queue.cpp
+    test_mpmc_queue.cpp
+    test_operators.cpp
+    test_backpressure.cpp
+    test_pipeline_integration.cpp
 )
 
-# For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-
-FetchContent_MakeAvailable(googletest)
-
-include(GoogleTest)
-
-# Queue tests
-add_executable(queue_test
-    queue_test.cpp
-)
-target_link_libraries(queue_test
-    PRIVATE
-        klstream_core
-        GTest::gtest_main
-)
-gtest_discover_tests(queue_test)
-
-# Operator tests
-add_executable(operator_test
-    operator_test.cpp
-)
-target_link_libraries(operator_test
-    PRIVATE
-        klstream_core
-        GTest::gtest_main
-)
-gtest_discover_tests(operator_test)
-
-# Integration tests
-add_executable(integration_test
-    integration_test.cpp
-)
-target_link_libraries(integration_test
-    PRIVATE
-        klstream_core
-        GTest::gtest_main
-)
-gtest_discover_tests(integration_test)
+foreach(src ${TEST_SOURCES})
+    get_filename_component(name ${src} NAME_WE)
+    add_executable(${name} ${src})
+    target_link_libraries(${name}
+        PRIVATE klstream::klstream GTest::gtest_main)
+    gtest_discover_tests(${name})
+endforeach()
