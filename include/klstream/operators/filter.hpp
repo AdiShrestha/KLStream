@@ -1,152 +1,78 @@
+// include/klstream/operators/filter.hpp
 #pragma once
-
-/**
- * @file filter.hpp
- * @brief Filter operator implementation
- */
-
+#include "../core/operator.hpp"
+#include "../core/event.hpp"
+#include "../core/spsc_queue.hpp"
+#include "../core/metrics.hpp"
 #include <functional>
-
-#include "klstream/core/operator.hpp"
 
 namespace klstream {
 
-/**
- * @brief Filter operator that selectively passes events
- */
-template<typename Predicate>
-class FilterOperator : public Operator {
+// ── FilterOperator<T> ─────────────────────────────────────────────────────
+//
+// Stateless selective pass-through. Pops one Event<T> from input. If the
+// predicate returns true, pushes it to output unchanged. If false, the event
+// is dropped (this is one of the few operators that intentionally discards
+// events — it is correct by design, not a data-loss bug).
+//
+// Example:
+//   FilterOperator<uint64_t> even_only(
+//       "even_filter", &q_in, &q_out,
+//       [](uint64_t x) { return x % 2 == 0; });
+template <typename T>
+class FilterOperator : public IOperator {
 public:
-    FilterOperator(std::string name, Predicate pred)
-        : Operator(std::move(name))
-        , predicate_(std::move(pred)) {}
-    
-    void process(Event& event, OperatorContext& ctx) override {
-        record_received();
-        auto start = std::chrono::steady_clock::now();
-        
-        bool pass = false;
-        if constexpr (std::is_invocable_r_v<bool, Predicate, const Event&>) {
-            pass = predicate_(event);
-        } else if constexpr (std::is_invocable_r_v<bool, Predicate, const Payload&>) {
-            pass = predicate_(event.payload());
+    using Queue     = SPSCQueue<Event<T>>;
+    using Predicate = std::function<bool(const T&)>;
+
+    FilterOperator(std::string name, Queue* input, Queue* output, Predicate pred)
+        : IOperator(std::move(name))
+        , input_(input), output_(output), pred_(std::move(pred))
+    {}
+
+    void attach_metrics(OperatorMetrics* m) { metrics_ = m; }
+
+    OpStatus tick() override {
+        if (has_pending_) {
+            if (output_->try_push(pending_)) {
+                has_pending_ = false;
+                if (metrics_) metrics_->events_processed.increment();
+                return OpStatus::Processed;
+            }
+            if (metrics_) metrics_->events_blocked.increment();
+            return OpStatus::Blocked;
         }
-        
-        if (pass) {
-            ctx.emit(std::move(event));
-            record_emitted();
-        } else {
-            record_dropped();
+
+        Event<T> ev;
+        if (!input_->try_pop(&ev)) {
+            if (metrics_) metrics_->events_idle.increment();
+            return OpStatus::Idle;
         }
-        
-        auto end = std::chrono::steady_clock::now();
-        auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-        record_processing_time(static_cast<std::uint64_t>(ns));
+
+        if (!pred_(ev.data)) {
+            // Filtered out — count as processed (we consumed it) but don't push.
+            if (metrics_) metrics_->events_processed.increment();
+            return OpStatus::Processed;
+        }
+
+        if (output_->try_push(ev)) {
+            if (metrics_) metrics_->events_processed.increment();
+            return OpStatus::Processed;
+        }
+
+        pending_     = ev;
+        has_pending_ = true;
+        if (metrics_) metrics_->events_blocked.increment();
+        return OpStatus::Blocked;
     }
 
 private:
-    Predicate predicate_;
+    Queue*           input_;
+    Queue*           output_;
+    Predicate        pred_;
+    Event<T>         pending_{};
+    bool             has_pending_{false};
+    OperatorMetrics* metrics_{nullptr};
 };
-
-/**
- * @brief Factory function for filter operators
- */
-template<typename Predicate>
-auto make_filter(std::string name, Predicate&& pred) {
-    return std::make_unique<FilterOperator<std::decay_t<Predicate>>>(
-        std::move(name), std::forward<Predicate>(pred)
-    );
-}
-
-/**
- * @brief Integer predicate filter
- */
-inline auto make_int_filter(std::string name, std::function<bool(std::int64_t)> pred) {
-    return make_filter(std::move(name), [p = std::move(pred)](const Payload& payload) {
-        if (auto* val = std::get_if<std::int64_t>(&payload)) {
-            return p(*val);
-        }
-        return false;
-    });
-}
-
-/**
- * @brief Common filters
- */
-namespace filters {
-
-/**
- * @brief Filter for even integers
- */
-inline auto even() {
-    return [](const Payload& p) {
-        if (auto* val = std::get_if<std::int64_t>(&p)) {
-            return (*val % 2) == 0;
-        }
-        return false;
-    };
-}
-
-/**
- * @brief Filter for odd integers
- */
-inline auto odd() {
-    return [](const Payload& p) {
-        if (auto* val = std::get_if<std::int64_t>(&p)) {
-            return (*val % 2) != 0;
-        }
-        return false;
-    };
-}
-
-/**
- * @brief Filter for positive numbers
- */
-inline auto positive() {
-    return [](const Payload& p) {
-        if (auto* val = std::get_if<std::int64_t>(&p)) {
-            return *val > 0;
-        }
-        if (auto* val = std::get_if<double>(&p)) {
-            return *val > 0.0;
-        }
-        return false;
-    };
-}
-
-/**
- * @brief Filter for negative numbers
- */
-inline auto negative() {
-    return [](const Payload& p) {
-        if (auto* val = std::get_if<std::int64_t>(&p)) {
-            return *val < 0;
-        }
-        if (auto* val = std::get_if<double>(&p)) {
-            return *val < 0.0;
-        }
-        return false;
-    };
-}
-
-/**
- * @brief Filter by range
- */
-template<typename T>
-inline auto in_range(T min_val, T max_val) {
-    return [min_val, max_val](const Payload& p) {
-        if (auto* val = std::get_if<std::int64_t>(&p)) {
-            return *val >= static_cast<std::int64_t>(min_val) && 
-                   *val <= static_cast<std::int64_t>(max_val);
-        }
-        if (auto* val = std::get_if<double>(&p)) {
-            return *val >= static_cast<double>(min_val) && 
-                   *val <= static_cast<double>(max_val);
-        }
-        return false;
-    };
-}
-
-} // namespace filters
 
 } // namespace klstream
