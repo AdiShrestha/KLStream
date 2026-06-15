@@ -167,3 +167,37 @@ TEST(OperatorsTest, SourceOperator_PendingRetry) {
     EXPECT_EQ(src_op.tick(), OpStatus::Processed);
     EXPECT_EQ(seq_val, 4ULL); // Should push the same cached event
 }
+
+// Test 7: TumblingTimeWindow_Fires
+TEST(OperatorsTest, TumblingTimeWindow_Fires) {
+    SPSCQueue<Event<uint64_t>> q_in(16);
+    SPSCQueue<Event<uint64_t>> q_out(16);
+    
+    // 100ms time window
+    TumblingTimeWindow<uint64_t, uint64_t> win_op(
+        "win", &q_in, &q_out, std::chrono::milliseconds(100),
+        [](const std::vector<uint64_t>& buf) {
+            uint64_t sum = 0;
+            for (auto v : buf) sum += v;
+            return sum;
+        });
+        
+    // First event at T=0
+    q_in.try_push(Event<uint64_t>::make(10));
+    EXPECT_EQ(win_op.tick(), OpStatus::Processed);
+    
+    // Queue should be empty, window not fired
+    EXPECT_FALSE(q_out.pop().has_value());
+    
+    // Sleep to simulate time passing (150ms > 100ms)
+    std::this_thread::sleep_for(std::chrono::milliseconds(150));
+    
+    // Second event triggers the window for the first batch
+    q_in.try_push(Event<uint64_t>::make(20));
+    EXPECT_EQ(win_op.tick(), OpStatus::Processed);
+    
+    // Now the window should have fired with the first event
+    auto val = q_out.pop();
+    ASSERT_TRUE(val.has_value());
+    EXPECT_EQ(val.value().data, 10ULL);
+}
