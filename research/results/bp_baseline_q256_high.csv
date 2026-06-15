@@ -1,0 +1,12 @@
+
+── KLStream Metrics ─────────────────────────────────
+Operator              Events/sec      Blocked/sec   Idle/sec    
+----------------------------------------------------------------
+src                   22719           1755613       0           
+snk                   22719           0             477453      
+Mode: baseline, QSize: 256, Burst: high
+Throughput: 1 ev/s
+Blocked/sec: 0
+p50 latency: 5621 us
+p99 latency: 10000 us
+p999 latency: 10000 us

@@ -1,0 +1,18 @@
+
+── KLStream Metrics ─────────────────────────────────
+Operator              Events/sec      Blocked/sec   Idle/sec    
+----------------------------------------------------------------
+src                   9929            238577        0           
+snk                   9929            0             752122      
+
+── KLStream Metrics ─────────────────────────────────
+Operator              Events/sec      Blocked/sec   Idle/sec    
+----------------------------------------------------------------
+src                   461             21278         0           
+snk                   218             0             12          
+Mode: adaptive, QSize: 256, Burst: low
+Throughput: 0 ev/s
+Blocked/sec: 0
+p50 latency: 16 us
+p99 latency: 5465 us
+p999 latency: 5658 us

@@ -28,3 +28,5 @@ docs/
 *.tmp
 .DS_Store
 Thumbs.db
+
+KLStream_Complete_Implementation_Guide.md

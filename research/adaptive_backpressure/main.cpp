@@ -58,9 +58,6 @@ int main(int argc, char* argv[]) {
     rt.register_op(&source, 0);
     rt.register_op(&sink, 1);
     
-    rt.metrics().add(&m_src);
-    rt.metrics().add(&m_snk);
-
     // Burst toggler thread
     std::atomic<bool> running{true};
     std::thread burst_thread([&]() {

@@ -63,8 +63,6 @@ int main(int argc, char* argv[]) {
     rt.register_op(&map, 1);
     rt.register_op(&sink, 2);
     
-    rt.metrics().add(&m_snk);
-
     std::cout << "Running core_pinning experiment in mode: " << mode << "\n";
     rt.start();
     rt.wait_for(seconds(10));

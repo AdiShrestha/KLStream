@@ -1,0 +1,51 @@
+{
+  "context": {
+    "date": "2026-06-15T11:06:45+05:45",
+    "host_name": "Adityas-MacBook-Air-2.local",
+    "executable": "./build/benchmarks/bench_ysb",
+    "num_cpus": 8,
+    "mhz_per_cpu": 24,
+    "cpu_scaling_enabled": false,
+    "caches": [
+      {
+        "type": "Data",
+        "level": 1,
+        "size": 65536,
+        "num_sharing": 0
+      },
+      {
+        "type": "Instruction",
+        "level": 1,
+        "size": 131072,
+        "num_sharing": 0
+      },
+      {
+        "type": "Unified",
+        "level": 2,
+        "size": 4194304,
+        "num_sharing": 1
+      }
+    ],
+    "load_avg": [2.97705,2.14941,2.3125],
+    "library_version": "v1.8.4",
+    "library_build_type": "release",
+    "json_schema_version": 1
+  },
+  "benchmarks": [
+    {
+      "name": "BM_YSBThroughput/manual_time",
+      "family_index": 0,
+      "per_family_instance_index": 0,
+      "run_name": "BM_YSBThroughput/manual_time",
+      "run_type": "iteration",
+      "repetitions": 1,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 1,
+      "real_time": 2.0053825829999998e+09,
+      "cpu_time": 1.2999999999996347e+05,
+      "time_unit": "ns",
+      "items_per_second": 9.9023498899112567e+06
+    }
+  ]
+}

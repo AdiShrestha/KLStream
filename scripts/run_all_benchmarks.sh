@@ -2,7 +2,7 @@
 # scripts/run_all_benchmarks.sh
 set -e
 
-BUILD=./build_release
+BUILD=./build
 RESULTS=./research/results
 mkdir -p $RESULTS
 
