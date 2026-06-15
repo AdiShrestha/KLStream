@@ -1,0 +1,2 @@
+add_executable(adaptive_bp_experiment main.cpp)
+target_link_libraries(adaptive_bp_experiment PRIVATE klstream::klstream)

@@ -1,0 +1,2 @@
+add_executable(core_pinning_experiment main.cpp)
+target_link_libraries(core_pinning_experiment PRIVATE klstream::klstream)
