@@ -48,7 +48,7 @@ public:
         ema_tracker_ = std::make_unique<EMAOccupancyTracker<Queue>>(*output_);
     }
 
-    void attach_metrics(OperatorMetrics* m) { metrics_ = m; }
+    void attach_metrics(OperatorMetrics* m) override { metrics_ = m; }
 
     OpStatus tick() override {
         // ── Adaptive backpressure (if enabled) ───────────────────────────
@@ -88,6 +88,7 @@ public:
         // ── Generate a new event ──────────────────────────────────────────
         Event<T> ev;
         if (!gen_(ev, seq_++)) {
+            if (metrics_) metrics_->events_idle.increment();
             return OpStatus::Idle; // Generator exhausted or throttling.
         }
 

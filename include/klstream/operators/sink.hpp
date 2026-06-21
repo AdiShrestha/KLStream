@@ -34,7 +34,7 @@ public:
         , consumer_(std::move(consumer))
     {}
 
-    void attach_metrics(OperatorMetrics* m) { metrics_ = m; }
+    void attach_metrics(OperatorMetrics* m) override { metrics_ = m; }
 
     OpStatus tick() override {
         Event<T> ev;

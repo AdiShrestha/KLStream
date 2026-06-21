@@ -92,9 +92,9 @@ TEST(OperatorsTest, TumblingCountWindow_Fires) {
     
     TumblingCountWindow<uint64_t, uint64_t> win_op(
         "win", &q_in, &q_out, 3,
-        [](const std::vector<uint64_t>& buf) {
+        [](const std::vector<Event<uint64_t>>& buf) {
             uint64_t sum = 0;
-            for (auto v : buf) sum += v;
+            for (auto v : buf) sum += v.data;
             return sum;
         });
         

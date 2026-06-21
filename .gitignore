@@ -30,3 +30,12 @@ coverage/
 *.log
 
 KLStream_Complete_Implementation_Guide.md
+KLStream_Research.md
+
+# Data and Results
+data/
+results/
+*.csv
+*.bin
+build_asan/
+build_tsan/

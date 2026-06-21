@@ -109,9 +109,9 @@ int main() {
     // (replaces the original 10-second tumbling window for benchmark clarity)
     TumblingCountWindow<CampaignResult, CampaignResult> win(
         "1k_window", &q_map_win, &q_win_snk, 1000,
-        [](const std::vector<CampaignResult>& buf) -> CampaignResult {
+        [](const std::vector<Event<CampaignResult>>& buf) -> CampaignResult {
             std::unordered_map<uint32_t, uint64_t> counts;
-            for (const auto& r : buf) counts[r.campaign_id] += r.view_count;
+            for (const auto& r : buf) counts[r.data.campaign_id] += r.data.view_count;
             // Return the campaign with most views in this window.
             auto it = std::max_element(counts.begin(), counts.end(),
                 [](const auto& a, const auto& b){ return a.second < b.second; });

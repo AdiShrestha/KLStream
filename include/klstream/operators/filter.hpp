@@ -30,7 +30,7 @@ public:
         , input_(input), output_(output), pred_(std::move(pred))
     {}
 
-    void attach_metrics(OperatorMetrics* m) { metrics_ = m; }
+    void attach_metrics(OperatorMetrics* m) override { metrics_ = m; }
 
     OpStatus tick() override {
         if (has_pending_) {

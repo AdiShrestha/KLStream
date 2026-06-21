@@ -52,9 +52,9 @@ static void BM_YSBThroughput(benchmark::State& state) {
         MapOperator<AdEvent, CampaignResult> map("map", &q2, &q3, [](const AdEvent& e) -> CampaignResult {
             return { campaign_table[e.ad_id], 1 };
         });
-        TumblingCountWindow<CampaignResult, CampaignResult> win("win", &q3, &q4, 1000, [](const std::vector<CampaignResult>& buf) -> CampaignResult {
+        TumblingCountWindow<CampaignResult, CampaignResult> win("win", &q3, &q4, 1000, [](const std::vector<Event<CampaignResult>>& buf) -> CampaignResult {
             std::unordered_map<uint32_t, uint64_t> counts;
-            for (const auto& r : buf) counts[r.campaign_id] += r.view_count;
+            for (const auto& r : buf) counts[r.data.campaign_id] += r.data.view_count;
             auto it = std::max_element(counts.begin(), counts.end(), [](const auto& a, const auto& b){ return a.second < b.second; });
             return { it->first, it->second };
         });

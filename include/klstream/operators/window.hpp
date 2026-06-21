@@ -34,7 +34,7 @@ class TumblingCountWindow : public IOperator {
 public:
     using InQueue   = SPSCQueue<Event<T>>;
     using OutQueue  = SPSCQueue<Event<Out>>;
-    using AggrFn    = std::function<Out(const std::vector<T>&)>;
+    using AggrFn    = std::function<Out(const std::vector<Event<T>>&)>;
 
     TumblingCountWindow(std::string name,
                         InQueue*    input,
@@ -48,7 +48,7 @@ public:
         buffer_.reserve(window_size_);
     }
 
-    void attach_metrics(OperatorMetrics* m) { metrics_ = m; }
+    void attach_metrics(OperatorMetrics* m) override { metrics_ = m; }
 
     OpStatus tick() override {
         if (has_pending_) {
@@ -70,7 +70,7 @@ public:
         if (buffer_.empty()) {
             window_start_ts_ = in_ev.timestamp_ns; // track for latency
         }
-        buffer_.push_back(in_ev.data);
+        buffer_.push_back(in_ev);
 
         if (buffer_.size() >= window_size_) {
             Event<Out> out_ev;
@@ -99,7 +99,7 @@ private:
     OutQueue*         output_;
     std::size_t       window_size_;
     AggrFn            aggr_;
-    std::vector<T>    buffer_;
+    std::vector<Event<T>>    buffer_;
     std::uint64_t     window_start_ts_{0};
     Event<Out>        pending_{};
     bool              has_pending_{false};
@@ -142,7 +142,7 @@ public:
         reset_window();
     }
 
-    void attach_metrics(OperatorMetrics* m) { metrics_ = m; }
+    void attach_metrics(OperatorMetrics* m) override { metrics_ = m; }
 
     OpStatus tick() override {
         if (has_pending_) {

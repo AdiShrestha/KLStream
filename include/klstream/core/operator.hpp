@@ -54,6 +54,8 @@ public:
     // Called once after the stop flag is set. Flush, close files, etc.
     virtual void shutdown() {}
 
+    virtual void attach_metrics(struct OperatorMetrics*) {}
+
     const std::string& name() const { return name_; }
 
     // Unique integer ID assigned by the Runtime at registration time.

@@ -32,7 +32,7 @@ public:
         , input_(input), output_(output), fn_(std::move(fn))
     {}
 
-    void attach_metrics(OperatorMetrics* m) { metrics_ = m; }
+    void attach_metrics(OperatorMetrics* m) override { metrics_ = m; }
 
     OpStatus tick() override {
         // If we have a pending output from a previous Blocked tick, try again.
