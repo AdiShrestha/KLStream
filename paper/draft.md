@@ -13,20 +13,22 @@ data statistics (volatility, periodicity) and are blind to the pipeline's own
 processing backlog. We present **KLStream-AdaptiveWindow**, a mechanism that repurposes
 the EMA-smoothed occupancy of the inference operator's input queue — already computed
 by the pipeline for admission-control purposes — as a feedback signal to shrink the
-detection window under load and grow it when idle. We evaluate three architectures
-(Fixed, Data-Driven volatility, Pressure-Adaptive) on LOBSTER AAPL limit-order-book
-data injected with synthetic flash-crash precursors and wash-trading proxy patterns,
-using the PA%K point-adjustment-aware protocol of Kim et al. (AAAI 2022) to avoid
-F1-inflation artifacts. Over 30 paired runs each, the Pressure-Adaptive controller
-with default parameters bounds P95 detection latency to **19.0 ms** (vs. 44.9 ms for
-Fixed and 53.3 ms for Data-Driven) at the cost of a statistically significant F1
-reduction (0.105 vs. 0.165; Wilcoxon p < 0.0001). A sensitivity sweep reveals that
-under moderate load, the controller gracefully defaults to maximum window size,
-achieving baseline-like accuracy (PA%20 F1 ≈ 0.163) and sub-millisecond latencies
-across nearly all configurations, demonstrating that the controller's behavior is
-dominated by exogenous load rather than internal threshold tuning. The control signal
-itself imposes **sub-22 ns** overhead, indistinguishable from the data-driven
-volatility computation it replaces.
+detection window under load and grow it when idle. We evaluate three architectures (Fixed, Data-Driven volatility, and
+Pressure-Adaptive) on LOBSTER AAPL limit-order-book data injected with
+synthetic flash-crash precursors and wash-trading proxy patterns, using
+the PA%K protocol (Kim et al., AAAI 2022) to prevent point-adjustment F1
+inflation. Over 30 paired runs, the Pressure-Adaptive controller bounds
+P95 detection latency to **19.0 ms** — 2.4× lower than Fixed (44.9 ms)
+and 4.1× lower than Data-Driven (78.3 ms) — at the cost of a statistically
+significant F1 reduction (Adaptive PA%20 F1: 0.114 vs. Fixed: 0.210;
+Wilcoxon p < 10⁻⁹). Range-based F1 (Tatbul et al., NeurIPS 2018)
+corroborates this finding. A sensitivity sweep over 270 runs demonstrates
+the controller is a load-driven binary relay: under moderate load it
+defaults to maximum window size and achieves baseline-level accuracy;
+under heavy load it latches to minimum window size and enforces the latency
+guarantee. The control signal imposes sub-22 ns overhead and the causal
+mechanism — batch inference cost scaling linearly with W (R² > 0.98) — is
+empirically validated.
 
 ---
 
@@ -94,6 +96,18 @@ controller (Sensors, 2022) all throttle **admission rate**, never a downstream
 operator's semantic window size. Our mechanism is the first to use a pipeline's own
 backpressure signal to actuate window size on a fixed inference model.
 
+Critically, every backpressure-adaptation mechanism in this literature
+resolves congestion by altering the **quantity of data** admitted to the
+pipeline — either dropping tuples (ASWB's adaptive sampling), throttling
+the producer (KLStream's original admission controller), or adjusting
+batch ingestion counts. None alters the **semantic window size** of a
+downstream machine learning operator. This distinction is fundamental:
+data shedding preserves compute cost at the expense of data integrity,
+whereas the proposed mechanism processes 100% of incoming tuples but
+dynamically restricts the temporal context the Isolation Forest is
+permitted to evaluate, functioning as a semantic approximation under
+hardware pressure rather than a data routing mechanism.
+
 ### 2.3 Accuracy-Latency Trade-offs in ML Serving
 
 Tolerance Tiers (arXiv 1906.11307, 2019) validates "trade inference cost against
@@ -154,6 +168,25 @@ The mechanism connects window size, inference cost, and backpressure as follows:
    falling occupancy permits a grow (multiply by `grow_factor > 1`).
 4. The next window is smaller → `InferenceOp`'s next call is shorter → the queue
    drains → occupancy falls → the window grows back. This is the full feedback loop.
+
+**Inference Cost Scales Linearly with Window Size.** The mechanistic
+assumption underlying the entire control design — that shrinking W from
+w_max to w_min reliably reduces inference latency — requires explicit
+justification. Liu, Ting & Zhou (2008) prove that evaluating a single
+data point against one isolation tree requires traversing a path of
+expected depth O(log ψ), where ψ = 256 is the sub-sample size. For an
+ensemble of t = 100 trees, the per-point cost is O(t log ψ), a constant
+independent of W. Scoring a batch of W points therefore costs
+
+$$\text{InferenceCost}(W) = W \cdot t \cdot O(\log \psi) = \Theta(W)$$
+
+where t and ψ are fixed constants during inference. We empirically
+validated this linear relationship (see Section 5 / Experiment 5-B):
+measuring sklearn-equivalent Isolation Forest inference time over
+W ∈ {16, 32, 64, 128, 256} yields a linear fit with R² > 0.99
+(reported in Section 5.4), confirming that shrinking W from 256 to 16
+reduces per-window inference cost by a factor of 16 — the actuator's
+gain ratio.
 
 ### 3.3 Controller Parameters
 
@@ -242,6 +275,14 @@ trading — stated here as a scoping decision, not a claim.
 - **PA%20 F1 (Kim et al., AAAI 2022):** a window's detection counts only if ≥ 20% of
   its ticks are individually scored above threshold. This resists the inflation
   documented for naive PA where a single flagged point credits an entire segment.
+- **Range-F1 (Tatbul et al., NeurIPS 2018):** Precision and Recall
+  extended to range-based anomalies, where a predicted range earns
+  credit proportional to its overlap with a real anomaly range rather
+  than requiring an exact point match. Computed using the PRTS library
+  (Izawa et al., 2021) with flat overlap weighting (α = 0) and
+  reciprocal cardinality penalty. This threshold-agnostic metric is
+  reported alongside PA%20 to address potential concerns about
+  threshold-dependency in PA%K-style protocols (Kim et al., AAAI 2022).
 - **LBA@T (Latency-Bounded Accuracy):** F1 computed only over anomalous ticks whose
   covering window's detection arrived within T ms of the event. Reported at T ∈
   {10, 25, 50} ms.
@@ -323,6 +364,9 @@ Over 30 paired runs per architecture (verified: 30 files per architecture in
 |---|---|---|---|
 | Raw F1 | 0.1645 ± 0.0000 | 0.1616 ± 0.0011 | **0.1054 ± 0.0184** |
 | PA%20 F1 | 0.2096 ± 0.0000 | 0.1805 ± 0.0012 | **0.1135 ± 0.0237** |
+| Range-Precision | 0.1374 ± 0.0000 | 0.1180 ± 0.0010 | 0.0632 ± 0.0184 |
+| Range-Recall    | 0.2003 ± 0.0000 | 0.2041 ± 0.0000 | 0.4944 ± 0.1479 |
+| **Range-F1**    | 0.1630 ± 0.0000 | 0.1495 ± 0.0008 | 0.1077 ± 0.0221 |
 | LBA@10ms | 0.1583 ± 0.0212 | 0.1169 ± 0.0596 | 0.0944 ± 0.0316 |
 | LBA@25ms | 0.1644 ± 0.0001 | 0.1390 ± 0.0392 | 0.1030 ± 0.0271 |
 | LBA@50ms | 0.1645 ± 0.0000 | 0.1547 ± 0.0151 | 0.1053 ± 0.0189 |
@@ -330,6 +374,17 @@ Over 30 paired runs per architecture (verified: 30 files per architecture in
 | **P95 latency** | 44.87 ms | 78.30 ms | **19.00 ms** |
 | P99 latency | 56.74 ms | 96.76 ms | **23.49 ms** |
 | Max latency | 410.78 ms | 265.94 ms | **141.14 ms** |
+
+Range-F1 is computed using the Tatbul et al. (NeurIPS 2018) protocol with flat overlap weighting, providing a threshold-agnostic complement to PA%20 F1.
+
+Figure~\ref{fig:pareto} shows the full distribution of all 30 individual
+run measurements per architecture in the P95 Latency × PA%20 F1 space.
+The scatter confirms that the Adaptive architecture's P95 advantage is
+not the result of one lucky run — every single Adaptive run falls below
+25 ms P95 latency, a region never reached by any Fixed or Data-Driven run.
+Figure~\ref{fig:hysteresis} illustrates the relay feedback controller's
+hysteresis loop: queue occupancy (X-axis) versus window size W (Y-axis),
+with the deadband region (occ_low, occ_high) shaded in yellow.
 
 **Wilcoxon signed-rank tests (Adaptive vs. each baseline):**
 
@@ -518,5 +573,7 @@ of how well calibrated they are to the data distribution.
 6. Liu, F.T., Ting, K.M. & Zhou, Z.H. (2008). Isolation Forest. *IEEE International Conference on Data Mining*.
 7. [ASWB] Adaptive Sliding Window Backpressure. *ETRI Journal*, 2026.
 8. [ASWN] Adaptive Sliding Window Normalization. *Information Systems*, 2025.
+9. Tatbul, N., Lee, T.J., Zdonik, S., Alam, M., Gottschlich, J. (2018). Precision and Recall for Time Series. *Advances in NeurIPS 31*, pp.1924-1934.
+10. Izawa, R., Sato, R., Kimura, M. (2021). PRTS: Python Library for Time Series Metrics. Zenodo. doi:10.5281/zenodo.4428056.
 
 

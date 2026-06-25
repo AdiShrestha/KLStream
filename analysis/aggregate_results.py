@@ -21,7 +21,7 @@ from scipy import stats  # for Wilcoxon paired test
 
 import sys
 sys.path.insert(0, os.path.dirname(__file__))
-from compute_metrics import tick_level_f1, pa_k_f1, lba_f1
+from compute_metrics import tick_level_f1, pa_k_f1, lba_f1, range_f1
 
 REQUIRED_RUNS = 30
 OUT_DIR = "results/raw/exp2_3"
@@ -64,6 +64,7 @@ def main():
     gt = pd.read_csv(GT_PATH)
     segments = load_segments(gt)
     print(f"  {len(gt)} ticks, {len(segments)} anomaly segments.\n")
+    print(f"Ground truth: {len(segments)} anomaly segments found")
 
     summary = {}
 
@@ -71,6 +72,7 @@ def main():
         files = sorted(glob.glob(os.path.join(OUT_DIR, f"run_{arch}_*.csv")))
 
         f1s, pa20s, lba10s, lba25s, lba50s, lats_all = [], [], [], [], [], []
+        range_precs, range_recs, range_f1s = [], [], []
 
         for f in files:
             df = pd.read_csv(f)
@@ -78,11 +80,13 @@ def main():
 
             _, _, f1   = tick_level_f1(df, gt, threshold)
             _, _, pa20 = pa_k_f1(df, gt, threshold, 0.20, segments)
+            range_prec, range_rec, range_f1_score = range_f1(df, gt, threshold, segments)
             _, _, l10  = lba_f1(df, gt, threshold, 10.0)
             _, _, l25  = lba_f1(df, gt, threshold, 25.0)
             _, _, l50  = lba_f1(df, gt, threshold, 50.0)
 
             f1s.append(f1);  pa20s.append(pa20)
+            range_precs.append(range_prec); range_recs.append(range_rec); range_f1s.append(range_f1_score)
             lba10s.append(l10); lba25s.append(l25); lba50s.append(l50)
             lats_all.extend(df["latency_ns"].values / 1e6)  # → ms
 
@@ -108,6 +112,9 @@ def main():
         print(f"=== {arch.upper()} ===")
         print(f"  Raw F1:      {np.mean(f1s):.4f} ± {np.std(f1s):.4f}")
         print(f"  PA%20 F1:    {np.mean(pa20s):.4f} ± {np.std(pa20s):.4f}")
+        print(f"  Range-F1:     {np.mean(range_f1s):.4f} ± {np.std(range_f1s):.4f}")
+        print(f"  Range-Prec:   {np.mean(range_precs):.4f} ± {np.std(range_precs):.4f}")
+        print(f"  Range-Recall: {np.mean(range_recs):.4f} ± {np.std(range_recs):.4f}")
         print(f"  LBA@10ms:    {np.mean(lba10s):.4f} ± {np.std(lba10s):.4f}")
         print(f"  LBA@25ms:    {np.mean(lba25s):.4f} ± {np.std(lba25s):.4f}")
         print(f"  LBA@50ms:    {np.mean(lba50s):.4f} ± {np.std(lba50s):.4f}")

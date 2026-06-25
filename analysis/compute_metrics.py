@@ -48,6 +48,85 @@ def pa_k_f1(predictions_df, ground_truth_df, threshold, k_fraction, segments):
     f1 = 2 * precision * recall / (precision + recall) if (precision + recall) else 0.0
     return precision, recall, f1
 
+def range_f1(predictions_df, ground_truth_df, threshold, segments, alpha=0.0):
+    """
+    Computes Range-based Precision, Recall, and F1 following Tatbul et al.
+    (NeurIPS 2018). Uses the PRTS library if available; falls back to a
+    manual simplified implementation (flat cardinality, no position bias,
+    existence-only overlap) if not.
+
+    Args:
+        predictions_df: DataFrame with columns [first_seq, last_seq, max_score]
+        ground_truth_df: DataFrame with column [seq, label]
+        threshold: float, anomaly score threshold
+        segments: list of (start_seq, end_seq) tuples for each anomaly segment
+        alpha: float in [0,1], weight for overlap vs. existence reward (0=flat)
+
+    Returns:
+        (range_precision, range_recall, range_f1_score): all floats in [0,1]
+    """
+    import numpy as np
+    n_ticks = len(ground_truth_df)
+
+    # Build binary prediction array at tick level (same as tick_level_f1)
+    pred = np.zeros(n_ticks, dtype=bool)
+    for _, row in predictions_df.iterrows():
+        if row['max_score'] >= threshold:
+            s = int(row['first_seq'])
+            e = int(row['last_seq'])
+            if s < n_ticks and e < n_ticks:
+                pred[s:e + 1] = True
+
+    truth = (ground_truth_df['label'].values != 0)
+
+    try:
+        from prts import ts_precision, ts_recall
+        # PRTS expects integer 0/1 arrays
+        pred_int  = pred.astype(int)
+        truth_int = truth.astype(int)
+        rp = ts_precision(truth_int, pred_int, alpha=alpha,
+                          cardinality="reciprocal", bias="flat")
+        rr = ts_recall(truth_int, pred_int, alpha=alpha,
+                       cardinality="reciprocal", bias="flat")
+        rf1 = (2 * rp * rr / (rp + rr)) if (rp + rr) > 0 else 0.0
+        return float(rp), float(rr), float(rf1)
+
+    except ImportError:
+        # Manual fallback: simplified overlap-based range metrics
+        # Recall: per real segment, what fraction of its ticks were detected?
+        total_recall = 0.0
+        for (s, e) in segments:
+            seg_len = e - s + 1
+            if seg_len == 0:
+                continue
+            detected = np.sum(pred[s:e + 1])
+            existence_reward = 1.0 if detected > 0 else 0.0
+            overlap_reward   = detected / seg_len
+            seg_recall = alpha * overlap_reward + (1.0 - alpha) * existence_reward
+            total_recall += seg_recall
+        rr = total_recall / len(segments) if segments else 0.0
+
+        # Precision: per predicted segment, what fraction overlaps a real anomaly?
+        from itertools import groupby
+        pred_segments = []
+        for k, g in groupby(range(n_ticks), key=lambda i: pred[i]):
+            grp = list(g)
+            if k:
+                pred_segments.append((grp[0], grp[-1]))
+
+        total_precision = 0.0
+        for (ps, pe) in pred_segments:
+            seg_len = pe - ps + 1
+            overlapping = np.sum(truth[ps:pe + 1])
+            existence_reward = 1.0 if overlapping > 0 else 0.0
+            overlap_reward   = overlapping / seg_len
+            seg_prec = alpha * overlap_reward + (1.0 - alpha) * existence_reward
+            total_precision += seg_prec
+        rp = total_precision / len(pred_segments) if pred_segments else 0.0
+
+        rf1 = (2 * rp * rr / (rp + rr)) if (rp + rr) > 0 else 0.0
+        return float(rp), float(rr), float(rf1)
+
 def lba_f1(predictions_df, ground_truth_df, threshold, max_latency_ms):
     """Latency-Bounded Accuracy (LBA@T) F1 score.
 
