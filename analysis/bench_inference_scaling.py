@@ -112,9 +112,10 @@ ax2.axhline(df_timing['ns_per_point'].mean(), color='red', linestyle='--',
             label=f"Mean = {df_timing['ns_per_point'].mean():.1f} ns/point")
 ax2.set_xlabel('Window Size W', fontsize=12)
 ax2.set_ylabel('Time per Feature Vector (ns)', fontsize=12)
-ax2.set_title('Constant Cost per Point Confirms O(W) Scaling\n'
-              '(Flat bars = linear batch cost)', fontsize=11)
-ax2.legend(fontsize=10)
+ax2.set_title('Declining ns/point reflects fixed overhead + O(W) variable cost', fontsize=11)
+ax2.text(0.95, 0.95, f"Fit: time_ns = {slope:.0f} * W + {intercept:.0f}\nFixed overhead: ~{(intercept/1e6):.2f} ms",
+         transform=ax2.transAxes, ha='right', va='top', bbox=dict(facecolor='white', alpha=0.8, edgecolor='gray'))
+ax2.legend(fontsize=10, loc='center right')
 ax2.grid(True, linestyle='--', alpha=0.4, axis='y')
 
 plt.tight_layout()

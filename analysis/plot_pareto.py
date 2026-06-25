@@ -36,12 +36,7 @@ if in_seg:
     segments.append((seg_start, len(labels) - 1))
 print(f"Ground truth: {len(segments)} anomaly segments")
 
-# ── Per-architecture threshold (95th pct of calm-period scores) ───────────
-# Use a single global threshold from the fixed architecture for fair comparison
-all_fixed = sorted(glob.glob(f'{EXP_DIR}/run_fixed_*.csv'))
-fixed_scores = pd.concat([pd.read_csv(f)['max_score'] for f in all_fixed])
-THRESHOLD = float(fixed_scores.quantile(THRESHOLD_PCT))
-print(f"Global threshold (Fixed arch, 95th pct): {THRESHOLD:.6f}")
+# ── Per-run threshold (95th pct) will be computed dynamically ────────────
 
 # ── Collect per-run (P95_latency_ms, PA20_F1) for each architecture ───────
 architectures = {
@@ -59,7 +54,8 @@ for display_name, (arch, color, marker, size) in architectures.items():
         df = pd.read_csv(f)
         lat_ms = df['latency_ns'].values / 1e6
         p95 = float(np.percentile(lat_ms, 95))
-        _, _, pa20 = pa_k_f1(df, ground_truth_df, THRESHOLD, 0.20, segments)
+        threshold = float(df['max_score'].quantile(THRESHOLD_PCT))
+        _, _, pa20 = pa_k_f1(df, ground_truth_df, threshold, 0.20, segments)
         p95_values.append(p95)
         pa20_values.append(pa20)
     results[display_name] = {

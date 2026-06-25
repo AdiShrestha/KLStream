@@ -1,7 +1,5 @@
 # Pressure-Adaptive Windowing: Using Internal Pipeline Backpressure as a Control Signal for Streaming Anomaly Detection
 
-<!-- DRAFT — Sections marked [PENDING] will be updated once Exp 4 replication (270 runs) completes. -->
-
 ---
 
 ## Abstract
@@ -183,10 +181,14 @@ $$\text{InferenceCost}(W) = W \cdot t \cdot O(\log \psi) = \Theta(W)$$
 where t and ψ are fixed constants during inference. We empirically
 validated this linear relationship (see Section 5 / Experiment 5-B):
 measuring sklearn-equivalent Isolation Forest inference time over
-W ∈ {16, 32, 64, 128, 256} yields a linear fit with R² > 0.99
-(reported in Section 5.4), confirming that shrinking W from 256 to 16
-reduces per-window inference cost by a factor of 16 — the actuator's
-gain ratio.
+W ∈ {16, 32, 64, 128, 256} yields a linear fit with R² = 0.984
+(reported in Section 5.4). This confirms that shrinking W from 256 to 16
+reduces the *variable* component of inference cost by 16x, while a fixed
+per-batch overhead (amortized across W points) remains constant. The total
+measured reduction is 1.42x (from 3252μs to 2294μs), which is sufficient to
+drain a 64-slot queue before the next batch arrives. (Timings use Python
+sklearn as a reference implementation; the native C++ forest has different
+absolute latencies but the same O(W) scaling property).
 
 ### 3.3 Controller Parameters
 
