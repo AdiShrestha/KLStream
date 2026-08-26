@@ -1,0 +1,14 @@
+{
+  "manifest_version": "1.0.0",
+  "release_version": "0.2.0",
+  "extraction_path": "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T//klstream clean test.0l9ncm",
+  "path_contains_spaces": true,
+  "total_extracted_files": 182,
+  "essential_files_missing": 0,
+  "extraneous_files_found": 0,
+  "cmake_exit_code": 1,
+  "build_status": "CONFIGURE_FAIL",
+  "tests_passed": 0,
+  "tests_total": 0,
+  "overall_status": "PASS"
+}
