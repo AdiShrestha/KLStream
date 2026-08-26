@@ -1,0 +1,26 @@
+name: klstream
+
+services:
+  dev:
+    build:
+      context: .
+      target: base
+    image: klstream:dev
+    working_dir: /workspace
+    volumes:
+      - .:/workspace:cached
+    command: /bin/bash
+    stdin_open: true
+    tty: true
+
+  builder:
+    build:
+      context: .
+      target: builder
+    image: klstream:builder
+
+  app:
+    build:
+      context: .
+      target: runtime
+    image: klstream:runtime
