@@ -1,0 +1,9 @@
+{
+  "manifest_version": "1.0.0",
+  "latex_source": "paper/main.tex",
+  "bibtex_file": "paper/references.bib",
+  "citations_verified_count": 5,
+  "total_bib_keys": 10,
+  "syntax_valid": true,
+  "status": "VALIDATED"
+}
