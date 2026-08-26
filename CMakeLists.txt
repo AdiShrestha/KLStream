@@ -107,3 +107,41 @@ endif()
 if(KLSTREAM_BUILD_APPS)
     add_subdirectory(source/apps/adaptive_window)
 endif()
+
+# ── Installation & Packaging ──────────────────────────────────────────────
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
+install(TARGETS klstream
+    EXPORT KLStreamTargets
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(DIRECTORY source/include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install(EXPORT KLStreamTargets
+    FILE KLStreamTargets.cmake
+    NAMESPACE KLStream::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/KLStream
+)
+
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/KLStreamConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/KLStreamConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/KLStreamConfig.cmake"
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/KLStream
+)
+
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/KLStreamConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/KLStreamConfigVersion.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/KLStream
+)
+
