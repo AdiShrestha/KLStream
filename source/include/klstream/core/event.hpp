@@ -1,8 +1,8 @@
-// include/klstream/core/event.hpp
 #pragma once
-#include "config.hpp"
+#include <klstream/core/config.hpp>
 #include <cstdint>
 #include <chrono>
+
 
 namespace klstream {
 

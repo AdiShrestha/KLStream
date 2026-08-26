@@ -1,9 +1,9 @@
-// include/klstream/core/runtime.hpp
 #pragma once
-#include "operator.hpp"
-#include "pinning.hpp"
-#include "worker.hpp"
-#include "metrics.hpp"
+#include <klstream/core/operator.hpp>
+#include <klstream/core/pinning.hpp>
+#include <klstream/core/worker.hpp>
+#include <klstream/core/metrics.hpp>
+
 #include <cstdint>
 #include <memory>
 #include <stdexcept>

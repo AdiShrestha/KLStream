@@ -7,6 +7,7 @@ set(TEST_SOURCES
     test_operators.cpp
     test_backpressure.cpp
     test_pipeline_integration.cpp
+    unit/test_header_compilation.cpp
 )
 
 foreach(src ${TEST_SOURCES})
@@ -14,5 +15,6 @@ foreach(src ${TEST_SOURCES})
     add_executable(${name} ${src})
     target_link_libraries(${name}
         PRIVATE klstream::klstream GTest::gtest_main)
+    klstream_apply_warnings(${name})
     gtest_discover_tests(${name})
 endforeach()

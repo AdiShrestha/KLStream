@@ -1,12 +1,13 @@
 #pragma once
-#include "../core/operator.hpp"
-#include "../core/event.hpp"
-#include "../core/spsc_queue.hpp"
-#include "../core/metrics.hpp"
-#include "../core/backpressure.hpp"   // EMAOccupancyTracker — reused as-is
-#include "types.hpp"
+#include <klstream/core/operator.hpp>
+#include <klstream/core/event.hpp>
+#include <klstream/core/spsc_queue.hpp>
+#include <klstream/core/metrics.hpp>
+#include <klstream/core/backpressure.hpp>
+#include <klstream/window/types.hpp>
 #include <algorithm>
 #include <cstdint>
+
 
 namespace klstream {
 

@@ -1,7 +1,7 @@
-// include/klstream/core/backpressure.hpp
 #pragma once
-#include "config.hpp"
+#include <klstream/core/config.hpp>
 #include <atomic>
+
 #include <chrono>
 #include <thread>
 #include <cstdint>

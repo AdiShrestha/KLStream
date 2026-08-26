@@ -1,10 +1,10 @@
-// include/klstream/operators/filter.hpp
 #pragma once
-#include "../core/operator.hpp"
-#include "../core/event.hpp"
-#include "../core/spsc_queue.hpp"
-#include "../core/metrics.hpp"
+#include <klstream/core/operator.hpp>
+#include <klstream/core/event.hpp>
+#include <klstream/core/spsc_queue.hpp>
+#include <klstream/core/metrics.hpp>
 #include <functional>
+
 
 namespace klstream {
 

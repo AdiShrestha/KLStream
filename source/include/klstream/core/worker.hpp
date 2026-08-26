@@ -1,8 +1,8 @@
-// include/klstream/core/worker.hpp
 #pragma once
-#include "operator.hpp"
-#include "pinning.hpp"
-#include "config.hpp"
+#include <klstream/core/operator.hpp>
+#include <klstream/core/pinning.hpp>
+#include <klstream/core/config.hpp>
+
 #include <atomic>
 #include <chrono>
 #include <memory>

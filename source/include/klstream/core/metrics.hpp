@@ -1,7 +1,7 @@
-// include/klstream/core/metrics.hpp
 #pragma once
-#include "config.hpp"
+#include <klstream/core/config.hpp>
 #include <atomic>
+
 #include <cstddef>
 #include <cstdint>
 #include <string>

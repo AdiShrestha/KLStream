@@ -1,7 +1,7 @@
-// include/klstream/core/spsc_queue.hpp
 #pragma once
-#include "config.hpp"
+#include <klstream/core/config.hpp>
 #include <atomic>
+
 #include <cassert>
 #include <cstddef>
 #include <memory>
