@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software in academic research, please cite it as below."
+title: "KLStream: Low-Latency Parallel Stream Processing Runtime in C++17"
+version: 0.2.0-dev
+date-released: 2026-08-26
+url: "https://github.com/AdiShrestha/KLStream"
+license: AGPL-3.0-or-later
+authors:
+  - family-names: "Shrestha"
+    given-names: "Adi"
+abstract: "A lock-free, single-node parallel stream processing runtime optimized for low-latency financial tick ingestion and stateful windowed analytics in C++17."
+keywords:
+  - stream processing
+  - lock-free
+  - low latency
+  - c++17
+  - systems
