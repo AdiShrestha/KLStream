@@ -6,7 +6,7 @@ A high-performance, single-node stream processing runtime that executes continuo
 
 ## Features
 
-- **No External Dependencies**: Pure C++20 implementation with no message broker required
+- **No External Dependencies**: Pure C++17 implementation with no message broker required
 - **Bounded Memory**: Fixed-capacity queues prevent unbounded memory growth
 - **Backpressure**: Automatic flow control when downstream operators slow down
 - **Parallel Execution**: Worker thread pool with configurable scheduling policies
@@ -17,7 +17,7 @@ A high-performance, single-node stream processing runtime that executes continuo
 
 ### Prerequisites
 
-- C++20 compatible compiler (GCC 11+, Clang 14+)
+- C++17 compatible compiler (GCC 9+, Clang 10+)
 - CMake 3.20+
 - Ninja (recommended) or Make
 - Docker (for x86_64 Linux development on macOS ARM)
@@ -122,41 +122,32 @@ Source → Operator → Operator → ... → Sink
 
 ```cpp
 #include "klstream/klstream.hpp"
+#include <iostream>
+#include <chrono>
 
 int main() {
-    klstream::Runtime runtime;
-    klstream::StreamGraphBuilder builder;
+    using namespace klstream;
     
-    // Source: generate integers 1..1000
-    klstream::SequenceSource::Config src_cfg;
-    src_cfg.count = 1000;
-    builder.add_source(std::make_unique<klstream::SequenceSource>("src", src_cfg));
+    // Create queues
+    SPSCQueue<Event<uint64_t>> q_src_map(4096);
     
-    // Map: square each number
-    builder.add_operator(klstream::make_int_map("square", 
-        [](int64_t x) { return x * x; }));
+    // Source: generates integers
+    SourceOperator<uint64_t> source(
+        "source", &q_src_map,
+        [](Event<uint64_t>& out, uint64_t seq) -> bool {
+            out = Event<uint64_t>::make(seq);
+            return true;
+        });
+        
+    // Runtime setup
+    Runtime rt;
+    rt.add_worker(CoreAffinity::Performance);
+    rt.register_op(&source, 0);
     
-    // Filter: keep even numbers
-    builder.add_operator(klstream::make_filter("even", 
-        klstream::filters::even()));
+    rt.start();
+    rt.wait_for(std::chrono::seconds(1));
+    rt.stop();
     
-    // Sink: aggregate results
-    auto sink = std::make_unique<klstream::AggregatingSink>("agg");
-    auto* sink_ptr = sink.get();
-    builder.add_sink(std::move(sink));
-    
-    // Connect operators
-    builder.connect("src", "square")
-           .connect("square", "even")
-           .connect("even", "agg");
-    
-    // Run pipeline
-    runtime.init(std::move(builder));
-    runtime.start();
-    // ... wait for completion
-    runtime.stop();
-    
-    std::cout << "Sum: " << sink_ptr->sum() << std::endl;
     return 0;
 }
 ```

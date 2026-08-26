@@ -3,6 +3,13 @@
 Generates the Pareto frontier scatter plot (P95 Latency vs PA%20 F1)
 with ALL 30 individual run points per architecture visible as dots.
 Saves to: results/figures/pareto_scatter.png and pareto_scatter.pdf
+
+P95 LATENCY METHOD (must match aggregate_results.py):
+  We compute the GLOBAL P95: pool all per-tick latency_ns values across
+  ALL 30 runs for each architecture, then take np.percentile(..., 95).
+  This is NOT mean-of-per-run-P95. See aggregate_results.py line ~101.
+  For the scatter plot, each individual run point uses its own per-run P95.
+  The mean marker and summary numbers use the global-P95 to match the table.
 """
 import os, glob
 import pandas as pd
@@ -48,22 +55,29 @@ architectures = {
 results = {}
 for display_name, (arch, color, marker, size) in architectures.items():
     files = sorted(glob.glob(f'{EXP_DIR}/run_{arch}_*.csv'))
-    p95_values  = []
+    p95_values  = []   # per-run P95, used for scatter dots only
     pa20_values = []
+    all_lats_ms = []   # pooled latencies across all runs — for global P95
     for f in files:
         df = pd.read_csv(f)
         lat_ms = df['latency_ns'].values / 1e6
-        p95 = float(np.percentile(lat_ms, 95))
+        # Per-run P95 for scatter dots (shows within-arch variability)
+        p95_per_run = float(np.percentile(lat_ms, 95))
         threshold = float(df['max_score'].quantile(THRESHOLD_PCT))
         _, _, pa20 = pa_k_f1(df, ground_truth_df, threshold, 0.20, segments)
-        p95_values.append(p95)
+        p95_values.append(p95_per_run)
         pa20_values.append(pa20)
+        all_lats_ms.extend(lat_ms.tolist())
+    # GLOBAL P95: pool all ticks, then percentile — matches aggregate_results.py
+    global_p95 = float(np.percentile(all_lats_ms, 95))
     results[display_name] = {
         'color': color, 'marker': marker, 'size': size,
         'p95': p95_values, 'pa20': pa20_values,
-        'mean_p95': np.mean(p95_values), 'mean_pa20': np.mean(pa20_values),
+        # mean_p95 uses global-P95 to match aggregate_results.py table
+        'mean_p95': global_p95, 'mean_pa20': np.mean(pa20_values),
     }
-    print(f"{display_name}: mean P95={np.mean(p95_values):.2f}ms "
+    print(f"{display_name}: global-P95={global_p95:.2f}ms  "
+          f"mean-of-per-run-P95={np.mean(p95_values):.2f}ms  "
           f"mean PA%20={np.mean(pa20_values):.4f} n={len(files)}")
 
 # ── Plot ─────────────────────────────────────────────────────────────────

@@ -25,7 +25,7 @@ the controller is a load-driven binary relay: under moderate load it
 defaults to maximum window size and achieves baseline-level accuracy;
 under heavy load it latches to minimum window size and enforces the latency
 guarantee. The control signal imposes sub-22 ns overhead and the causal
-mechanism — batch inference cost scaling linearly with W (R² = 0.9953) — is
+mechanism — batch inference cost scaling linearly with W (R² = 0.9868) — is
 empirically validated.
 
 ---
@@ -59,7 +59,7 @@ We make the following contributions:
 2. **An empirical evaluation** on LOBSTER financial tick data with rigorous statistical
    methodology: 30 paired runs per architecture, PA%K evaluation avoiding the
    point-adjustment inflation documented by Kim et al. (AAAI 2022), and Wilcoxon
-   signed-rank tests for all comparisons.
+   signed-rank tests (paired, Pratt method for zero-differences) for all comparisons.
 
 3. **A sensitivity sweep** over the controller's four threshold parameters, revealing
    that under moderate load the system acts as a load-driven binary relay, seamlessly
@@ -116,7 +116,7 @@ granularity appropriate for a single-node streaming pipeline.
 
 ### 2.4 Active Queue Management
 
-RED and CoDel use EMA-smoothed queue-occupancy estimates to act before saturation —
+RED and CoDel use EMA-smoothed queue-occupancy estimates to act before saturation (Floyd & Jacobson, 1993) —
 the direct intellectual ancestor of `EMAOccupancyTracker`. We repurpose this concept,
 unmodified, to drive a completely different actuator: window size instead of packet
 drop rate.
@@ -143,7 +143,7 @@ TickSource ──▶ FeatureExtractOp ──▶ [WindowOp variant] ──▶ Inf
                                           AdaptiveWindowOp
 ```
 
-Three interchangeable window-stage implementations, swapped via a command-line flag,
+Three interchangeable window-stage implementations (connected by Rigtorp-style lock-free SPSC queues) are swapped via a command-line flag,
 all producing `Event<WindowBatch>` so `InferenceOp` and all downstream operators are
 **architecturally unaware** of which window strategy is active:
 
@@ -181,7 +181,7 @@ $$\text{InferenceCost}(W) = W \cdot t \cdot O(\log \psi) = \Theta(W)$$
 where t and ψ are fixed constants during inference. We empirically
 validated this linear relationship (see Section 5 / Experiment 5-B):
 measuring sklearn-equivalent Isolation Forest inference time over
-W ∈ {16, 32, 64, 128, 256} yields a linear fit with R² = 0.9953
+W ∈ {16, 32, 48, 64, 96, 128, 192, 256} yields a linear fit with R² = 0.9868 (std err = 171.19)
 (reported in Section 5.4). This confirms that shrinking W from 256 to 16
 reduces the *variable* component of inference cost by 16x, while a fixed
 per-batch overhead (amortized across W points) remains constant. The total
@@ -491,7 +491,7 @@ burst timestamps against the injected anomaly segments reveals the structural re
 the system is rarely *blocked* (4.6% of time above `occ_high`), periods of high
 queue occupancy are triggered exactly by bursts of unusually high tick-arrival rates in the
 underlying data. Because these bursts represent dense clusters of events occurring in short
-wall-clock windows, **~85% of all events** arrive and are evaluated at `w_min = 16`.
+wall-clock windows, **~85% of all events** arrive and are evaluated at `w_min = 16` (documented in `results/event_fraction_analysis.csv`).
 Anomalies show a modest excess representation in burst periods (91.5% vs 85.2% for normal
 ticks), but this is a minor secondary effect relative to the dominant throughput mechanism:
 the vast majority of the data stream naturally clusters into these high-rate bursts. The F1
@@ -570,14 +570,14 @@ of how well calibrated they are to the data distribution.
 
 ## References
 
-1. Åström, K.J. & Murray, R.M. (2021). *Feedback Systems: An Introduction for Scientists and Engineers* (2nd ed.). Princeton University Press.
+1. Åström, K.J. & Murray, R.M. (2021). *Feedback Systems: An Introduction for Scientists and Engineers* (2nd ed., Chapter 10). Princeton University Press.
 2. Easley, D., López de Prado, M.M. & O'Hara, M. (2011). The microstructure of the "Flash Crash": Flow toxicity, liquidity crashes, and the probability of informed trading. *Journal of Portfolio Management*, 37(2).
 3. Ermshaus, A., Schäfer, P. & Leser, U. (2023). Window size selection in unsupervised time series analytics: A review and benchmark. *arXiv preprint arXiv:2306.10281*.
-4. Jacobson, V. (1988). Congestion avoidance and control. *ACM SIGCOMM Computer Communication Review*, 18(4).
+4. Floyd, S., & Jacobson, V. (1993). Random Early Detection gateways for Congestion Avoidance. *IEEE/ACM Transactions on Networking*, 1(4), 397-413.
 5. Kim, S., Choi, K., Choi, J.S., Lee, B.H. & Yoon, S. (2022). Towards a rigorous evaluation of time-series anomaly detection. *AAAI Conference on Artificial Intelligence*.
-6. Liu, F.T., Ting, K.M. & Zhou, Z.H. (2008). Isolation Forest. *IEEE International Conference on Data Mining*.
-7. [ASWB] Adaptive Sliding Window Backpressure. *ETRI Journal*, 2026.
-8. [ASWN] Adaptive Sliding Window Normalization. *Information Systems*, 2025.
+6. Liu, F.T., Ting, K.M. & Zhou, Z.H. (2008). Isolation Forest. *2008 Eighth IEEE International Conference on Data Mining*, 413-422.
+7. Xiao, X. (2026). Adaptive sampling-driven workload balancing for distributed data stream processing. *ETRI Journal*. DOI: 10.4218/etrij.2025-0175
+8. Papageorgiou, G., & Tjortjis, C. (2025). Adaptive sliding window normalization. *Information Systems*, 129. DOI: 10.1016/j.is.2024.102515
 9. Tatbul, N., Lee, T.J., Zdonik, S., Alam, M., Gottschlich, J. (2018). Precision and Recall for Time Series. *Advances in NeurIPS 31*, pp.1924-1934.
 10. Izawa, R., Sato, R., Kimura, M. (2021). PRTS: Python Library for Time Series Metrics. Zenodo. doi:10.5281/zenodo.4428056.
 

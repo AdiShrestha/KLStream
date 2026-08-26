@@ -22,7 +22,7 @@ def run_experiment_4(oscillation_speed_factor: int = 1460, n_reps: int = 30):
     print(f"    speed_factor={oscillation_speed_factor}, n_reps={n_reps} per cell")
 
     occ_pairs = [(0.2, 0.6), (0.3, 0.7), (0.4, 0.8)]
-    factor_pairs = [(0.4, 1.05), (0.5, 1.1), (0.6, 1.15)]
+    factor_pairs = [(0.6, 1.10), (0.7, 1.15), (0.8, 1.20)]
 
     grid = list(itertools.product(occ_pairs, factor_pairs))
 
@@ -82,7 +82,7 @@ def run_experiment_4(oscillation_speed_factor: int = 1460, n_reps: int = 30):
             
             return f1, f1_20, mean_lat, p95_lat
 
-        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
             rep_results = list(executor.map(run_rep, range(n_reps)))
 
         for rep, (f1, f1_20, mean_lat, p95_lat) in enumerate(rep_results):
@@ -132,6 +132,9 @@ def run_experiment_4(oscillation_speed_factor: int = 1460, n_reps: int = 30):
 
 if __name__ == "__main__":
     import sys
-    sf    = int(sys.argv[1]) if len(sys.argv) > 1 else 150
+    # Default speed_factor=1460 — the calibrated value at which the grid was run
+    # and results in Section 5.3 were generated. (150 was an early exploratory
+    # value that did not trigger threshold adaptation effectively.)
+    sf    = int(sys.argv[1]) if len(sys.argv) > 1 else 1460
     reps  = int(sys.argv[2]) if len(sys.argv) > 2 else 30
     run_experiment_4(oscillation_speed_factor=sf, n_reps=reps)

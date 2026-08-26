@@ -12,7 +12,7 @@ import shutil
 import sys
 from datetime import datetime, timezone
 
-architectures = ["datadriven"]
+architectures = ["fixed", "datadriven", "adaptive"]
 runs          = 30
 duration      = 10   # seconds per run
 speed_factor  = 1460 # Calibrated: passes oscillation criterion (std=0.358, frac_high=15.1%, frac_low=83.8%)

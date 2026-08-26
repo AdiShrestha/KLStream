@@ -48,7 +48,7 @@ clf = IsolationForest(n_estimators=N_ESTIMATORS, max_samples=MAX_SAMPLES,
 clf.fit(X_train)
 print(f"Forest trained on {n_train} samples.")
 
-W_values = [16, 32, 64, 128, 256]
+W_values = [16, 32, 48, 64, 96, 128, 192, 256]
 rows = []
 print(f"\n{'W':>6} {'mean_ns':>12} {'std_ns':>12} {'ns_per_point':>14}")
 print("-" * 50)

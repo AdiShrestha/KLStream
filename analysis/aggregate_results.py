@@ -138,9 +138,10 @@ def main():
             a_vals  = summary["adaptive"][key]
             b_vals  = summary[baseline][key]
             try:
-                stat, p = stats.wilcoxon(a_vals, b_vals)
+                stat_w, p_w = stats.wilcoxon(a_vals, b_vals, zero_method='wilcox')
+                stat_p, p_p = stats.wilcoxon(a_vals, b_vals, zero_method='pratt')
                 direction = "adaptive > baseline" if np.mean(a_vals) > np.mean(b_vals) else "baseline > adaptive"
-                print(f"  {metric:10s} adaptive vs {baseline:11s}: p={p:.4f}  ({direction})")
+                print(f"  {metric:10s} adaptive vs {baseline:11s}: p_wilcox={p_w:.6f}, p_pratt={p_p:.6f}  ({direction})")
             except Exception as e:
                 print(f"  {metric} vs {baseline}: test failed ({e})")
     print()

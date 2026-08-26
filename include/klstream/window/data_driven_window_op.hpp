@@ -14,6 +14,12 @@ public:
     using InQueue  = SPSCQueue<Event<FeatureVector>>;
     using OutQueue = SPSCQueue<Event<WindowBatch>>;
 
+    // Calibrated thresholds for LOBSTER AAPL 2012-06-21 calm-period volatility:
+    //   vol_low  = 8.98e-9  ← 25th percentile of rolling_vol in calm segments
+    //   vol_high = 1.52e-8  ← 95th percentile of rolling_vol in calm segments
+    // Derived by preprocessing/preprocess_lobster.py and confirmed in
+    // calibrate_speed.py. These bracket the typical calm/volatile transition
+    // for this dataset and should be re-calibrated for other symbols/dates.
     DataDrivenWindowOp(std::string name, InQueue* input, OutQueue* output,
                        std::uint32_t w_min = 16, std::uint32_t w_max = MAX_WINDOW_SIZE,
                        float vol_low = 8.98e-09f, float vol_high = 1.52e-08f)
