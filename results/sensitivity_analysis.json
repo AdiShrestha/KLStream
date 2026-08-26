@@ -1,0 +1,502 @@
+{
+  "manifest_version": "1.0.0",
+  "governing_invariants": [
+    "MAR-X4"
+  ],
+  "num_grid_evaluations": 60,
+  "grid_evaluations": [
+    {
+      "alpha": 0.01,
+      "w_min": 5,
+      "w_max": 100,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.01,
+      "w_min": 5,
+      "w_max": 250,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.01,
+      "w_min": 5,
+      "w_max": 500,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.01,
+      "w_min": 5,
+      "w_max": 1000,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.01,
+      "w_min": 10,
+      "w_max": 100,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.01,
+      "w_min": 10,
+      "w_max": 250,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.01,
+      "w_min": 10,
+      "w_max": 500,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.01,
+      "w_min": 10,
+      "w_max": 1000,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.01,
+      "w_min": 20,
+      "w_max": 100,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.01,
+      "w_min": 20,
+      "w_max": 250,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.01,
+      "w_min": 20,
+      "w_max": 500,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.01,
+      "w_min": 20,
+      "w_max": 1000,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.05,
+      "w_min": 5,
+      "w_max": 100,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.05,
+      "w_min": 5,
+      "w_max": 250,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.05,
+      "w_min": 5,
+      "w_max": 500,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.05,
+      "w_min": 5,
+      "w_max": 1000,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.05,
+      "w_min": 10,
+      "w_max": 100,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.05,
+      "w_min": 10,
+      "w_max": 250,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.05,
+      "w_min": 10,
+      "w_max": 500,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.05,
+      "w_min": 10,
+      "w_max": 1000,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.05,
+      "w_min": 20,
+      "w_max": 100,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.05,
+      "w_min": 20,
+      "w_max": 250,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.05,
+      "w_min": 20,
+      "w_max": 500,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.05,
+      "w_min": 20,
+      "w_max": 1000,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.1,
+      "w_min": 5,
+      "w_max": 100,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.1,
+      "w_min": 5,
+      "w_max": 250,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.1,
+      "w_min": 5,
+      "w_max": 500,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.1,
+      "w_min": 5,
+      "w_max": 1000,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.1,
+      "w_min": 10,
+      "w_max": 100,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.1,
+      "w_min": 10,
+      "w_max": 250,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.1,
+      "w_min": 10,
+      "w_max": 500,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.1,
+      "w_min": 10,
+      "w_max": 1000,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.1,
+      "w_min": 20,
+      "w_max": 100,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.1,
+      "w_min": 20,
+      "w_max": 250,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.1,
+      "w_min": 20,
+      "w_max": 500,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.1,
+      "w_min": 20,
+      "w_max": 1000,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.2,
+      "w_min": 5,
+      "w_max": 100,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.2,
+      "w_min": 5,
+      "w_max": 250,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.2,
+      "w_min": 5,
+      "w_max": 500,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.2,
+      "w_min": 5,
+      "w_max": 1000,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.2,
+      "w_min": 10,
+      "w_max": 100,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.2,
+      "w_min": 10,
+      "w_max": 250,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.2,
+      "w_min": 10,
+      "w_max": 500,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.2,
+      "w_min": 10,
+      "w_max": 1000,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.2,
+      "w_min": 20,
+      "w_max": 100,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.2,
+      "w_min": 20,
+      "w_max": 250,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.2,
+      "w_min": 20,
+      "w_max": 500,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.2,
+      "w_min": 20,
+      "w_max": 1000,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.5,
+      "w_min": 5,
+      "w_max": 100,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.5,
+      "w_min": 5,
+      "w_max": 250,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.5,
+      "w_min": 5,
+      "w_max": 500,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.5,
+      "w_min": 5,
+      "w_max": 1000,
+      "p99_latency_ns": 786.2324263600001,
+      "mean_latency_ns": 777.3963885000002,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.5,
+      "w_min": 10,
+      "w_max": 100,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.5,
+      "w_min": 10,
+      "w_max": 250,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.5,
+      "w_min": 10,
+      "w_max": 500,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.5,
+      "w_min": 10,
+      "w_max": 1000,
+      "p99_latency_ns": 1484.989492,
+      "mean_latency_ns": 1477.45835152,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.5,
+      "w_min": 20,
+      "w_max": 100,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.5,
+      "w_min": 20,
+      "w_max": 250,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.5,
+      "w_min": 20,
+      "w_max": 500,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    },
+    {
+      "alpha": 0.5,
+      "w_min": 20,
+      "w_max": 1000,
+      "p99_latency_ns": 2959.970936,
+      "mean_latency_ns": 2952.63389344,
+      "auc_roc": 0.8273916836289619
+    }
+  ],
+  "step_load_stability": {
+    "alpha": 0.2,
+    "deadband": 0.05,
+    "w_min": 10,
+    "w_max": 500,
+    "peak_window_size": 500,
+    "rise_time_steps": 10,
+    "chattering_index_baseline": 0.0,
+    "chattering_index_surge": 0.0,
+    "chattering_index_recovery": 0.0,
+    "chattering_free": true,
+    "limit_cycle_detected": false
+  }
+}
