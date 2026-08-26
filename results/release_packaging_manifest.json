@@ -1,0 +1,18 @@
+{
+  "manifest_version": "1.0.0",
+  "release_version": "0.2.0",
+  "packages": {
+    "klstream-0.2.0.tar.gz": {
+      "type": "source_distribution",
+      "file_count": 182,
+      "size_bytes": 172144
+    },
+    "klstream-paper-0.2.0.tar.gz": {
+      "type": "paper_distribution",
+      "file_count": 35,
+      "size_bytes": 1774524
+    }
+  },
+  "sha256sums_file": "dist/SHA256SUMS",
+  "status": "PACKAGED"
+}
