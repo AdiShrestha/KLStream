@@ -9,7 +9,9 @@ set(TEST_SOURCES
     test_pipeline_integration.cpp
     unit/test_header_compilation.cpp
     unit/test_runtime_lifecycle.cpp
+    unit/test_metrics_accuracy.cpp
 )
+
 
 
 foreach(src ${TEST_SOURCES})
