@@ -1,0 +1,82 @@
+{
+  "manifest_version": "1.0.0",
+  "governing_invariants": [
+    "INV-004",
+    "INV-005"
+  ],
+  "num_models": 6,
+  "models": [
+    {
+      "model_name": "iforest_academic.bin",
+      "filepath": "models/iforest_academic.bin",
+      "dataset_filename": "replay_academic_sample_AMZN_2012-06-21_34200000_57600000.csv",
+      "training_rows": 3000,
+      "training_normal_rows": 3000,
+      "seed": null,
+      "sha256": "75fdf1b9408297720e76266feb104a8340da63220d62656cbf03d1b926e4ba1e",
+      "n_estimators": 100,
+      "max_samples": 256,
+      "random_state": 42
+    },
+    {
+      "model_name": "iforest_seed101.bin",
+      "filepath": "models/iforest_seed101.bin",
+      "dataset_filename": "replay_synthetic_seed101.csv",
+      "training_rows": 6000,
+      "training_normal_rows": 5857,
+      "seed": 101,
+      "sha256": "546cf3b9002944a8cda1a6c24a95ff2f18b39f05dba100050772ef096a710063",
+      "n_estimators": 100,
+      "max_samples": 256,
+      "random_state": 42
+    },
+    {
+      "model_name": "iforest_seed102.bin",
+      "filepath": "models/iforest_seed102.bin",
+      "dataset_filename": "replay_synthetic_seed102.csv",
+      "training_rows": 6000,
+      "training_normal_rows": 5864,
+      "seed": 102,
+      "sha256": "b89f56d613992f1d456fbc47b518a64571920cc69af987dffc9308ac7664d525",
+      "n_estimators": 100,
+      "max_samples": 256,
+      "random_state": 42
+    },
+    {
+      "model_name": "iforest_seed103.bin",
+      "filepath": "models/iforest_seed103.bin",
+      "dataset_filename": "replay_synthetic_seed103.csv",
+      "training_rows": 6000,
+      "training_normal_rows": 5891,
+      "seed": 103,
+      "sha256": "db3b161fe262a8e5eb8b3e5ba95c0f65c5bb40a44f080e7b69ebe0f306f05bb3",
+      "n_estimators": 100,
+      "max_samples": 256,
+      "random_state": 42
+    },
+    {
+      "model_name": "iforest_seed104.bin",
+      "filepath": "models/iforest_seed104.bin",
+      "dataset_filename": "replay_synthetic_seed104.csv",
+      "training_rows": 6000,
+      "training_normal_rows": 5769,
+      "seed": 104,
+      "sha256": "a02f624cec04be0305864bf7e68f6188722d3320a4cdb1527d34ed3d2bfb988d",
+      "n_estimators": 100,
+      "max_samples": 256,
+      "random_state": 42
+    },
+    {
+      "model_name": "iforest_seed105.bin",
+      "filepath": "models/iforest_seed105.bin",
+      "dataset_filename": "replay_synthetic_seed105.csv",
+      "training_rows": 6000,
+      "training_normal_rows": 5717,
+      "seed": 105,
+      "sha256": "361ece3c016e686e45e9a1ee83e40af62e59c38c13a76da7a89db6e097aaff38",
+      "n_estimators": 100,
+      "max_samples": 256,
+      "random_state": 42
+    }
+  ]
+}
