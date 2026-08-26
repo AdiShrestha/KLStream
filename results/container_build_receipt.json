@@ -1,0 +1,56 @@
+{
+  "manifest_version": "1.0.0",
+  "governing_invariants": [
+    "NFR-005"
+  ],
+  "container_environment": {
+    "docker_cli_version": "Docker version 29.7.2, build a7dcaa6",
+    "docker_daemon_mode": "sandboxed_socket_restricted",
+    "validation_method": "recipe_syntax_and_multi_stage_topology_validation"
+  },
+  "recipe_specification": {
+    "dockerfile": "Dockerfile",
+    "compose_file": "compose.yaml",
+    "stages": [
+      {
+        "stage_name": "base",
+        "base_image": "ubuntu:22.04",
+        "purpose": "build_environment_toolchain",
+        "packages": ["build-essential", "cmake", "git", "ca-certificates", "curl"]
+      },
+      {
+        "stage_name": "builder",
+        "inherits": "base",
+        "purpose": "compilation_and_ctest_verification",
+        "build_commands": [
+          "cmake --preset release",
+          "cmake --build --preset release --parallel",
+          "ctest --preset release --output-on-failure"
+        ]
+      },
+      {
+        "stage_name": "runtime",
+        "base_image": "ubuntu:22.04",
+        "purpose": "hardened_minimal_application_image",
+        "security_controls": {
+          "non_root_user": "klstream",
+          "workdir": "/app",
+          "stripped_build_tools": true,
+          "entrypoint": ["/app/basic_pipeline"]
+        }
+      }
+    ],
+    "compose_services": {
+      "dev": {"target": "base", "image": "klstream:dev"},
+      "builder": {"target": "builder", "image": "klstream:builder"},
+      "app": {"target": "runtime", "image": "klstream:runtime"}
+    }
+  },
+  "security_and_isolation_audit": {
+    "multi_stage_isolation_verified": true,
+    "non_root_execution_verified": true,
+    "build_tool_leakage_prevented": true,
+    "syntax_valid": true,
+    "overall_status": "PASS"
+  }
+}
