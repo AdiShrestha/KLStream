@@ -1,0 +1,10 @@
+{
+  "manifest_version": "1.0.0",
+  "governing_invariants": [
+    "INV-015"
+  ],
+  "total_claims_audited": 10,
+  "matched_claims": 10,
+  "mismatched_claims": 0,
+  "audit_verdict": "PASSED"
+}
