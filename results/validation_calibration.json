@@ -1,0 +1,102 @@
+{
+  "manifest_version": "1.0.0",
+  "governing_invariants": [
+    "INV-005",
+    "SVI-002",
+    "MAR-3"
+  ],
+  "target_fpr": 0.05,
+  "num_calibrations": 6,
+  "calibrations": [
+    {
+      "dataset_alias": "academic_sample",
+      "dataset_filename": "replay_academic_sample_AMZN_2012-06-21_34200000_57600000.csv",
+      "validation_rows": 1000,
+      "validation_anomalies": 0,
+      "validation_auc_roc": 0.5,
+      "validation_pr_auc": 0.0,
+      "threshold": 0.625143799594661,
+      "target_fpr": 0.05,
+      "validation_fpr": 0.05,
+      "validation_precision": 0.0,
+      "validation_recall": 0.0,
+      "validation_f1": 0.0,
+      "model_filepath": "models/iforest_academic.bin"
+    },
+    {
+      "dataset_alias": "synthetic_seed101",
+      "dataset_filename": "replay_synthetic_seed101.csv",
+      "validation_rows": 2000,
+      "validation_anomalies": 150,
+      "validation_auc_roc": 0.8454882882882883,
+      "validation_pr_auc": 0.34359934500550815,
+      "threshold": 0.5949090120441177,
+      "target_fpr": 0.05,
+      "validation_fpr": 0.05027027027027027,
+      "validation_precision": 0.3881578947368421,
+      "validation_recall": 0.3933333333333333,
+      "validation_f1": 0.39072847682119205,
+      "model_filepath": "models/iforest_seed101.bin"
+    },
+    {
+      "dataset_alias": "synthetic_seed102",
+      "dataset_filename": "replay_synthetic_seed102.csv",
+      "validation_rows": 2000,
+      "validation_anomalies": 42,
+      "validation_auc_roc": 0.8932462668417724,
+      "validation_pr_auc": 0.11294919111733619,
+      "threshold": 0.5523148270306546,
+      "target_fpr": 0.05,
+      "validation_fpr": 0.05005107252298264,
+      "validation_precision": 0.14035087719298245,
+      "validation_recall": 0.38095238095238093,
+      "validation_f1": 0.20512820512820512,
+      "model_filepath": "models/iforest_seed102.bin"
+    },
+    {
+      "dataset_alias": "synthetic_seed103",
+      "dataset_filename": "replay_synthetic_seed103.csv",
+      "validation_rows": 2000,
+      "validation_anomalies": 148,
+      "validation_auc_roc": 0.7234691494950675,
+      "validation_pr_auc": 0.18506289794006234,
+      "threshold": 0.5849045663162321,
+      "target_fpr": 0.05,
+      "validation_fpr": 0.050215982721382287,
+      "validation_precision": 0.211864406779661,
+      "validation_recall": 0.16891891891891891,
+      "validation_f1": 0.18796992481203006,
+      "model_filepath": "models/iforest_seed103.bin"
+    },
+    {
+      "dataset_alias": "synthetic_seed104",
+      "dataset_filename": "replay_synthetic_seed104.csv",
+      "validation_rows": 2000,
+      "validation_anomalies": 40,
+      "validation_auc_roc": 0.750280612244898,
+      "validation_pr_auc": 0.045831075605860895,
+      "threshold": 0.5747930189983426,
+      "target_fpr": 0.05,
+      "validation_fpr": 0.05,
+      "validation_precision": 0.057692307692307696,
+      "validation_recall": 0.15,
+      "validation_f1": 0.08333333333333334,
+      "model_filepath": "models/iforest_seed104.bin"
+    },
+    {
+      "dataset_alias": "synthetic_seed105",
+      "dataset_filename": "replay_synthetic_seed105.csv",
+      "validation_rows": 2000,
+      "validation_anomalies": 0,
+      "validation_auc_roc": 0.5,
+      "validation_pr_auc": 0.0,
+      "threshold": 0.5734729866247065,
+      "target_fpr": 0.05,
+      "validation_fpr": 0.05,
+      "validation_precision": 0.0,
+      "validation_recall": 0.0,
+      "validation_f1": 0.0,
+      "model_filepath": "models/iforest_seed105.bin"
+    }
+  ]
+}
