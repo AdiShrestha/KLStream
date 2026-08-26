@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "dataset_alias": "academic_sample",
+    "dataset_filename": "replay_academic_sample_AMZN_2012-06-21_34200000_57600000.csv",
+    "split": "test",
+    "controller_name": "fixed_w100",
+    "controller_display_name": "Fixed-W100",
+    "calibrated_threshold": 0.625143799594661,
+    "target_fpr": 0.05,
+    "timestamp_utc": "2026-08-26T08:36:04Z"
+  },
+  "event_accounting": {
+    "events_ingested": 1000,
+    "events_processed": 1000,
+    "events_dropped": 0,
+    "backpressure_activations": 0,
+    "max_queue_occupancy": 0
+  },
+  "detection_metrics": {
+    "auc_roc": 0.5,
+    "pr_auc": 0.0,
+    "classification_at_tau": {
+      "threshold": 0.625143799594661,
+      "tp": 0,
+      "fp": 630,
+      "tn": 370,
+      "fn": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "fpr": 0.63,
+      "accuracy": 0.37
+    }
+  },
+  "latency_summary_ns": {
+    "queuing_latency": {
+      "count": 1000,
+      "min_ns": 34.864832,
+      "mean_ns": 36.83485840000001,
+      "p50_ns": 36.857698,
+      "p90_ns": 38.23465520000002,
+      "p95_ns": 38.916776000000006,
+      "p99_ns": 38.916776000000006,
+      "max_ns": 38.916776000000006,
+      "std_ns": 1.2174361182172324
+    },
+    "freshness_lag": {
+      "count": 1000,
+      "min_ns": 14850.0,
+      "mean_ns": 14850.0,
+      "p50_ns": 14850.0,
+      "p90_ns": 14850.0,
+      "p95_ns": 14850.0,
+      "p99_ns": 14850.0,
+      "max_ns": 14850.0,
+      "std_ns": 0.0
+    },
+    "execution_latency": {
+      "count": 1000,
+      "min_ns": 55.0,
+      "mean_ns": 55.0,
+      "p50_ns": 55.0,
+      "p90_ns": 55.0,
+      "p95_ns": 55.0,
+      "p99_ns": 55.0,
+      "max_ns": 55.0,
+      "std_ns": 0.0
+    },
+    "end_to_end_latency": {
+      "count": 1000,
+      "min_ns": 14939.864832,
+      "mean_ns": 14941.8348584,
+      "p50_ns": 14941.857698,
+      "p90_ns": 14943.234655200002,
+      "p95_ns": 14943.916776,
+      "p99_ns": 14943.916776,
+      "max_ns": 14943.916776,
+      "std_ns": 1.2174361182173612
+    }
+  }
+}

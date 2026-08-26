@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "dataset_alias": "synthetic_seed103",
+    "dataset_filename": "replay_synthetic_seed103.csv",
+    "split": "test",
+    "controller_name": "shuffled_control",
+    "controller_display_name": "Control-ShuffledOccupancy[seed=42]",
+    "calibrated_threshold": 0.5849045663162321,
+    "target_fpr": 0.05,
+    "timestamp_utc": "2026-08-26T08:36:04Z"
+  },
+  "event_accounting": {
+    "events_ingested": 2000,
+    "events_processed": 2000,
+    "events_dropped": 0,
+    "backpressure_activations": 0,
+    "max_queue_occupancy": 0
+  },
+  "detection_metrics": {
+    "auc_roc": 0.5,
+    "pr_auc": 0.0,
+    "classification_at_tau": {
+      "threshold": 0.5849045663162321,
+      "tp": 0,
+      "fp": 314,
+      "tn": 1686,
+      "fn": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "fpr": 0.157,
+      "accuracy": 0.843
+    }
+  },
+  "latency_summary_ns": {
+    "queuing_latency": {
+      "count": 2000,
+      "min_ns": 23.675576000000003,
+      "mean_ns": 27.264767264000003,
+      "p50_ns": 27.619004,
+      "p90_ns": 29.602484000000004,
+      "p95_ns": 29.602484000000004,
+      "p99_ns": 29.602484000000004,
+      "max_ns": 29.602484000000004,
+      "std_ns": 2.1446008141782
+    },
+    "freshness_lag": {
+      "count": 2000,
+      "min_ns": 3150.0,
+      "mean_ns": 46989.6,
+      "p50_ns": 51000.0,
+      "p90_ns": 66900.0,
+      "p95_ns": 66900.0,
+      "p99_ns": 66900.0,
+      "max_ns": 66900.0,
+      "std_ns": 17313.455441938793
+    },
+    "execution_latency": {
+      "count": 2000,
+      "min_ns": 51.11856823266219,
+      "mean_ns": 52.25,
+      "p50_ns": 51.46627565982405,
+      "p90_ns": 53.47222222222222,
+      "p95_ns": 54.20168067226891,
+      "p99_ns": 72.72727272727272,
+      "max_ns": 72.72727272727272,
+      "std_ns": 2.645656621915335
+    },
+    "end_to_end_latency": {
+      "count": 2000,
+      "min_ns": 3250.8116087272724,
+      "mean_ns": 47069.114767264,
+      "p50_ns": 51079.08527965983,
+      "p90_ns": 66975.53774023266,
+      "p95_ns": 66975.53774023266,
+      "p99_ns": 66975.53774023266,
+      "max_ns": 66975.53774023266,
+      "std_ns": 17311.18878822792
+    }
+  }
+}

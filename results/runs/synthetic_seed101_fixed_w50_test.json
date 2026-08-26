@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "dataset_alias": "synthetic_seed101",
+    "dataset_filename": "replay_synthetic_seed101.csv",
+    "split": "test",
+    "controller_name": "fixed_w50",
+    "controller_display_name": "Fixed-W50",
+    "calibrated_threshold": 0.5949090120441177,
+    "target_fpr": 0.05,
+    "timestamp_utc": "2026-08-26T08:36:04Z"
+  },
+  "event_accounting": {
+    "events_ingested": 2000,
+    "events_processed": 2000,
+    "events_dropped": 0,
+    "backpressure_activations": 0,
+    "max_queue_occupancy": 0
+  },
+  "detection_metrics": {
+    "auc_roc": 0.5,
+    "pr_auc": 0.0,
+    "classification_at_tau": {
+      "threshold": 0.5949090120441177,
+      "tp": 0,
+      "fp": 124,
+      "tn": 1876,
+      "fn": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "fpr": 0.062,
+      "accuracy": 0.938
+    }
+  },
+  "latency_summary_ns": {
+    "queuing_latency": {
+      "count": 2000,
+      "min_ns": 19.737896,
+      "mean_ns": 26.159505499999998,
+      "p50_ns": 26.473800000000004,
+      "p90_ns": 30.01710960000001,
+      "p95_ns": 30.451949799999987,
+      "p99_ns": 32.360384,
+      "max_ns": 32.360384,
+      "std_ns": 3.1106844965674925
+    },
+    "freshness_lag": {
+      "count": 2000,
+      "min_ns": 7350.0,
+      "mean_ns": 7350.0,
+      "p50_ns": 7350.0,
+      "p90_ns": 7350.0,
+      "p95_ns": 7350.0,
+      "p99_ns": 7350.0,
+      "max_ns": 7350.0,
+      "std_ns": 0.0
+    },
+    "execution_latency": {
+      "count": 2000,
+      "min_ns": 60.0,
+      "mean_ns": 60.0,
+      "p50_ns": 60.0,
+      "p90_ns": 60.0,
+      "p95_ns": 60.0,
+      "p99_ns": 60.0,
+      "max_ns": 60.0,
+      "std_ns": 0.0
+    },
+    "end_to_end_latency": {
+      "count": 2000,
+      "min_ns": 7429.737896,
+      "mean_ns": 7436.1595055,
+      "p50_ns": 7436.4738,
+      "p90_ns": 7440.0171096,
+      "p95_ns": 7440.4519498,
+      "p99_ns": 7442.360384,
+      "max_ns": 7442.360384,
+      "std_ns": 3.1106844965675218
+    }
+  }
+}

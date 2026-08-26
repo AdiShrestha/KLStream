@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "dataset_alias": "academic_sample",
+    "dataset_filename": "replay_academic_sample_AMZN_2012-06-21_34200000_57600000.csv",
+    "split": "test",
+    "controller_name": "adaptive_ema",
+    "controller_display_name": "Adaptive-EMA[W10-W500]",
+    "calibrated_threshold": 0.625143799594661,
+    "target_fpr": 0.05,
+    "timestamp_utc": "2026-08-26T08:36:04Z"
+  },
+  "event_accounting": {
+    "events_ingested": 1000,
+    "events_processed": 1000,
+    "events_dropped": 0,
+    "backpressure_activations": 0,
+    "max_queue_occupancy": 0
+  },
+  "detection_metrics": {
+    "auc_roc": 0.5,
+    "pr_auc": 0.0,
+    "classification_at_tau": {
+      "threshold": 0.625143799594661,
+      "tp": 0,
+      "fp": 630,
+      "tn": 370,
+      "fn": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "fpr": 0.63,
+      "accuracy": 0.37
+    }
+  },
+  "latency_summary_ns": {
+    "queuing_latency": {
+      "count": 1000,
+      "min_ns": 28.36364,
+      "mean_ns": 36.312759400000004,
+      "p50_ns": 36.615446000000006,
+      "p90_ns": 38.3306408,
+      "p95_ns": 38.7749816,
+      "p99_ns": 39.23758192,
+      "max_ns": 39.30232,
+      "std_ns": 1.9509822058980144
+    },
+    "freshness_lag": {
+      "count": 1000,
+      "min_ns": 1350.0,
+      "mean_ns": 1350.0,
+      "p50_ns": 1350.0,
+      "p90_ns": 1350.0,
+      "p95_ns": 1350.0,
+      "p99_ns": 1350.0,
+      "max_ns": 1350.0,
+      "std_ns": 0.0
+    },
+    "execution_latency": {
+      "count": 1000,
+      "min_ns": 100.0,
+      "mean_ns": 100.0,
+      "p50_ns": 100.0,
+      "p90_ns": 100.0,
+      "p95_ns": 100.0,
+      "p99_ns": 100.0,
+      "max_ns": 100.0,
+      "std_ns": 0.0
+    },
+    "end_to_end_latency": {
+      "count": 1000,
+      "min_ns": 1478.36364,
+      "mean_ns": 1486.3127594,
+      "p50_ns": 1486.615446,
+      "p90_ns": 1488.3306408,
+      "p95_ns": 1488.7749816,
+      "p99_ns": 1489.2375819200001,
+      "max_ns": 1489.30232,
+      "std_ns": 1.9509822058980162
+    }
+  }
+}

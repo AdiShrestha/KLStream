@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "dataset_alias": "academic_sample",
+    "dataset_filename": "replay_academic_sample_AMZN_2012-06-21_34200000_57600000.csv",
+    "split": "test",
+    "controller_name": "unadaptive_w1",
+    "controller_display_name": "Unadaptive-W1",
+    "calibrated_threshold": 0.625143799594661,
+    "target_fpr": 0.05,
+    "timestamp_utc": "2026-08-26T08:36:04Z"
+  },
+  "event_accounting": {
+    "events_ingested": 1000,
+    "events_processed": 1000,
+    "events_dropped": 0,
+    "backpressure_activations": 0,
+    "max_queue_occupancy": 0
+  },
+  "detection_metrics": {
+    "auc_roc": 0.5,
+    "pr_auc": 0.0,
+    "classification_at_tau": {
+      "threshold": 0.625143799594661,
+      "tp": 0,
+      "fp": 630,
+      "tn": 370,
+      "fn": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "fpr": 0.63,
+      "accuracy": 0.37
+    }
+  },
+  "latency_summary_ns": {
+    "queuing_latency": {
+      "count": 1000,
+      "min_ns": 27.63502,
+      "mean_ns": 36.322729588,
+      "p50_ns": 36.678492,
+      "p90_ns": 38.327892,
+      "p95_ns": 38.772542800000004,
+      "p99_ns": 39.193173959999996,
+      "max_ns": 39.751748,
+      "std_ns": 1.9012739762905644
+    },
+    "freshness_lag": {
+      "count": 1000,
+      "min_ns": 0.0,
+      "mean_ns": 0.0,
+      "p50_ns": 0.0,
+      "p90_ns": 0.0,
+      "p95_ns": 0.0,
+      "p99_ns": 0.0,
+      "max_ns": 0.0,
+      "std_ns": 0.0
+    },
+    "execution_latency": {
+      "count": 1000,
+      "min_ns": 550.0,
+      "mean_ns": 550.0,
+      "p50_ns": 550.0,
+      "p90_ns": 550.0,
+      "p95_ns": 550.0,
+      "p99_ns": 550.0,
+      "max_ns": 550.0,
+      "std_ns": 0.0
+    },
+    "end_to_end_latency": {
+      "count": 1000,
+      "min_ns": 577.63502,
+      "mean_ns": 586.322729588,
+      "p50_ns": 586.678492,
+      "p90_ns": 588.327892,
+      "p95_ns": 588.7725428,
+      "p99_ns": 589.19317396,
+      "max_ns": 589.751748,
+      "std_ns": 1.901273976290566
+    }
+  }
+}

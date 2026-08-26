@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "dataset_alias": "synthetic_seed101",
+    "dataset_filename": "replay_synthetic_seed101.csv",
+    "split": "test",
+    "controller_name": "fixed_w500",
+    "controller_display_name": "Fixed-W500",
+    "calibrated_threshold": 0.5949090120441177,
+    "target_fpr": 0.05,
+    "timestamp_utc": "2026-08-26T08:36:04Z"
+  },
+  "event_accounting": {
+    "events_ingested": 2000,
+    "events_processed": 2000,
+    "events_dropped": 0,
+    "backpressure_activations": 0,
+    "max_queue_occupancy": 0
+  },
+  "detection_metrics": {
+    "auc_roc": 0.5,
+    "pr_auc": 0.0,
+    "classification_at_tau": {
+      "threshold": 0.5949090120441177,
+      "tp": 0,
+      "fp": 124,
+      "tn": 1876,
+      "fn": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "fpr": 0.062,
+      "accuracy": 0.938
+    }
+  },
+  "latency_summary_ns": {
+    "queuing_latency": {
+      "count": 2000,
+      "min_ns": 23.085764,
+      "mean_ns": 26.629052000000005,
+      "p50_ns": 26.688894,
+      "p90_ns": 30.052656000000002,
+      "p95_ns": 30.052656000000002,
+      "p99_ns": 30.052656000000002,
+      "max_ns": 30.052656000000002,
+      "std_ns": 2.4653302330276166
+    },
+    "freshness_lag": {
+      "count": 2000,
+      "min_ns": 74850.0,
+      "mean_ns": 74850.0,
+      "p50_ns": 74850.0,
+      "p90_ns": 74850.0,
+      "p95_ns": 74850.0,
+      "p99_ns": 74850.0,
+      "max_ns": 74850.0,
+      "std_ns": 0.0
+    },
+    "execution_latency": {
+      "count": 2000,
+      "min_ns": 51.0,
+      "mean_ns": 51.0,
+      "p50_ns": 51.0,
+      "p90_ns": 51.0,
+      "p95_ns": 51.0,
+      "p99_ns": 51.0,
+      "max_ns": 51.0,
+      "std_ns": 0.0
+    },
+    "end_to_end_latency": {
+      "count": 2000,
+      "min_ns": 74924.085764,
+      "mean_ns": 74927.62905199999,
+      "p50_ns": 74927.68889399999,
+      "p90_ns": 74931.052656,
+      "p95_ns": 74931.052656,
+      "p99_ns": 74931.052656,
+      "max_ns": 74931.052656,
+      "std_ns": 2.4653302330263127
+    }
+  }
+}

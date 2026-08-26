@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "dataset_alias": "academic_sample",
+    "dataset_filename": "replay_academic_sample_AMZN_2012-06-21_34200000_57600000.csv",
+    "split": "test",
+    "controller_name": "periodic_control",
+    "controller_display_name": "Control-PeriodicSchedule[period=500]",
+    "calibrated_threshold": 0.625143799594661,
+    "target_fpr": 0.05,
+    "timestamp_utc": "2026-08-26T08:36:04Z"
+  },
+  "event_accounting": {
+    "events_ingested": 1000,
+    "events_processed": 1000,
+    "events_dropped": 0,
+    "backpressure_activations": 0,
+    "max_queue_occupancy": 0
+  },
+  "detection_metrics": {
+    "auc_roc": 0.5,
+    "pr_auc": 0.0,
+    "classification_at_tau": {
+      "threshold": 0.625143799594661,
+      "tp": 0,
+      "fp": 630,
+      "tn": 370,
+      "fn": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "fpr": 0.63,
+      "accuracy": 0.37
+    }
+  },
+  "latency_summary_ns": {
+    "queuing_latency": {
+      "count": 1000,
+      "min_ns": 33.1772,
+      "mean_ns": 36.33040512,
+      "p50_ns": 37.14957600000001,
+      "p90_ns": 38.158864,
+      "p95_ns": 38.158864,
+      "p99_ns": 38.158864,
+      "max_ns": 38.158864,
+      "std_ns": 1.916170771715482
+    },
+    "freshness_lag": {
+      "count": 1000,
+      "min_ns": 33750.0,
+      "mean_ns": 37467.9,
+      "p50_ns": 38550.0,
+      "p90_ns": 39000.0,
+      "p95_ns": 39000.0,
+      "p99_ns": 39000.0,
+      "max_ns": 39000.0,
+      "std_ns": 2034.8438736178264
+    },
+    "execution_latency": {
+      "count": 1000,
+      "min_ns": 51.91570881226053,
+      "mean_ns": 52.0,
+      "p50_ns": 51.93798449612403,
+      "p90_ns": 52.21238938053097,
+      "p95_ns": 52.21238938053097,
+      "p99_ns": 52.21238938053097,
+      "max_ns": 52.21238938053097,
+      "std_ns": 0.11590298236247218
+    },
+    "end_to_end_latency": {
+      "count": 1000,
+      "min_ns": 33839.13335338053,
+      "mean_ns": 37556.23040512,
+      "p50_ns": 38635.11518449612,
+      "p90_ns": 39089.06528481226,
+      "p95_ns": 39089.06528481226,
+      "p99_ns": 39089.06528481226,
+      "max_ns": 39089.06528481226,
+      "std_ns": 2034.3581974441352
+    }
+  }
+}
