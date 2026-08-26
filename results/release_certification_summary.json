@@ -1,0 +1,30 @@
+{
+  "manifest_version": "1.0.0",
+  "certification_status": "CERTIFIED",
+  "total_contracts_examined": 69,
+  "contracts_complete": 69,
+  "recompute_declarations_checked": 18,
+  "hard_findings": 0,
+  "warnings": 0,
+  "categories_checked": [
+    "contract_status",
+    "evidence_and_recompute",
+    "tier_inference",
+    "release_artifact_scan"
+  ],
+  "proof_boundaries": {
+    "verified": [
+      "Contract completion status (69/69 COMPLETE)",
+      "Recompute declaration consistency (18 checked)",
+      "Fail-closed tier inference (69 contracts)",
+      "Release artifact scan (paper/paper.md)"
+    ],
+    "not_verified": [
+      "Scientific truth or publication acceptance",
+      "Full git validation (AI-attested only)",
+      "Bootstrap validation",
+      "Manifest validation",
+      "Allowed file validation"
+    ]
+  }
+}
