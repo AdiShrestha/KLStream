@@ -1,0 +1,41 @@
+{
+  "manifest_version": "1.0.0",
+  "governing_invariants": [
+    "SC-003"
+  ],
+  "ci_workflow_specification": {
+    "workflow_file": ".github/workflows/ci.yml",
+    "name": "KLStream Continuous Integration",
+    "triggers": [
+      "push (main, rehabilitation/**)",
+      "pull_request (main)"
+    ],
+    "concurrency_control": "ci-${{ github.ref }} (cancel-in-progress: true)"
+  },
+  "matrix_coverage": {
+    "compilers_and_platforms": [
+      {"os": "ubuntu-latest", "compiler": "gcc-12", "configurations": ["release", "debug"]},
+      {"os": "ubuntu-latest", "compiler": "clang-15", "configurations": ["release", "debug"]},
+      {"os": "macos-latest", "compiler": "appleclang", "configurations": ["release", "debug"]}
+    ],
+    "sanitizers": [
+      {"name": "AddressSanitizer (ASan)", "preset": "asan", "toolchain": "clang-15"},
+      {"name": "ThreadSanitizer (TSan)", "preset": "tsan", "toolchain": "clang-15"},
+      {"name": "UndefinedBehaviorSanitizer (UBSan)", "preset": "ubsan", "toolchain": "clang-15"}
+    ],
+    "packaging_and_downstream_consumer": [
+      {"platform": "ubuntu-latest", "test": "CMake prefix install + consumer build"},
+      {"platform": "macos-latest", "test": "CMake prefix install + consumer build"}
+    ],
+    "scientific_verification_and_reality_gate": [
+      {"step": "pytest source/tests/unit", "purpose": "Python unit tests"},
+      {"step": "reality_gate.py", "purpose": "Data preprocessing and split integrity verification"}
+    ]
+  },
+  "validation_verdict": {
+    "yaml_syntax_valid": true,
+    "all_six_required_domains_covered": true,
+    "sc_003_sanitizer_cleanliness_enforced": true,
+    "overall_status": "PASS"
+  }
+}

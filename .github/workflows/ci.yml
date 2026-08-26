@@ -133,3 +133,28 @@ jobs:
           cmake -B build-consumer -S source/tests/consumer -DCMAKE_PREFIX_PATH="${{ runner.temp }}/klstream_install"
           cmake --build build-consumer --parallel
           ./build-consumer/consumer_test
+
+  python-verification:
+    name: Python Tests & Reality Gate Verification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Dependencies
+        run: |
+          pip install numpy scipy scikit-learn pandas pytest pyyaml
+
+      - name: Run Python Unit Tests
+        run: |
+          pytest source/tests/unit
+
+      - name: Verify Reality Gate
+        run: |
+          python3 source/experiments/preprocessing/reality_gate.py --data-dir data/processed --report reality_gate_ci.json
+
