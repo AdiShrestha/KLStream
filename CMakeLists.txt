@@ -108,10 +108,15 @@ set(BENCHMARK_ENABLE_INSTALL       OFF CACHE BOOL "" FORCE)
 set(BENCHMARK_DOWNLOAD_DEPENDENCIES ON  CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googlebenchmark)
 
+# ── Testing ───────────────────────────────────────────────────────────────
+include(CTest)
+enable_testing()
+
 # ── Subdirectories ────────────────────────────────────────────────────────
 add_subdirectory(source/examples)
 add_subdirectory(source/tests)
 add_subdirectory(source/benchmarks)
 add_subdirectory(source/experiments/research)
 add_subdirectory(source/apps/adaptive_window)
+
 
