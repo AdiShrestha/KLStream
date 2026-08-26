@@ -5,8 +5,8 @@
     "SVI-006"
   ],
   "archive_filename": "experimental_runs_reproducible.tar.gz",
-  "archive_size_bytes": 2576207,
-  "archive_sha256": "51b9495cac12fb5c7ce1f455e6e1d95cb115c88acb79279b3e3c58b38b95b939",
+  "archive_size_bytes": 2576242,
+  "archive_sha256": "5b15005e2f9bbf2d23729ee748a42427cc3584ffa54ef193710f5632140d5df9",
   "num_files_packed": 67,
   "files": [
     "results/runs/synthetic_seed101_fixed_w50_test.json",
