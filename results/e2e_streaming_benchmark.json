@@ -1,0 +1,17 @@
+{
+  "manifest_version": "1.0.0",
+  "governing_invariants": ["INV-007", "FR-006"],
+  "zero_loss_verified": true,
+  "events_dropped": 0,
+  "events_ingested": 100000,
+  "events_processed": 100000,
+  "backpressure_activations": 86032,
+  "elapsed_seconds": 0.0590964,
+  "throughput_events_per_sec": 1.69215e+06,
+  "latency_ns": {
+    "mean": 8.11464e+06,
+    "p50": 1.66229e+06,
+    "p90": 4.0653e+07,
+    "p99": 4.20067e+07
+  }
+}
