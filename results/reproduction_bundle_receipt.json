@@ -1,0 +1,11 @@
+{
+  "manifest_version": "1.0.0",
+  "archive_path": "results/archive/experimental_runs_reproducible.tar.gz",
+  "archive_size_bytes": 2576242,
+  "extracted_file_count": 67,
+  "manifest_present": true,
+  "manifest_entries": 67,
+  "key_results_found": 3,
+  "key_results_total": 4,
+  "status": "VERIFIED"
+}
