@@ -1,0 +1,36 @@
+1. Verify experiment files:
+      30
+      30
+      30
+2. Verify the Experiment 4 grid file exists with 9 data rows:
+      10
+occ_low,occ_high,shrink,grow,raw_f1,pa20_f1,pa20_recall,mean_lat_ms,p95_lat_ms
+0.2,0.6,0.6,1.1,0.12734623159110597,0.13452871799789048,0.45054592164418755,12.977433960016873,21.30690175
+0.2,0.6,0.7,1.15,0.13348164627363737,0.14233749802309031,0.28901734104046245,7.090014207656914,17.133756249999998
+0.2,0.6,0.8,1.2,0.12710127101271013,0.13677770224337185,0.3230571612074502,11.397592598155745,22.155041
+0.3,0.7,0.6,1.1,0.09401892137473944,0.09965626582109835,0.6005138086062941,37.110382735396804,210.52491059999988
+0.3,0.7,0.7,1.15,0.0943316635908252,0.09989222155043241,0.6101477199743096,14.860003375704608,22.71329375
+0.3,0.7,0.8,1.2,0.1530240466358999,0.15928346647300895,0.2113037893384714,2.8076419246635975,11.1152395
+0.4,0.8,0.6,1.1,0.09121638415270666,0.09646796381212047,0.6249197174052665,18.511450711255563,19.6365105
+0.4,0.8,0.7,1.15,0.0893051416678492,0.09430802255089285,0.6419396274887604,22.997470718741415,23.93277075
+0.4,0.8,0.8,1.2,0.09045447051711819,0.09469499657299521,0.554592164418754,18.311812977222022,19.507625
+3. Verify replay and forest files:
+-rw-r--r--@ 1 adi  staff    13M Jun 20 17:30 data/replay/replay_AAPL_20120621.csv
+-rw-r--r--@ 1 adi  staff   313K Jun 20 17:37 data/forest.bin
+4. Print current default parameters from main.cpp:
+44:    double occ_low = 0.30;
+45:    double occ_high = 0.70;
+46:    double shrink_factor = 0.70;
+47:    double grow_factor = 1.15;
+58:        else if (val("--occ_low=")) occ_low = std::stod(a.substr(10));
+59:        else if (val("--occ_high=")) occ_high = std::stod(a.substr(11));
+60:        else if (val("--shrink=")) shrink_factor = std::stod(a.substr(9));
+61:        else if (val("--grow=")) grow_factor = std::stod(a.substr(7));
+102:        auto* op = new AdaptiveWindowOp("adaptive_window", &q_src_feat, &q_win_inf, 16, MAX_WINDOW_SIZE, occ_low, occ_high, shrink_factor, grow_factor);
+5. Print head of one result file to confirm column schema:
+seq,detect_timestamp_ns,latency_ns,max_score,window_size_used,first_seq,last_seq,flagged_seq,occupancy_at_decision
+127,1523026298747791,906542,0.59831643,128,0,127,71,0
+255,1523026299191000,895875,0.60530327,128,128,255,165,0
+seq,detect_timestamp_ns,latency_ns,max_score,window_size_used,first_seq,last_seq,flagged_seq,occupancy_at_decision
+255,1523634703257375,981833,0.60530327,256,0,255,165,0
+511,1523634704169375,972708,0.60754791,256,256,511,431,0

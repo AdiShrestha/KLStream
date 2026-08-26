@@ -7,7 +7,7 @@
     "controller_display_name": "Fixed-W500",
     "calibrated_threshold": 0.625143799594661,
     "target_fpr": 0.05,
-    "timestamp_utc": "2026-08-26T08:36:16Z"
+    "timestamp_utc": "2026-08-26T09:00:43Z"
   },
   "event_accounting": {
     "events_ingested": 1000,

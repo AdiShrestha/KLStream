@@ -10,7 +10,7 @@
   "total_runs": 54,
   "total_events_processed": 99000,
   "total_events_dropped": 0,
-  "execution_duration_sec": 0.55,
+  "execution_duration_sec": 0.68,
   "runs": [
     {
       "run_id": "academic_sample_unadaptive_w1",

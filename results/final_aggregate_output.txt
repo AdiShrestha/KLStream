@@ -1,0 +1,61 @@
+✅ File counts verified (30 per architecture).
+
+Loading ground truth...
+  100000 ticks, 60 anomaly segments.
+
+Ground truth: 60 anomaly segments found
+=== FIXED ===
+  Raw F1:      0.1645 ± 0.0000
+  PA%20 F1:    0.2096 ± 0.0000
+  Range-F1:     0.1630 ± 0.0000
+  Range-Prec:   0.1374 ± 0.0000
+  Range-Recall: 0.2003 ± 0.0000
+  LBA@10ms:    0.1583 ± 0.0212
+  LBA@25ms:    0.1644 ± 0.0001
+  LBA@50ms:    0.1645 ± 0.0000
+  P50 Latency: 0.97 ms
+  P95 Latency: 44.87 ms
+  P99 Latency: 56.74 ms
+  Max Latency: 410.78 ms
+
+=== DATADRIVEN ===
+  Raw F1:      0.1616 ± 0.0011
+  PA%20 F1:    0.1805 ± 0.0012
+  Range-F1:     0.1495 ± 0.0008
+  Range-Prec:   0.1180 ± 0.0010
+  Range-Recall: 0.2041 ± 0.0000
+  LBA@10ms:    0.1169 ± 0.0596
+  LBA@25ms:    0.1390 ± 0.0392
+  LBA@50ms:    0.1547 ± 0.0151
+  P50 Latency: 41.53 ms
+  P95 Latency: 78.30 ms
+  P99 Latency: 96.76 ms
+  Max Latency: 265.94 ms
+
+=== ADAPTIVE ===
+  Raw F1:      0.1054 ± 0.0184
+  PA%20 F1:    0.1135 ± 0.0237
+  Range-F1:     0.1077 ± 0.0221
+  Range-Prec:   0.0632 ± 0.0184
+  Range-Recall: 0.4944 ± 0.1479
+  LBA@10ms:    0.0944 ± 0.0316
+  LBA@25ms:    0.1030 ± 0.0271
+  LBA@50ms:    0.1053 ± 0.0189
+  P50 Latency: 17.65 ms
+  P95 Latency: 19.00 ms
+  P99 Latency: 23.49 ms
+  Max Latency: 141.14 ms
+
+=== Statistical Tests (Wilcoxon signed-rank, paired per-run) ===
+  Raw F1     adaptive vs fixed      : p=0.0000  (baseline > adaptive)
+  Raw F1     adaptive vs datadriven : p=0.0000  (baseline > adaptive)
+  PA%20 F1   adaptive vs fixed      : p=0.0000  (baseline > adaptive)
+  PA%20 F1   adaptive vs datadriven : p=0.0000  (baseline > adaptive)
+  LBA@10ms   adaptive vs fixed      : p=0.0000  (baseline > adaptive)
+  LBA@10ms   adaptive vs datadriven : p=0.0577  (baseline > adaptive)
+  LBA@25ms   adaptive vs fixed      : p=0.0000  (baseline > adaptive)
+  LBA@25ms   adaptive vs datadriven : p=0.0013  (baseline > adaptive)
+  LBA@50ms   adaptive vs fixed      : p=0.0000  (baseline > adaptive)
+  LBA@50ms   adaptive vs datadriven : p=0.0000  (baseline > adaptive)
+
+Saved to results/aggregated_results.csv

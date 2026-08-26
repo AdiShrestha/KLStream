@@ -1,0 +1,21 @@
+============================================================
+EMPIRICAL ISOLATION FOREST INFERENCE SCALING
+Parameters: n_estimators=100, max_samples=256, n_features=5
+============================================================
+Forest trained on 5000 samples.
+
+     W      mean_ns       std_ns   ns_per_point
+--------------------------------------------------
+    16    2027874.9      60614.6       126742.2
+    32    2042473.1      38589.2        63827.3
+    64    2133713.2      46300.8        33339.3
+   128    2402830.9      49317.0        18772.1
+   256    2850054.1      54074.2        11133.0
+
+Linear regression: time_ns = 3544.24 * W + 1939800.94
+R² = 0.995259  (p = 1.39e-04)
+→ Linear fit quality: EXCELLENT
+→ ns per point per tree: 35.4424 ns  (theoretical: O(log 256) ≈ O(8) tree-node traversals)
+
+Saved: results/inference_scaling.csv
+Saved: results/figures/inference_scaling.png

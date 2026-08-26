@@ -1,0 +1,36 @@
+Ground truth: 100000 total ticks, 3114 anomalous ticks
+Run 0: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 1: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 2: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 3: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 4: anomaly@wmin=14.19%  normal@wmin=12.13%
+Run 5: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 6: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 7: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 8: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 9: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 10: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 11: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 12: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 13: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 14: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 15: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 16: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 17: anomaly@wmin=88.38%  normal@wmin=83.17%
+Run 18: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 19: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 20: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 21: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 22: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 23: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 24: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 25: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 26: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 27: anomaly@wmin=10.31%  normal@wmin=9.61%
+Run 28: anomaly@wmin=0.00%  normal@wmin=0.00%
+Run 29: anomaly@wmin=0.00%  normal@wmin=0.00%
+
+=== SUMMARY ACROSS ALL RUNS ===
+Mean pct_anomaly_at_wmin: 3.7626% ± 16.2875%
+Mean pct_normal_at_wmin:  3.4968% ± 15.3006%
+Saved: results/event_fraction_analysis_v2.csv

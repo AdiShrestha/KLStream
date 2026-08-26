@@ -1,7 +1,7 @@
 # Scientific Reproducibility Receipt — KLStream
 
-**Generated:** 2026-08-26 09:08:29 UTC  
-**Repository Commit:** `2fc7309ee6e6c16ca0eca43d8f0ad4c2ec97af4e`  
+**Generated:** 2026-08-26 09:08:35 UTC  
+**Repository Commit:** `fe5cb118e46e75e3f95abb666ff38de4a887e94d`  
 **Invariant Certification:** Invariants SVI-006, INV-003, INV-007, NFR-001, NFR-004  
 **Reproducibility Status:** CERTIFIED (Deterministic Verification Pass)  
 

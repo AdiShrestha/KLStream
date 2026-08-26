@@ -7,7 +7,7 @@
     "controller_display_name": "Control-PeriodicSchedule[period=500]",
     "calibrated_threshold": 0.5734729866247065,
     "target_fpr": 0.05,
-    "timestamp_utc": "2026-08-26T08:36:16Z"
+    "timestamp_utc": "2026-08-26T09:00:43Z"
   },
   "event_accounting": {
     "events_ingested": 2000,
