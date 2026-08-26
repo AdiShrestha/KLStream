@@ -1,0 +1,34 @@
+{
+  "manifest_version": "1.0.0",
+  "files_checked": 4,
+  "total_placeholders": 0,
+  "all_files_present": true,
+  "citation_check": {
+    "citations_found": 5,
+    "bib_keys": 10,
+    "unresolved": []
+  },
+  "per_file": {
+    "paper/paper.md": {
+      "exists": true,
+      "placeholders_found": [],
+      "placeholder_count": 0
+    },
+    "paper/main.tex": {
+      "exists": true,
+      "placeholders_found": [],
+      "placeholder_count": 0
+    },
+    "paper/references.bib": {
+      "exists": true,
+      "placeholders_found": [],
+      "placeholder_count": 0
+    },
+    "paper/ARTIFACT_EVALUATION.md": {
+      "exists": true,
+      "placeholders_found": [],
+      "placeholder_count": 0
+    }
+  },
+  "status": "PASS"
+}
