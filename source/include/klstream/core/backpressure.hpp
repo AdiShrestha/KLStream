@@ -1,39 +1,27 @@
 #pragma once
+
 #include <klstream/core/config.hpp>
 #include <atomic>
-
 #include <chrono>
 #include <thread>
 #include <cstdint>
+#include <algorithm>
 
 namespace klstream {
 
 // ── EMAOccupancyTracker ───────────────────────────────────────────────────
 //
-// Wraps any Queue that exposes .occupancy() and tracks an exponential
+// Wraps any Queue exposing .occupancy() and tracks an exponential
 // moving average of its fill fraction.
 //
-// The EMA alpha parameter controls smoothing:
-//   Small alpha (e.g. 0.05): slow to react, very smooth — good for
-//     predicting slow-building pressure from sustained overload.
-//   Large alpha (e.g. 0.30): reacts quickly — better for bursty workloads.
-//
-// Default alpha = 0.10 is a sensible starting point. The research extension
-// (Section 14.1) sweeps alpha values and measures the effect on p99 latency.
-//
-// USAGE:
-//   EMAOccupancyTracker tracker(my_queue, 0.10);
-//   // In the source's tick() loop:
-//   tracker.update();
-//   if (tracker.ema() > BP_SOFT_THRESHOLD) { /* slow down */ }
+// Formula: EMA_t = alpha * occ_t + (1 - alpha) * EMA_{t-1}
 
 template <typename Queue>
 class EMAOccupancyTracker {
 public:
     explicit EMAOccupancyTracker(Queue& queue, double alpha = 0.10)
-        : queue_(queue), alpha_(alpha), ema_(0.0) {}
+        : queue_(queue), alpha_(std::clamp(alpha, 0.001, 1.0)), ema_(0.0) {}
 
-    // Call once per tick() to update the EMA.
     void update() noexcept {
         double occ = queue_.occupancy();
         ema_ = alpha_ * occ + (1.0 - alpha_) * ema_;
@@ -41,50 +29,54 @@ public:
 
     [[nodiscard]] double ema() const noexcept { return ema_; }
 
-    // Returns true if the EMA exceeds the soft backpressure threshold.
-    // When this returns true the source should reduce its emission rate.
     [[nodiscard]] bool soft_pressure() const noexcept {
         return ema_ > BP_SOFT_THRESHOLD;
     }
 
-    // Returns true if occupancy is critically high (hard threshold).
-    // When this returns true the source should stop emitting entirely
-    // and wait, identical to the baseline blocking behaviour.
     [[nodiscard]] bool hard_pressure() const noexcept {
         return queue_.occupancy() > BP_HARD_THRESHOLD;
     }
 
+    void reset() noexcept {
+        ema_ = 0.0;
+    }
+
 private:
-    Queue&      queue_;
-    double      alpha_;
-    double      ema_;
+    Queue& queue_;
+    double alpha_;
+    double ema_;
 };
 
 // ── TokenBucketRateLimiter ────────────────────────────────────────────────
 //
-// A simple token-bucket used by SourceOperator to smoothly rate-limit event
-// generation when adaptive backpressure is enabled.
+// Token-bucket rate limiter with nominal rate preservation and anti-lockup guarantees.
 //
-// tokens are replenished at a configurable rate (tokens_per_sec).
-// Each call to try_consume() uses one token. When the bucket is empty,
-// try_consume() returns false and the source should pause.
-//
-// The rate can be reduced at runtime via set_rate(). This is how the adaptive
-// backpressure controller gradually slows the source when soft pressure is
-// detected (before the queue is actually full).
+// Correctness Contract (INV-007, FR-006):
+//   * nominal_rate_ is immutable and defines the baseline emission target.
+//   * effective_rate_ dynamically fluctuates under backpressure but never drops below min_rate_.
+//   * When backpressure clears, effective_rate_ deterministically recovers to nominal_rate_.
+
 class TokenBucketRateLimiter {
 public:
     explicit TokenBucketRateLimiter(double tokens_per_sec,
-                                    double max_burst = 0.0)
-        : rate_(tokens_per_sec)
-        , tokens_(tokens_per_sec) // start full
-        , max_tokens_(max_burst > 0 ? max_burst : tokens_per_sec)
+                                    double max_burst = 0.0,
+                                    double min_rate_floor = 1.0)
+        : nominal_rate_(std::max(0.1, tokens_per_sec))
+        , effective_rate_(std::max(0.1, tokens_per_sec))
+        , min_rate_(std::max(0.01, min_rate_floor))
+        , tokens_(std::max(0.1, tokens_per_sec))
+        , max_tokens_(max_burst > 0.0 ? max_burst : std::max(0.1, tokens_per_sec))
         , last_(std::chrono::steady_clock::now())
     {}
 
-    // Refill tokens based on elapsed time, then try to consume one.
+    // Try consuming a token at the current real time.
     [[nodiscard]] bool try_consume() noexcept {
-        refill();
+        return try_consume_at(std::chrono::steady_clock::now());
+    }
+
+    // Try consuming a token at a specified time point (for deterministic/simulated testing).
+    [[nodiscard]] bool try_consume_at(std::chrono::steady_clock::time_point now) noexcept {
+        refill(now);
         if (tokens_ >= 1.0) {
             tokens_ -= 1.0;
             return true;
@@ -92,25 +84,98 @@ public:
         return false;
     }
 
+    // Set dynamic rate directly; clamped to [min_rate_, nominal_rate_].
     void set_rate(double tokens_per_sec) noexcept {
-        rate_ = tokens_per_sec;
+        double clamped = std::clamp(tokens_per_sec, min_rate_, nominal_rate_);
+        effective_rate_.store(clamped, std::memory_order_relaxed);
     }
 
-    double rate() const noexcept { return rate_; }
+    // Throttle rate by a factor in [0.0, 1.0].
+    void throttle(double factor) noexcept {
+        double clamped_factor = std::clamp(factor, 0.0, 1.0);
+        double new_rate = nominal_rate_ * clamped_factor;
+        set_rate(new_rate);
+    }
+
+    // Reset rate to 100% nominal rate.
+    void recover() noexcept {
+        effective_rate_.store(nominal_rate_, std::memory_order_relaxed);
+    }
+
+    [[nodiscard]] double rate() const noexcept {
+        return effective_rate_.load(std::memory_order_relaxed);
+    }
+
+    [[nodiscard]] double nominal_rate() const noexcept {
+        return nominal_rate_;
+    }
+
+    [[nodiscard]] double effective_rate() const noexcept {
+        return rate();
+    }
+
+    [[nodiscard]] double min_rate() const noexcept {
+        return min_rate_;
+    }
 
 private:
-    void refill() noexcept {
-        auto now     = std::chrono::steady_clock::now();
+    void refill(std::chrono::steady_clock::time_point now) noexcept {
         double elapsed = std::chrono::duration<double>(now - last_).count();
-        last_    = now;
-        tokens_ += elapsed * rate_;
+        if (elapsed <= 0.0) return;
+        last_ = now;
+        double current_rate = effective_rate_.load(std::memory_order_relaxed);
+        tokens_ += elapsed * current_rate;
         if (tokens_ > max_tokens_) tokens_ = max_tokens_;
     }
 
-    double rate_;
-    double tokens_;
-    double max_tokens_;
-    std::chrono::steady_clock::time_point last_;
+    const double                                 nominal_rate_;
+    std::atomic<double>                          effective_rate_;
+    const double                                 min_rate_;
+    double                                       tokens_;
+    double                                       max_tokens_;
+    std::chrono::steady_clock::time_point        last_;
+};
+
+// ── BackpressureController ────────────────────────────────────────────────
+//
+// Automatically adjusts emission rate of a TokenBucketRateLimiter based on
+// EMA occupancy of downstream queues.
+
+template <typename Queue>
+class BackpressureController {
+public:
+    BackpressureController(Queue& downstream_queue,
+                           TokenBucketRateLimiter& rate_limiter,
+                           double alpha = 0.10)
+        : tracker_(downstream_queue, alpha)
+        , limiter_(rate_limiter)
+    {}
+
+    void update() noexcept {
+        tracker_.update();
+        double ema = tracker_.ema();
+
+        if (tracker_.hard_pressure()) {
+            limiter_.set_rate(limiter_.min_rate());
+        } else if (tracker_.soft_pressure()) {
+            // Linear throttle between soft threshold (0.70) and hard threshold (0.90)
+            double range = BP_HARD_THRESHOLD - BP_SOFT_THRESHOLD;
+            double over = ema - BP_SOFT_THRESHOLD;
+            double factor = std::clamp(1.0 - (over / range), 0.0, 1.0);
+            limiter_.throttle(factor);
+        } else {
+            // Below soft threshold: recover to nominal
+            limiter_.recover();
+        }
+    }
+
+    [[nodiscard]] const EMAOccupancyTracker<Queue>& tracker() const noexcept {
+        return tracker_;
+    }
+
+private:
+    EMAOccupancyTracker<Queue> tracker_;
+    TokenBucketRateLimiter&    limiter_;
 };
 
 } // namespace klstream
