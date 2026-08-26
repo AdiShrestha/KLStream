@@ -1,0 +1,15 @@
+{
+  "manifest_version": "1.0.0",
+  "governing_invariants": [
+    "INV-007",
+    "INV-010",
+    "INV-011"
+  ],
+  "num_runs_processed": 54,
+  "total_events_processed": 99000,
+  "total_events_dropped": 0,
+  "zero_drops_verified": true,
+  "latency_decomposition_verified": true,
+  "validation_failures": [],
+  "overall_status": "PASS"
+}
