@@ -1,0 +1,18 @@
+{
+  "manifest_version": "1.0.0",
+  "release_version": "0.2.0",
+  "release_date": "2026-08-26",
+  "factory_version": "2.2.0",
+  "certification_status": "CERTIFIED",
+  "total_contracts": 72,
+  "packages": {
+    "klstream-0.2.0.tar.gz": {
+      "sha256": "0164aa0fe243c5c0e07a21aa21709eccb179caea305091a7922392a4cb26098f",
+      "size_bytes": 172144
+    },
+    "klstream-paper-0.2.0.tar.gz": {
+      "sha256": "11d12d8dc77dfaa24163d98847a1a56f975f35ec2d6afd038fbf34e73cb7a6d3",
+      "size_bytes": 1774524
+    }
+  }
+}
