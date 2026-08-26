@@ -72,16 +72,17 @@ if(KLSTREAM_ASAN)
 endif()
 
 # ── KLStream header-only interface library ───────────────────────────────
-# All source code lives in headers. This CMake target just exposes the
-# include directory so that every subdirectory (examples, tests, benchmarks)
-# can link against klstream::klstream and get the headers.
+find_package(Threads REQUIRED)
+
 add_library(klstream INTERFACE)
 target_include_directories(klstream INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/source/include>
     $<INSTALL_INTERFACE:include>
 )
-target_link_libraries(klstream INTERFACE pthread)
+target_compile_features(klstream INTERFACE cxx_std_17)
+target_link_libraries(klstream INTERFACE Threads::Threads)
 add_library(klstream::klstream ALIAS klstream)
+add_library(KLStream::klstream ALIAS klstream)
 
 # ── FetchContent: GoogleTest ─────────────────────────────────────────────
 include(FetchContent)
