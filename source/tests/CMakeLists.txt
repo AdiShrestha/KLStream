@@ -10,7 +10,9 @@ set(TEST_SOURCES
     unit/test_header_compilation.cpp
     unit/test_runtime_lifecycle.cpp
     unit/test_metrics_accuracy.cpp
+    unit/test_adaptive_controller.cpp
 )
+
 
 
 
