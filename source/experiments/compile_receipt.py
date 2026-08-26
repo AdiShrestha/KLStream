@@ -127,7 +127,11 @@ def main():
 
     claims = fals_verdicts.get("verdicts", {})
     for cid, cinfo in claims.items():
-        receipt_md.append(f"| **{cid.upper()}** | {cinfo.get('claim_name', cid)} | {cinfo.get('effect_size', 'N/A')} | {cinfo.get('falsification_threshold', 'N/A')} | **{cinfo.get('status', 'N/A')}** |")
+        title = cinfo.get('claim_title', cid)
+        verdict = cinfo.get('verdict', 'N/A')
+        details = cinfo.get('details', 'N/A')
+        bound = f"Margin >= {cinfo.get('target_margin_pct')}%, p < {cinfo.get('target_p_val')}" if 'target_margin_pct' in cinfo else f"Max AUC Drop <= {cinfo.get('target_max_auc_drop')}"
+        receipt_md.append(f"| **{cid.upper()}** | {title} | {details} | {bound} | **{verdict}** |")
 
     receipt_md.extend([
         "",

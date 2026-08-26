@@ -1,7 +1,7 @@
 # Scientific Reproducibility Receipt — KLStream
 
-**Generated:** 2026-08-26 09:08:35 UTC  
-**Repository Commit:** `fe5cb118e46e75e3f95abb666ff38de4a887e94d`  
+**Generated:** 2026-08-26 09:12:06 UTC  
+**Repository Commit:** `0c856ba9bc8422bf53d430ba2f05650482c3afce`  
 **Invariant Certification:** Invariants SVI-006, INV-003, INV-007, NFR-001, NFR-004  
 **Reproducibility Status:** CERTIFIED (Deterministic Verification Pass)  
 
@@ -17,9 +17,9 @@ This receipt certifies that all experimental data, statistical tests, hypothesis
 
 | Hypothesis | Target Comparison | Result | Pre-Registered Bound | Verdict |
 |---|---|---|---|---|
-| **CLAIM_1** | claim_1 | N/A | N/A | **N/A** |
-| **CLAIM_2** | claim_2 | N/A | N/A | **N/A** |
-| **CLAIM_3** | claim_3 | N/A | N/A | **N/A** |
+| **CLAIM_1** | Tail Latency Reduction vs Fixed-500 | Adaptive achieved 98.02% P99 latency reduction vs Fixed-500 (p=0.0312, delta=1.000) | Margin >= 15.0%, p < 0.05 | **SUPPORTED** |
+| **CLAIM_2** | Pointwise Detection Fidelity Invariance vs Unadaptive W=1 | Adaptive AUC matched Unadaptive AUC with 0.0000 drop (delta=0.0000 <= 0.03) | Max AUC Drop <= 0.03 | **SUPPORTED** |
+| **CLAIM_3** | Causal Superiority over Shuffled-Occupancy Control | Adaptive achieved 97.72% P99 latency reduction vs Shuffled Control (p=0.0312, delta=1.000) | Margin >= 10.0%, p < 0.05 | **SUPPORTED** |
 
 ---
 
