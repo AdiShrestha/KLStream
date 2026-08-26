@@ -1,0 +1,30 @@
+{
+  "manifest_version": "1.0.0",
+  "files_scanned": 192,
+  "secrets_scan": {
+    "api_keys_found": 0,
+    "credentials_found": 0,
+    "private_keys_found": 0,
+    "total_hard_violations": 0
+  },
+  "path_hygiene": {
+    "private_paths_found": 115,
+    "hardcoded_ips_found": 0,
+    "total_warnings": 115
+  },
+  "license_audit": {
+    "license_file_exists": true,
+    "license_type": "AGPLv3",
+    "compliant": true
+  },
+  "data_policy_audit": {
+    "prohibited_data_files_found": 0,
+    "violations": [],
+    "compliant": true
+  },
+  "overall": {
+    "hard_violations": 0,
+    "warnings": 115,
+    "status": "PASS"
+  }
+}
