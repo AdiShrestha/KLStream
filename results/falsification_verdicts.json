@@ -1,0 +1,44 @@
+{
+  "manifest_version": "1.0.0",
+  "governing_invariants": [
+    "SVI-003",
+    "SVI-004",
+    "MAR-7",
+    "MAR-X6"
+  ],
+  "preregistration_sha256_verified": true,
+  "num_claims_evaluated": 3,
+  "verdicts": {
+    "claim_1": {
+      "claim_title": "Tail Latency Reduction vs Fixed-500",
+      "verdict": "SUPPORTED",
+      "target_margin_pct": 15.0,
+      "empirical_margin_pct": 98.02,
+      "target_p_val": 0.05,
+      "empirical_p_val": 0.03125,
+      "target_cliffs_delta": 0.33,
+      "empirical_cliffs_delta": 1.0,
+      "details": "Adaptive achieved 98.02% P99 latency reduction vs Fixed-500 (p=0.0312, delta=1.000)"
+    },
+    "claim_2": {
+      "claim_title": "Pointwise Detection Fidelity Invariance vs Unadaptive W=1",
+      "verdict": "SUPPORTED",
+      "target_max_auc_drop": 0.03,
+      "empirical_auc_diff": 0.0,
+      "adaptive_auc_mean": 0.5303548076534478,
+      "unadaptive_auc_mean": 0.5303548076534478,
+      "details": "Adaptive AUC matched Unadaptive AUC with 0.0000 drop (delta=0.0000 <= 0.03)"
+    },
+    "claim_3": {
+      "claim_title": "Causal Superiority over Shuffled-Occupancy Control",
+      "verdict": "SUPPORTED",
+      "target_margin_pct": 10.0,
+      "empirical_margin_pct": 97.72,
+      "target_p_val": 0.05,
+      "empirical_p_val": 0.03125,
+      "target_cliffs_delta": 0.33,
+      "empirical_cliffs_delta": 1.0,
+      "details": "Adaptive achieved 97.72% P99 latency reduction vs Shuffled Control (p=0.0312, delta=1.000)"
+    }
+  }
+}
