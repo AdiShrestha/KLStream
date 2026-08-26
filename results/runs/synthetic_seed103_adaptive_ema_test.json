@@ -7,7 +7,7 @@
     "controller_display_name": "Adaptive-EMA[W10-W500]",
     "calibrated_threshold": 0.5849045663162321,
     "target_fpr": 0.05,
-    "timestamp_utc": "2026-08-26T08:36:04Z"
+    "timestamp_utc": "2026-08-26T08:36:16Z"
   },
   "event_accounting": {
     "events_ingested": 2000,
