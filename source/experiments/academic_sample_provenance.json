@@ -1,0 +1,19 @@
+{
+  "dataset_name": "LOBSTER Open Academic Benchmark Sample (AMZN 2012-06-21)",
+  "source_url": "https://lobsterdata.com/info/DataSamples.php",
+  "governing_policy": "DL-008 (Zero-Cost Academic Sample & Synthetic Order-Book Policy)",
+  "intended_use": "Non-commercial academic systems evaluation and anomaly scoring benchmark",
+  "retrieval_date": "2026-08-26",
+  "files": {
+    "AMZN_2012-06-21_34200000_57600000_message_1.csv": {
+      "sha256": "8038464096ec981209fe3e2518bb1b033aa0ee1ce0cb34d0320f5345cace2bfd",
+      "byte_size": 187627,
+      "row_count": 5000
+    },
+    "AMZN_2012-06-21_34200000_57600000_orderbook_1.csv": {
+      "sha256": "0e5e2482d24927272120ca4d67edd747964c5af25bfe38e1a52c6c78f9ec7613",
+      "byte_size": 130632,
+      "row_count": 5000
+    }
+  }
+}
