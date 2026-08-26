@@ -109,9 +109,13 @@ public:
         }
 
         if (buffer_.count == 0) {
+            auto start_t = std::chrono::steady_clock::now();
             tracker_.update();
             recorded_occupancy_ = static_cast<float>(tracker_.ema());
             target_w_ = controller_.update(recorded_occupancy_);
+            auto end_t = std::chrono::steady_clock::now();
+            overhead_ns_sum_ += std::chrono::duration_cast<std::chrono::nanoseconds>(end_t - start_t).count();
+            overhead_samples_++;
         }
 
         Event<FeatureVector> in_ev;
@@ -146,6 +150,10 @@ public:
         return OpStatus::Blocked;
     }
 
+    [[nodiscard]] double mean_overhead_ns() const noexcept {
+        return overhead_samples_ > 0 ? static_cast<double>(overhead_ns_sum_) / overhead_samples_ : 0.0;
+    }
+
 private:
     InQueue*                       input_;
     OutQueue*                      output_;
@@ -157,6 +165,9 @@ private:
     Event<WindowBatch>             pending_{};
     bool                           has_pending_{false};
     OperatorMetrics*               metrics_{nullptr};
+    std::uint64_t                  overhead_ns_sum_{0};
+    std::uint64_t                  overhead_samples_{0};
 };
+
 
 } // namespace klstream

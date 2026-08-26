@@ -12,7 +12,9 @@ set(TEST_SOURCES
     unit/test_metrics_accuracy.cpp
     unit/test_adaptive_controller.cpp
     unit/test_isolation_forest_math.cpp
+    unit/test_model_serialization.cpp
 )
+
 
 
 
