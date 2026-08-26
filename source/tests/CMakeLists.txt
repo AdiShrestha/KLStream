@@ -8,7 +8,9 @@ set(TEST_SOURCES
     test_backpressure.cpp
     test_pipeline_integration.cpp
     unit/test_header_compilation.cpp
+    unit/test_runtime_lifecycle.cpp
 )
+
 
 foreach(src ${TEST_SOURCES})
     get_filename_component(name ${src} NAME_WE)
