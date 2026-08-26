@@ -1,47 +1,62 @@
-# Build directories
-build/
-cmake-build-*/
-out/
+# Factory v2.2.0 outer-repository isolation
+/factory/
+/project/
+/bootstrap.sh
+/DROP_HERE/
+/TAKE_THIS/
+/.factory_temp/
 
-# IDE
+# Operating-system and editor state
+.DS_Store
+.AppleDouble
+Thumbs.db
 .idea/
 .vscode/
 *.swp
 *.swo
 *~
-.cache/
 
-# Compile database
-compile_commands.json
-
-# macOS
-.DS_Store
-
-# Test artifacts
+# CMake and compiler output at any supported local build root
+/build/
+/build-*/
+/build_asan/
+/build_tsan/
+/cmake-build-*/
+/out/
+/compile_commands.json
+CMakeCache.txt
+CMakeFiles/
 Testing/
 
-# Coverage
-*.gcov
+# Python environment and caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Sanitizer, profiler, coverage, benchmark temporary output
+*.profraw
+*.profdata
 *.gcda
 *.gcno
+*.gcov
 coverage/
 
-# Logs
+# Local data and models; tracked manifests/fixtures live elsewhere
+/data/
+/artifacts/runs/
+/artifacts/figures/
+/artifacts/releases/
+/results/
+/source/experiments/research/results/
+klstream-legacy-unverified-*
+
+# Logs and temporary files
 *.log
-
-KLStream_Complete_Implementation_Guide.md
-KLStream_Research.md
-
-# Data and Results
-data/
-results/
-*.csv
-*.bin
-build_asan/
-build_tsan/
-factory/
-project/
-bootstrap.sh
-DROP_HERE/
-TAKE_THIS/
-
+*.tmp
+*.temp

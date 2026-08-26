@@ -1,32 +1,54 @@
-# Build artifacts
+# Factory internals
+factory/
+project/
+DROP_HERE/
+TAKE_THIS/
+bootstrap.sh
+
+# Build directories
 build/
+build-*/
+build_asan/
+build_tsan/
 cmake-build-*/
 out/
 
-# IDE files
+# Version control
+.git/
+.gitignore
+
+# Data and artifacts
+data/
+results/
+artifacts/
+klstream-legacy-unverified-*
+source/experiments/research/results/
+
+# Editor and OS
 .idea/
 .vscode/
+.DS_Store
+Thumbs.db
 *.swp
 *.swo
 *~
 
-# Git
-.git/
-.gitignore
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
 
-# Documentation
-docs/
-*.md
-!README.md
-
-# CI/CD
+# CI
 .github/
 .gitlab-ci.yml
 
-# Misc
+# Logs and temps
 *.log
 *.tmp
-.DS_Store
-Thumbs.db
-
-KLStream_Complete_Implementation_Guide.md
+*.temp
+coverage/
+Testing/
