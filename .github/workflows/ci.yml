@@ -1,0 +1,135 @@
+name: KLStream Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+      - 'rehabilitation/**'
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  matrix-build-and-test:
+    name: Build & Test (${{ matrix.os }} - ${{ matrix.compiler }} - ${{ matrix.preset }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Linux GCC
+          - os: ubuntu-latest
+            compiler: gcc
+            cc: gcc-12
+            cxx: g++-12
+            preset: release
+          - os: ubuntu-latest
+            compiler: gcc
+            cc: gcc-12
+            cxx: g++-12
+            preset: debug
+          # Linux Clang
+          - os: ubuntu-latest
+            compiler: clang
+            cc: clang-15
+            cxx: clang++-15
+            preset: release
+          - os: ubuntu-latest
+            compiler: clang
+            cc: clang-15
+            cxx: clang++-15
+            preset: debug
+          # macOS AppleClang
+          - os: macos-latest
+            compiler: appleclang
+            cc: clang
+            cxx: clang++
+            preset: release
+          - os: macos-latest
+            compiler: appleclang
+            cc: clang
+            cxx: clang++
+            preset: debug
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Linux compilers
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ${{ matrix.cc }} ${{ matrix.cxx }} ninja-build
+
+      - name: Configure CMake
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+        run: |
+          cmake --preset ${{ matrix.preset }}
+
+      - name: Build Targets
+        run: |
+          cmake --build --preset ${{ matrix.preset }} --parallel
+
+      - name: Execute CTest Suite
+        run: |
+          ctest --preset ${{ matrix.preset }} --output-on-failure
+
+  sanitizers:
+    name: Sanitizers (${{ matrix.preset }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: [asan, tsan, ubsan]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup LLVM / Clang
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-15 clang++-15
+
+      - name: Configure Sanitizer Build
+        env:
+          CC: clang-15
+          CXX: clang++-15
+        run: |
+          cmake --preset ${{ matrix.preset }}
+
+      - name: Build Sanitizer Targets
+        run: |
+          cmake --build --preset ${{ matrix.preset }} --parallel
+
+      - name: Run Sanitizer Tests
+        run: |
+          ctest --preset ${{ matrix.preset }} --output-on-failure
+
+  downstream-packaging:
+    name: Package Export & Consumer Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install to Isolated Prefix
+        run: |
+          cmake -B build-install -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${{ runner.temp }}/klstream_install"
+          cmake --build build-install --parallel
+          cmake --install build-install
+
+      - name: Build and Execute Downstream Consumer
+        run: |
+          cmake -B build-consumer -S source/tests/consumer -DCMAKE_PREFIX_PATH="${{ runner.temp }}/klstream_install"
+          cmake --build build-consumer --parallel
+          ./build-consumer/consumer_test
