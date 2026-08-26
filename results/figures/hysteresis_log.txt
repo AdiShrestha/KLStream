@@ -1,0 +1,2 @@
+Loaded occupancy log: 97 rows
+Saved: results/figures/hysteresis_loop.png

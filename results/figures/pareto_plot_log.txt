@@ -1,0 +1,7 @@
+Ground truth: 60 anomaly segments
+Fixed: mean P95=36.93ms mean PA%20=0.2096 n=30
+Data-Driven: mean P95=54.51ms mean PA%20=0.1805 n=30
+Adaptive: mean P95=18.62ms mean PA%20=0.1135 n=30
+Saved: results/figures/pareto_scatter.png
+Saved: results/figures/pareto_scatter.pdf
+Saved raw data: results/figures/pareto_data.csv
