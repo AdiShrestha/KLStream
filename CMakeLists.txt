@@ -77,7 +77,7 @@ endif()
 # can link against klstream::klstream and get the headers.
 add_library(klstream INTERFACE)
 target_include_directories(klstream INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/source/include>
     $<INSTALL_INTERFACE:include>
 )
 target_link_libraries(klstream INTERFACE pthread)
@@ -109,8 +109,9 @@ set(BENCHMARK_DOWNLOAD_DEPENDENCIES ON  CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googlebenchmark)
 
 # ── Subdirectories ────────────────────────────────────────────────────────
-add_subdirectory(examples)
-add_subdirectory(tests)
-add_subdirectory(benchmarks)
-add_subdirectory(research)
-add_subdirectory(adaptive_window)
+add_subdirectory(source/examples)
+add_subdirectory(source/tests)
+add_subdirectory(source/benchmarks)
+add_subdirectory(source/experiments/research)
+add_subdirectory(source/apps/adaptive_window)
+
