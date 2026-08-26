@@ -1,0 +1,12 @@
+{
+  "model": "IsolationForest",
+  "num_trees": 10,
+  "subsample_size": 128,
+  "num_features": 7,
+  "evaluations": 200000,
+  "mean_latency_ns": 270.993,
+  "p50_latency_ns": 250,
+  "p90_latency_ns": 333,
+  "p99_latency_ns": 416,
+  "target_met": true
+}

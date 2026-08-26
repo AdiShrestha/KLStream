@@ -1,0 +1,68 @@
+{
+  "manifest_version": "1.0.0",
+  "governing_invariants": [
+    "NFR-001",
+    "NFR-004",
+    "MAR-X5"
+  ],
+  "overall_status": "PASS",
+  "spsc_target_mops": 10.0,
+  "scoring_target_max_ns": 500.0,
+  "hardware_platform": {
+    "machine": "arm64",
+    "processor": "arm",
+    "system": "Darwin",
+    "release": "25.6.0",
+    "version": "Darwin Kernel Version 25.6.0: Sat Jul 11 15:23:52 PDT 2026; root:xnu-12377.161.13~4/RELEASE_ARM64_T8122",
+    "model_name": "Apple M3",
+    "physical_cores": 8,
+    "logical_cores": 8,
+    "ram_bytes": 17179869184,
+    "ram_gb": 16.0
+  },
+  "compiler_info": {
+    "cxx_standard": "C++17",
+    "optimization_flags": "-O3 -DNDEBUG",
+    "python_version": "3.12.8"
+  },
+  "microbenchmarks": {
+    "queue_throughput": {
+      "spsc": {
+        "queue_type": "SPSCQueue",
+        "operations": 20000000,
+        "elapsed_seconds": 0.90336,
+        "million_ops_per_sec": 22.1396,
+        "target_exceeded": true
+      },
+      "mpmc": {
+        "queue_type": "MPMCQueue",
+        "producers": 4,
+        "consumers": 4,
+        "operations": 10000000,
+        "elapsed_seconds": 1.04485,
+        "million_ops_per_sec": 9.57076
+      }
+    },
+    "model_scoring": {
+      "model": "IsolationForest",
+      "num_trees": 10,
+      "subsample_size": 128,
+      "num_features": 7,
+      "evaluations": 200000,
+      "mean_latency_ns": 270.993,
+      "p50_latency_ns": 250,
+      "p90_latency_ns": 333,
+      "p99_latency_ns": 416,
+      "target_met": true
+    }
+  },
+  "performance_targets": {
+    "spsc_target_mops": 10.0,
+    "spsc_measured_mops": 22.1396,
+    "spsc_pass": true,
+    "scoring_target_max_ns": 500.0,
+    "scoring_measured_mean_ns": 270.993,
+    "scoring_pass": true,
+    "overall_status": "PASS"
+  }
+}

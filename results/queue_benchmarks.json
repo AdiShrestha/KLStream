@@ -1,0 +1,17 @@
+{
+  "spsc": {
+    "queue_type": "SPSCQueue",
+    "operations": 20000000,
+    "elapsed_seconds": 0.90336,
+    "million_ops_per_sec": 22.1396,
+    "target_exceeded": true
+  },
+  "mpmc": {
+    "queue_type": "MPMCQueue",
+    "producers": 4,
+    "consumers": 4,
+    "operations": 10000000,
+    "elapsed_seconds": 1.04485,
+    "million_ops_per_sec": 9.57076
+  }
+}
