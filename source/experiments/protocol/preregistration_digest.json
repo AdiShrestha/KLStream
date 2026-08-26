@@ -1,0 +1,8 @@
+{
+  "contract_id": "C05-05",
+  "document": "source/experiments/protocol/falsification_criteria.md",
+  "sha256": "6bf83d66c3d2b703c24d398c801aa224a52e14b4ac3c1754c8b95337615b3e64",
+  "claims_registered": ["Claim 1", "Claim 2", "Claim 3"],
+  "freeze_timestamp_utc": "2026-08-26T14:05:00Z",
+  "status": "FROZEN"
+}
