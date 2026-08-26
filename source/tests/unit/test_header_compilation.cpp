@@ -38,11 +38,13 @@
 #include <klstream/klstream.hpp>
 
 TEST(HeaderCompilationTest, VersionConstantsAvailable) {
-    EXPECT_STREQ(klstream::VERSION, "0.1.0");
+    EXPECT_STREQ(klstream::VERSION, "0.2.0-dev");
+    EXPECT_STREQ(klstream::version(), "0.2.0-dev");
     EXPECT_EQ(klstream::VERSION_MAJOR, 0);
-    EXPECT_EQ(klstream::VERSION_MINOR, 1);
+    EXPECT_EQ(klstream::VERSION_MINOR, 2);
     EXPECT_EQ(klstream::VERSION_PATCH, 0);
 }
+
 
 TEST(HeaderCompilationTest, CoreConfigConstantsAvailable) {
     EXPECT_GE(klstream::CACHE_LINE_SIZE, 64);

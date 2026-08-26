@@ -7,6 +7,7 @@
  * Include this single header to access the full KLStream API.
  */
 
+#include <klstream/core/version.hpp>
 #include <klstream/core/config.hpp>
 #include <klstream/core/event.hpp>
 #include <klstream/core/spsc_queue.hpp>
@@ -32,15 +33,3 @@
 #include <klstream/window/data_driven_window_op.hpp>
 #include <klstream/window/inference_op.hpp>
 #include <klstream/window/result_sink.hpp>
-
-namespace klstream {
-
-/**
- * @brief Library version information
- */
-constexpr const char* VERSION = "0.1.0";
-constexpr int VERSION_MAJOR = 0;
-constexpr int VERSION_MINOR = 1;
-constexpr int VERSION_PATCH = 0;
-
-} // namespace klstream
