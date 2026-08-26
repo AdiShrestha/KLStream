@@ -125,15 +125,16 @@ TEST(RuntimeLifecycleTest, LosslessPipelineDrain) {
 
     std::vector<int> collected;
     collected.reserve(N);
+    std::mutex collected_mutex;
 
     MapOperator<int, int> map_op("MultiplyBy2", &q_in, &q_out, [](int x) {
         return x * 2;
     });
 
     SinkOperator<int> sink_op("Collector", &q_out, [&](const Event<int>& ev) {
+        std::lock_guard<std::mutex> lock(collected_mutex);
         collected.push_back(ev.data);
     });
-
 
     {
         Runtime rt;
@@ -147,8 +148,11 @@ TEST(RuntimeLifecycleTest, LosslessPipelineDrain) {
 
         // Wait until all items are processed or runtime drains
         auto start_time = std::chrono::steady_clock::now();
-        while (collected.size() < N &&
-               std::chrono::steady_clock::now() - start_time < std::chrono::seconds(2)) {
+        while (std::chrono::steady_clock::now() - start_time < std::chrono::seconds(2)) {
+            {
+                std::lock_guard<std::mutex> lock(collected_mutex);
+                if (collected.size() >= N) break;
+            }
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
 
@@ -161,3 +165,4 @@ TEST(RuntimeLifecycleTest, LosslessPipelineDrain) {
         EXPECT_EQ(collected[i], i * 2);
     }
 }
+
