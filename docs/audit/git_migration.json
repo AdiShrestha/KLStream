@@ -1,5 +1,5 @@
 {
-  "status": "legacy_tags_published_and_verified_replacement_prepared",
+  "status": "replacement_main_published_and_remote_verified",
   "utc": "2026-09-30T14:26:55.883689+00:00",
   "remote": "https://github.com/AdiShrestha/KLStream",
   "old_public_main": "bc095f0be747216b59de08ec0bbf06163cf67553",
@@ -29,8 +29,16 @@
   ],
   "snapshot_file_count": 855,
   "snapshot_largest_file_bytes": 83918645,
-  "new_main": null,
-  "remote_readback": null,
+  "new_main": "5a8681a7a038cef9f315fb33290372d0b4df210d",
+  "remote_readback": {
+    "utc": "2026-09-30T18:48:01.772379+00:00",
+    "refs": {
+      "refs/heads/main": "5a8681a7a038cef9f315fb33290372d0b4df210d",
+      "refs/tags/legacy-local-2026-09-30^{}": "83545b7c845454af309794d08a1ec2d41220a7db",
+      "refs/tags/legacy-public-2026-09-30^{}": "bc095f0be747216b59de08ec0bbf06163cf67553",
+      "refs/tags/legacy-snapshot-2026-09-30^{}": "4139700b997f720634ec61e6f71368a876d9fd59"
+    }
+  },
   "scientific_status": "historical artifacts unverified; no legacy claim certified",
   "preserved_remote_readback": {
     "main": "bc095f0be747216b59de08ec0bbf06163cf67553",
@@ -40,5 +48,10 @@
       "legacy-snapshot-2026-09-30": "4139700b997f720634ec61e6f71368a876d9fd59"
     }
   },
-  "foundation_tag_name": "research-foundation-2026-10-01"
+  "foundation_tag_name": "research-foundation-2026-10-01",
+  "replacement_commit": "4c3f2ff41d348ab005e4441a1e46fabffe90d9c3",
+  "verification_scope": "new_main is the remotely verified replacement commit before this receipt is committed; subsequent receipt-only commits preserve the same engine. Verify current main and the foundation tag with git ls-remote.",
+  "history_rewritten": false,
+  "old_local_folder_deleted": false,
+  "legacy_tag_push_large_file_warning": "GitHub accepted the historical 80.03 MiB trace with a size recommendation warning; no such raw trace is in replacement main."
 }
