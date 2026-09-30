@@ -55,6 +55,11 @@
       "exit_code": 0,
       "scope": "Exercised foundation fixtures only; no exhaustive interleaving proof",
       "log_sha256": "1cecb6867602490008428bf3deff29e08c207db18d60a00071616cb468eee761"
+    },
+    {
+      "command": "git diff --cached --check (authored paths; supplied factory and historical source excerpts excluded to preserve their bytes/formatting)",
+      "status": "passed",
+      "scope": "Whitespace only, not scientific validation"
     }
   ],
   "not_established": [

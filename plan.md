@@ -842,3 +842,131 @@ evidence, and the implementation report must preserve the old counterexample.
 
 The next work is KLS-01/KLS-02 plus KLS-03, not another legacy result matrix.
 No new experimental claim was generated to make this migration appear successful.
+
+## 28. Proposed streaming adapter interface: concrete design input for KLS-02/KLS-07
+
+This section specifies an interface to implement. It is not an accepted factory
+schema today and is not an executable research plan. Do not insert it into the
+current parser and then suppress UNSUPPORTED_PROFILE. The Architect/Implementor
+must integrate and mutation-test the actual domain first.
+
+**Proposed profile identifier:** `streaming_systems_v1`. **Proposed domain module:**
+`factory/engine/domains/streaming_systems.py`, with an independently maintained
+research analysis module under `source/research/analysis/`. Both use the same
+published metric definitions, but must not simply call each other's headline
+implementation. Golden examples and independently traced equations prevent two
+copies of the same error from being called independent.
+
+### Source/cohort schema
+
+Keep source-level records separate from event rows. Required source fields are
+`source_id`, byte fingerprint, provider/origin, acquisition receipt path/hash,
+terms reference, raw schema/version, instrument/day or stress-process group,
+usable row/time extent and origin enum. Event cohort fields include `sample_id`,
+`source_id`, immutable raw row ordinal, group, split, raw exchange time where
+available, feature-schema hash and feature ancestry. Label/task fields are nullable
+and have a separate annotation source/hash/availability time when present.
+
+An unlabelled streaming cohort is accepted only for systems metrics. A labelled
+sub-study requires both its task schema and the existing classification checks.
+Do not require every temporal split to be artificially balanced, nor invent class
+members. Scope the relevant support floors to the actual claim and retain a
+reason-coded unavailable classification result where appropriate.
+
+### Attempt, schedule and model binding
+
+Each attempt binds project/epoch/experiment/policy/source/model/feature/build
+identities, independent trial block, model seed versus schedule seed, frozen
+parameters, worker/queue configuration, expected offered IDs/schedule hash,
+resolved argv/runtime, real supervisor nonce/signature, actual exit status and
+terminal lifecycle reason. A schedule is immutable before dispatch and can be
+reconstructed independently from its source plus declared timing transformation.
+Changing source pacing changes the observed release/admission times, not the
+original offered schedule. All configured bounds and units are in the receipt.
+
+Do not repeat large hashes in every hot-path record if that distorts the workload.
+A compact record may reference run metadata by immutable ID. Its lossless export
+joins that metadata after the measured phase; the signed output manifest covers
+both raw records and the deterministic conversion. Hashes do not establish the
+provider's truth, so the source review remains a separate acceptance property.
+
+### Pointwise terminal-observation schema
+
+Required identity fields are attempt ID, sample ID/raw ordinal, source ID, group,
+policy ID, batch ID if batched, output ordinal and terminal outcome/reason.
+Required timing fields, when that stage occurred, are offered, actual release,
+successful admission, batch-ready, service-start, inference-finish and publication
+in explicitly named monotonic nanoseconds. A durable-write field is separate.
+Missing stages are **null with a reason**, not zero. Score/decision/reference-model
+identity are present for inference outputs; a systems-only payload has its own
+semantic checksum or expected value. An optional label is joined from the frozen
+cohort after execution, never fed to the policy.
+
+Validate clock-domain identity, stage order, signed/nonnegative interval arithmetic,
+finite scores, raw identity membership, duplicates and total terminal accounting.
+If batching publishes all results only at batch finish, record that real convention
+for every member rather than fabricating an individual finish. A rejected/cancelled
+point has no completed latency unless completion actually occurred. Completion-only
+latency distributions require a simultaneous offered-denominator/terminal report
+so selective dropping cannot improve the headline unnoticed.
+
+### Batch/controller observations
+
+Record batch ID and member range/list mapping, target/actual size, first admission,
+readiness time, flush reason (size/deadline/EOS), queued/start/finish times, queue
+edge, observed usable slots/events/bytes, approximate occupancy, observation time,
+EMA/time constant, proposed and clamped action, and policy update sequence.
+A slot range cannot stand in for a membership list if reordering/filtering occurred.
+Controller diagnostics are synchronized snapshots. Deadline is a readiness/flush
+request; output blocking/scheduler delay can violate an application deadline and
+must remain measured. A deadline parameter is not a hard timing guarantee.
+
+### Resource observation schema
+
+Every observation states tool, unit, process/process-tree scope, wall interval,
+platform conversion and availability. Separate wall seconds, CPU seconds, peak
+RSS bytes, allocated engine buffers and system memory pressure. macOS/Linux RSS
+unit conventions are tested before conversion. CPU percentage has a declared core
+normalization. Temperature/frequency/energy are absent/unavailable if unsupported;
+no device-spec literal substitutes for a sample. The supervisor signs actual
+measurement availability along with any enforcement failures.
+
+### Independent metric return type and decision function
+
+Return a structured object with metric ID/version, status, value when valid, unit,
+numerator/denominator, source-observation hash, filters, quantile convention and
+unavailable/failure reason. Never encode infinity/NaN into strict JSON without an
+explicit state. Overflow of a diagnostic histogram cannot become a finite p99;
+research raw integer observations avoid that clipping entirely.
+
+For nearest-rank p99 of n valid integer durations, rank is `ceil(.99*n)` (one-based)
+and the selected sorted value is at rank minus one. Freeze a numerically reliable
+rational/integer implementation, not a row-order-dependent approximation. Validate
+n>0 and distinguish uncertainty of that conditional sample quantile from the
+uncertainty of the between-policy trial contrast. Throughput has a declared time
+interval and terminal denominator. Backlog and drop metrics reconcile IDs, not
+only counters. Recovery/oscillation include censoring/unavailable state.
+
+The verdict consumes registered claim rules plus these accepted metrics and the
+independent contrast analysis. It has distinct states for supported, contradicted,
+practically equivalent only under an actual equivalence design, inconclusive,
+unavailable and invalid evidence. A sign-flipped contrast, changed Holm family,
+removed terminal event or forged signature must change acceptance/verdict as
+specified. Paper rendering cannot override this state with a literal success.
+
+### Integration acceptance, not schema theater
+
+A positive end-to-end fixture must build/invoke a real tiny native program,
+produce a known finite offered schedule and terminal trace, record authentic
+supervisor execution, recompute its metrics, survive bundle verification and
+receive only the assurance it actually earned. Its generated source events are
+visibly fixtures, so it cannot be a scientific release. A declared-simulation
+research fixture can exercise scope rules without becoming observational data.
+
+Then execute the corruption matrix in KLS-02 against the real lifecycle. The
+certification gate must actually reject each mutation rather than an isolated
+helper returning a diagnostic that `certify` ignores. Verify positive evidence
+is not rejected for lawful causal history or a legitimately unlabelled stream.
+Document false-positive boundaries and procedural source-authenticity checks.
+This is the point at which a machine plan becomes compatible with KLStream's
+research domain; a renamed JSON field or another certificate template is not.
