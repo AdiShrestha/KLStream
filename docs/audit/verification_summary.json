@@ -1,0 +1,79 @@
+{
+  "purpose": "Software verification only; all generated inputs are test fixtures",
+  "client_completion_date": "2026-10-01",
+  "timezone": "Asia/Kathmandu",
+  "compiler": "AppleClang 21.0.0.21000101",
+  "checks": [
+    {
+      "command": "cmake -S . -B build-audit-release -DCMAKE_BUILD_TYPE=Release; cmake --build build-audit-release --parallel 2; ctest --test-dir build-audit-release --output-on-failure",
+      "status": "passed",
+      "test_cases": 1,
+      "description": "One fixture binary with concurrent queue, lifecycle, batching, model and configuration checks; checks survive NDEBUG"
+    },
+    {
+      "command": "cmake -S . -B build-audit-sanitizers -DCMAKE_BUILD_TYPE=Debug -DKLSTREAM_SANITIZERS=ON; cmake --build build-audit-sanitizers --parallel 2; ctest --test-dir build-audit-sanitizers --output-on-failure",
+      "status": "passed",
+      "sanitizers": [
+        "address",
+        "undefined"
+      ]
+    },
+    {
+      "command": "clang++ -std=c++17 -Wall -Wextra -Wpedantic -Werror -pthread -Isource/include -x c++ -fsyntax-only - (one include per public header)",
+      "status": "passed",
+      "public_headers": 20
+    },
+    {
+      "command": "FACTORY_SUPERVISOR_KEY=<temporary private key path> PYTHONDONTWRITEBYTECODE=1 python3 factory/run_self_tests.py",
+      "status": "passed",
+      "tests": 276,
+      "environment": "Execution permitting local Unix sockets",
+      "elapsed_seconds_from_test_runner": 2.963
+    },
+    {
+      "command": "same factory suite in restrictive sandbox",
+      "status": "environment_error",
+      "tests": 276,
+      "errors": 1,
+      "reason": "PermissionError creating local Unix socket"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 docs/audit/probe_legacy.py LEGACY_ROOT OUTPUT.json",
+      "status": "counterexamples_reproduced"
+    },
+    {
+      "command": "clang++ -std=c++17 -O2 -DNDEBUG -pthread -ILEGACY_ROOT/source/include docs/audit/legacy_cpp_counterexamples.cpp -o TMP_EXE; TMP_EXE",
+      "status": "counterexamples_reproduced"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 docs/audit/probe_factory_signature.py OUTPUT.json",
+      "status": "unsigned_acceptance_reproduced"
+    },
+    {
+      "command": "clang++ -std=c++17 -O1 -g -fsanitize=thread -fno-omit-frame-pointer -Wall -Wextra -Wpedantic -Werror -pthread -Isource/include source/tests/engine_tests.cpp -o TMP_EXE; TMP_EXE",
+      "status": "passed",
+      "exit_code": 0,
+      "scope": "Exercised foundation fixtures only; no exhaustive interleaving proof",
+      "log_sha256": "1cecb6867602490008428bf3deff29e08c207db18d60a00071616cb468eee761"
+    }
+  ],
+  "not_established": [
+    "Research measurements or superiority",
+    "Authentic research cohort",
+    "Factory streaming adapter or repaired assurance",
+    "Exhaustive race/interleaving coverage",
+    "Formal queue progress proof",
+    "Cross-platform execution",
+    "Submission readiness"
+  ],
+  "log_fingerprints": [
+    {
+      "name": "klstream-factory-selftests.log",
+      "sha256": "ddb2213d6eefae67aec56ef27cb84bf9dd37a51d404d0abcfa347ef264b4e2fb"
+    },
+    {
+      "name": "klstream-factory-selftests-unrestricted.log",
+      "sha256": "5ba72bae96b261afc59dab6da238e048a9912b3e78a88937808482a12fb72f6c"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "status": "legacy_tags_published_and_verified_replacement_prepared",
+  "utc": "2026-09-30T14:26:55.883689+00:00",
+  "remote": "https://github.com/AdiShrestha/KLStream",
+  "old_public_main": "bc095f0be747216b59de08ec0bbf06163cf67553",
+  "old_local_head": "83545b7c845454af309794d08a1ec2d41220a7db",
+  "legacy_snapshot": "4139700b997f720634ec61e6f71368a876d9fd59",
+  "preservation_tags": {
+    "legacy-public-2026-09-30": "bc095f0be747216b59de08ec0bbf06163cf67553",
+    "legacy-local-2026-09-30": "83545b7c845454af309794d08a1ec2d41220a7db",
+    "legacy-snapshot-2026-09-30": "4139700b997f720634ec61e6f71368a876d9fd59"
+  },
+  "tracked_dirty_files": 62,
+  "author_guides_preserved": [
+    "KLStream_Complete_Implementation_Guide.md",
+    "KLStream_Research.md",
+    "full_description.md",
+    "rehabilitation_plan.md",
+    "study.md",
+    "temporary.md"
+  ],
+  "authored_ignored_project_factory_files_added": 228,
+  "legacy_worktree_and_index_unchanged": true,
+  "snapshot_exclusions": [
+    ".cache",
+    "generated/build/cache trees",
+    ".snapshot_baseline bundles",
+    "ignored giant legacy archive"
+  ],
+  "snapshot_file_count": 855,
+  "snapshot_largest_file_bytes": 83918645,
+  "new_main": null,
+  "remote_readback": null,
+  "scientific_status": "historical artifacts unverified; no legacy claim certified",
+  "preserved_remote_readback": {
+    "main": "bc095f0be747216b59de08ec0bbf06163cf67553",
+    "peeled_tags": {
+      "legacy-public-2026-09-30": "bc095f0be747216b59de08ec0bbf06163cf67553",
+      "legacy-local-2026-09-30": "83545b7c845454af309794d08a1ec2d41220a7db",
+      "legacy-snapshot-2026-09-30": "4139700b997f720634ec61e6f71368a876d9fd59"
+    }
+  },
+  "foundation_tag_name": "research-foundation-2026-10-01"
+}

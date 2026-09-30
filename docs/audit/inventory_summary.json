@@ -1,0 +1,16 @@
+{
+  "counts": {
+    "configuration_or_other": 37,
+    "generated_or_cache_inventory_only": 11735,
+    "historical_claims_and_control_records": 266,
+    "historical_evidence_quarantined": 632,
+    "legacy_source_requires_semantic_review": 163,
+    "superseded_factory_v2": 11
+  },
+  "csv_streamed": 537,
+  "json_parsed": 94,
+  "legacy_root": "/Users/adi/adi/brolq",
+  "scope": "all non-.git filesystem files inventoried; generated/cache bytes not semantically audited; all other bytes hashed; text scanned and Python AST parsed; CSV bodies streamed",
+  "text_scanned": 537,
+  "total_files": 12844
+}

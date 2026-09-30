@@ -1,0 +1,19 @@
+# License scopes
+
+The KLStream engine under `source/` retains the GNU Affero General Public License,
+version 3, from the legacy project. See `source/LICENSE` for the complete license.
+The original legacy README's MIT claim was inconsistent with its actual license
+and is not carried forward.
+
+Software Factory code, specifications, templates and tests under `factory/` retain
+the author's proprietary license, preserved verbatim in `factory/LICENSE`.
+The supplied factory bootstrap and associated root documentation under `docs/`
+(COVERAGE, FORENSIC_AUDIT, MIGRATION, REFERENCES, RELEASE_SCOPE, SCHEMA, VALIDATION,
+audit_tools and v26_forensic_results) retain those same supplied terms.
+Including those files in this repository does not grant an additional license.
+
+Research planning and audit documents are supplied by the project author with no
+new general-purpose license grant in this migration. Third-party datasets keep
+their own terms; public availability does not establish redistribution permission.
+The author should choose and document a license for new research artifacts before
+an artifact submission. This file records scope; it does not relicense prior work.

@@ -1,0 +1,32 @@
+{
+  "analyses": {},
+  "claims": [],
+  "cohort": "data/cohort.csv",
+  "comparisons": [],
+  "data_origin": "observational",
+  "dependency_lock": "source/requirements.lock",
+  "experiments": [],
+  "factory_version": "3.3.0",
+  "frozen_paths": [
+    "source",
+    "data",
+    "project/methodology.md"
+  ],
+  "independence_rationale": "REPLACE_ME",
+  "intent": "research",
+  "license": "REPLACE_ME",
+  "methodology": "project/methodology.md",
+  "policy": {
+    "metric_tolerance": 1e-08,
+    "min_class_count": 2,
+    "min_seeds": 5,
+    "min_test_groups": 2
+  },
+  "population": "REPLACE_ME",
+  "profile": "binary_classification",
+  "project_id": "REPLACE_ME",
+  "release_files": [],
+  "sampling_rationale": "REPLACE_ME",
+  "schema_version": 3,
+  "source_records": "data/source_records.csv"
+}

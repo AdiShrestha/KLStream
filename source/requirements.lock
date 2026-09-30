@@ -1,0 +1,4 @@
+# The migrated C++ foundation has no Python runtime dependencies.
+# Factory 3.3.0 uses Python's standard library; Ed25519 needs cryptography.
+# This file does not lock a future research environment. Contract KLS-02
+# must replace it with an exact hashed lock before any research freeze.

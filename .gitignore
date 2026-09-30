@@ -1,41 +1,15 @@
-# Build directories
-build/
-cmake-build-*/
-out/
-
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-.cache/
-
-# Compile database
-compile_commands.json
-
-# macOS
+/build*/
+__pycache__/
+*.py[cod]
+.pytest_cache/
 .DS_Store
-
-# Test artifacts
-Testing/
-
-# Coverage
-*.gcov
-*.gcda
-*.gcno
-coverage/
-
-# Logs
+.venv/
+.cache/
 *.log
-
-KLStream_Complete_Implementation_Guide.md
-KLStream_Research.md
-
-# Data and Results
-data/
-results/
-*.csv
-*.bin
-build_asan/
-build_tsan/
+/data/raw/
+/data/processed/
+/artifacts/
+/project/.factory/
+/TAKE_THIS/*.zip
+*.key
+*.pem
