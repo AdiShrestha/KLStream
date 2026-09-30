@@ -7,7 +7,7 @@
     "controller_display_name": "Control-ShuffledOccupancy[seed=42]",
     "calibrated_threshold": 0.5523148270306546,
     "target_fpr": 0.05,
-    "timestamp_utc": "2026-08-26T09:00:43Z"
+    "timestamp_utc": "2026-08-30T15:37:14Z"
   },
   "event_accounting": {
     "events_ingested": 2000,
