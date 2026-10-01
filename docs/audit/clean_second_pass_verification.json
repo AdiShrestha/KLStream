@@ -1,0 +1,136 @@
+{
+  "purpose": "clean-checkout fixture verification, not research reproduction or publication readiness",
+  "started_utc": "2026-10-01T06:27:37.705774+00:00",
+  "checks": [
+    {
+      "name": "clone",
+      "argv": [
+        "git",
+        "clone",
+        "--no-hardlinks",
+        "/Users/adi/Desktop/Projects/Using v3.3 New projects/Brolq New",
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-clean-audit-6eyiqrg7/checkout"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "wall_seconds": 0.14557575003709644,
+      "log": "docs/audit/clean_second_pass_logs/clone.txt",
+      "log_sha256": "723a45eed674070d39fcd0d564138fa7959334b9051d73bef1b16abfb2645584"
+    },
+    {
+      "name": "commit",
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "wall_seconds": 0.011846375069580972,
+      "log": "docs/audit/clean_second_pass_logs/commit.txt",
+      "log_sha256": "1a91108587fbc939acbe198c83eca7ecf2b63b4c71ed1fa40d16917228e4faee"
+    },
+    {
+      "name": "configure",
+      "argv": [
+        "cmake",
+        "-S",
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-clean-audit-6eyiqrg7/checkout",
+        "-B",
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-clean-audit-6eyiqrg7/build",
+        "-DCMAKE_BUILD_TYPE=Release"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "wall_seconds": 0.6171709169866517,
+      "log": "docs/audit/clean_second_pass_logs/configure.txt",
+      "log_sha256": "7ade8414ceaff8edbe9149f7af4483c2b9b844b556b32975875cda3c7e338939"
+    },
+    {
+      "name": "build",
+      "argv": [
+        "cmake",
+        "--build",
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-clean-audit-6eyiqrg7/build",
+        "--parallel",
+        "2"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "wall_seconds": 1.1813465829472989,
+      "log": "docs/audit/clean_second_pass_logs/build.txt",
+      "log_sha256": "44e233cf727ca2037af148fc5b8eb09ba7d3a749ac3248c772e8d97f461a3c7d"
+    },
+    {
+      "name": "ctest",
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-clean-audit-6eyiqrg7/build",
+        "--output-on-failure"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "wall_seconds": 0.5400551250204444,
+      "log": "docs/audit/clean_second_pass_logs/ctest.txt",
+      "log_sha256": "229f66d26bc286a444176d86e38945cd36245e4afa04ac9a8e8792ceafa57a05"
+    },
+    {
+      "name": "factory_suite",
+      "argv": [
+        "python3",
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-clean-audit-6eyiqrg7/checkout/factory/run_self_tests.py"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "wall_seconds": 5.408153833006509,
+      "log": "docs/audit/clean_second_pass_logs/factory_suite.txt",
+      "log_sha256": "7beec4acd94947129e42f665fcafc31d9a446bf85dead92ea761ba61df921d18"
+    },
+    {
+      "name": "invalid_template_certify",
+      "argv": [
+        "python3",
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-clean-audit-6eyiqrg7/checkout/factory/gatekeeper.py",
+        "certify",
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-clean-audit-6eyiqrg7/checkout"
+      ],
+      "exit_code": 31,
+      "expected_exit_code": 31,
+      "passed": true,
+      "wall_seconds": 0.0647879169555381,
+      "log": "docs/audit/clean_second_pass_logs/invalid_template_certify.txt",
+      "log_sha256": "f98e9a83df6645e707fda72fd5f9cd71cf567c69053c2ab1757c6fc5754ec2c1"
+    },
+    {
+      "name": "status",
+      "argv": [
+        "git",
+        "status",
+        "--porcelain"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true,
+      "wall_seconds": 0.03283420891966671,
+      "log": "docs/audit/clean_second_pass_logs/status.txt",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "verified_commit": "6d90531a88b355278e4eb22b530080f8011f31f7",
+  "source_bindings": {
+    "count": 80,
+    "mismatched": [],
+    "passed": true
+  },
+  "factory_test_count": 326,
+  "checkout_clean_after_tests": true,
+  "finished_utc": "2026-10-01T06:27:45.766284+00:00",
+  "passed": true
+}

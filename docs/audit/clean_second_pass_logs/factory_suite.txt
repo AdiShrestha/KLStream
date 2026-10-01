@@ -360,7 +360,7 @@ unittest.case.FunctionTestCase (run_function)
 test_scientific_gatekeeper.test_missing_project_fails ... ok
 
 ----------------------------------------------------------------------
-Ran 326 tests in 6.016s
+Ran 326 tests in 5.263s
 
 OK
 21/23 Level-A principles mapped to named checks, 2 with documented rationale; mapping does not prove semantic enforcement
@@ -396,14 +396,14 @@ OK
   ]
 }
 {"status": "PASS", "epochs_trained": 3}
-{"status": "FAIL", "error": "contract must be strict JSON with executable checks: /private/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-clean-audit-hxtsianm/checkout/factory/tests/.tmp_contract.md: Expecting value: line 1 column 1 (char 0)"}
+{"status": "FAIL", "error": "contract must be strict JSON with executable checks: /private/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-clean-audit-6eyiqrg7/checkout/factory/tests/.tmp_contract.md: Expecting value: line 1 column 1 (char 0)"}
 {"status": "PASS", "checks": 1}
 {"status": "PASS", "categories_checked": 1}
 {"status": "PASS", "fields_checked": 7}
 {
   "status": "FROZEN",
   "epoch": 1,
-  "freeze_sha256": "91fc9ef1c0809312c7cb20858032d0af1e2c5f7a595635903bb7753ee7375e2e",
+  "freeze_sha256": "237759718e101d85e9269ff98efbd64b6fdb39daf8ba546a54fe41f3f78e3cc8",
   "frozen_files": 5,
   "snapshot_merkle_root": "1cf362ca00173f891735701bbacb1042feeb4e264471a809e7e0661dd5a29c8d",
   "snapshot_algorithm": "sha256_binary_tree_v2"
@@ -455,7 +455,7 @@ OK
 {
   "status": "FROZEN",
   "epoch": 1,
-  "freeze_sha256": "e2c6b6f028fda9cbc16ea24305e6b4104f134def902f875759e52172296efdcb",
+  "freeze_sha256": "426ca5d7118c6e5214a2903682b3be9f25cb78033e94e31727fa10ed05cd8fe2",
   "frozen_files": 5,
   "snapshot_merkle_root": "1cf362ca00173f891735701bbacb1042feeb4e264471a809e7e0661dd5a29c8d",
   "snapshot_algorithm": "sha256_binary_tree_v2"

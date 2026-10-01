@@ -1227,3 +1227,11 @@ independent nested bundle mutation is rejected after recomputing ZIP hashes.
 The root template returns NOT_CERTIFIED/31. These counts describe executed checks;
 they are not sample sizes, benchmark results or proof of a completed KLS contract.
 Intermediate states and retention limits are in docs/audit/intermediate_verification.
+
+A fresh clone of source commit 6d90531a88b355278e4eb22b530080f8011f31f7 additionally
+passed all 80 source bindings, both Release CTests and all 326 factory fixtures,
+with a clean working tree afterward. The clean receipt and GitHub preserved-tag
+readback are in docs/audit/clean_second_pass_verification.json and
+second_pass_git_publication.json. Documentation/receipt follow-ups do not change
+the verified engine or factory. This is engineering reproduction, not a completed
+research campaign or submission-ready artifact.

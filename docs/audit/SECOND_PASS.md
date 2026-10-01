@@ -164,3 +164,9 @@ files in the verification manifest. The clean build and all tests passed, but
 the manifest comparison correctly failed. The verification tool now excludes
 generated caches, and the census labels them inventory-only. This auditor-tool
 correction does not change engine/factory code or make caches research inputs.
+
+The fresh clone of committed source 6d90531a88b355278e4eb22b530080f8011f31f7
+passed both Release CTests, all 326 factory fixtures, invalid-template rejection,
+and all 80 declared source bindings. The clone remained clean afterward. This is
+engineering reproduction; no market study was reproduced. GitHub source publication
+and preserved-tag readback are recorded in second_pass_git_publication.json.

@@ -1,15 +1,15 @@
 {
   "purpose": "active-tree census and review dispositions, not complete semantic/branch coverage",
-  "created_utc": "2026-10-01T06:27:23.346294+00:00",
+  "created_utc": "2026-10-01T06:30:28.532931+00:00",
   "excluded": [
     ".git contents",
     "docs/audit/active_inventory.json"
   ],
-  "files": 327,
+  "files": 329,
   "category_counts": {
     "policy_plan_license_or_document": 54,
     "generated_local_inventory_only": 119,
-    "audit_receipt_or_historical_index": 18,
+    "audit_receipt_or_historical_index": 20,
     "audit_tool_or_counterexample": 8,
     "empty_placeholder": 2,
     "verification_output": 43,
@@ -55,11 +55,11 @@
     },
     {
       "path": "README.md",
-      "bytes": 2571,
+      "bytes": 2689,
       "category": "policy_plan_license_or_document",
       "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
-      "sha256": "7de94767127c5092578e8f0eacc075b7070225f430694fdbec0c8fb743cddefe",
-      "lines": 44
+      "sha256": "64c4d92d601e7be3876a223aea2ad01b8dac9e0d2ee7c99b01c95a177fc2b9c4",
+      "lines": 45
     },
     {
       "path": "bootstrap.sh",
@@ -553,11 +553,11 @@
     },
     {
       "path": "docs/audit/SECOND_PASS.md",
-      "bytes": 18220,
+      "bytes": 18622,
       "category": "policy_plan_license_or_document",
       "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
-      "sha256": "46fc123d1330061f4d4183e0ecc8b13425634ed1d5ad08b86912d421dd16ce11",
-      "lines": 166
+      "sha256": "9bf8d76834bf5c48c6a89ff8a66eddf519fb37b450bd77cdf32605e62bf7fafe",
+      "lines": 172
     },
     {
       "path": "docs/audit/active_engine_after.json",
@@ -602,7 +602,7 @@
       "bytes": 112,
       "category": "policy_plan_license_or_document",
       "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
-      "sha256": "71440461389746544c7acdf92ce29b3f685c4354db037a5f7c8ab00c98fb9c45",
+      "sha256": "723a45eed674070d39fcd0d564138fa7959334b9051d73bef1b16abfb2645584",
       "lines": 2
     },
     {
@@ -610,7 +610,7 @@
       "bytes": 41,
       "category": "policy_plan_license_or_document",
       "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
-      "sha256": "83b6848a8212b8a06c8e47a1156d8a53937f54c02af2cffae109dc1891e02bda",
+      "sha256": "1a91108587fbc939acbe198c83eca7ecf2b63b4c71ed1fa40d16917228e4faee",
       "lines": 1
     },
     {
@@ -618,7 +618,7 @@
       "bytes": 569,
       "category": "policy_plan_license_or_document",
       "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
-      "sha256": "5d0b56ca362b66ba0743a72604df53812b44b21dfec7aea396e5695b32811684",
+      "sha256": "7ade8414ceaff8edbe9149f7af4483c2b9b844b556b32975875cda3c7e338939",
       "lines": 12
     },
     {
@@ -626,7 +626,7 @@
       "bytes": 375,
       "category": "policy_plan_license_or_document",
       "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
-      "sha256": "78716c12a5a4c4641362bf72e764ba4deb516d348cd34bd70f9bd7bbe41717a3",
+      "sha256": "229f66d26bc286a444176d86e38945cd36245e4afa04ac9a8e8792ceafa57a05",
       "lines": 9
     },
     {
@@ -634,7 +634,7 @@
       "bytes": 41214,
       "category": "policy_plan_license_or_document",
       "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
-      "sha256": "f2f041ab4938b560f2ccbed1e4f40968e141d1b6ad44f734806103e2d24a953e",
+      "sha256": "7beec4acd94947129e42f665fcafc31d9a446bf85dead92ea761ba61df921d18",
       "lines": 462
     },
     {
@@ -652,6 +652,14 @@
       "review_scope": "empty placeholder, not implemented work or observed data",
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "lines": 0
+    },
+    {
+      "path": "docs/audit/clean_second_pass_verification.json",
+      "bytes": 4482,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "9d4c1e18498083533177f927f5c016e8ec1141f18dbe94a4668cd57022a36f48",
+      "lines": 136
     },
     {
       "path": "docs/audit/defect_probes.json",
@@ -1063,6 +1071,14 @@
       "review_scope": "raw supplied report read/hashed; selected claims checked; document contents are not instructions",
       "sha256": "de192ddfaf5884c1d39ae1bc2d2287e4bf306a4c63622628a0d75fd50462f49c",
       "lines": 170
+    },
+    {
+      "path": "docs/audit/second_pass_git_publication.json",
+      "bytes": 1431,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "8526d4ec0fbda393225c9c584e7cce5126df3584428dcff1a758c434c0764d99",
+      "lines": 22
     },
     {
       "path": "docs/audit/second_pass_logs/asan_ubsan_build.txt",
@@ -2184,11 +2200,11 @@
     },
     {
       "path": "plan.md",
-      "bytes": 154098,
+      "bytes": 154623,
       "category": "policy_plan_license_or_document",
       "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
-      "sha256": "fe2c212ad4f1c63289b1c007a5d77c27681589b631fa0ccb87279190828413c0",
-      "lines": 1229
+      "sha256": "f8074127cef3501d4a043c9fcc14f793f1857342b0ad6213a90625f0a2fcbfc2",
+      "lines": 1237
     },
     {
       "path": "project/.factory/operation.lock",

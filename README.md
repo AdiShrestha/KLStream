@@ -35,7 +35,8 @@ The supplied Deep Research report was assessed critically in
 [assessment.md](docs/audit/research_context/assessment.md).
 Current verification is in
 [second_pass_verification.json](docs/audit/second_pass_verification.json); these are
-correctness fixtures, not research results.
+correctness fixtures, not research results. A fresh committed-source clone also
+passed; see [clean verification](docs/audit/clean_second_pass_verification.json).
 API boundaries and residual risks are in [docs/ENGINE_CONTRACT.md](docs/ENGINE_CONTRACT.md).
 Audit scope, inventories and reproduced counterexamples are in [docs/audit](docs/audit).
 Git preservation receipts are in [docs/audit/git_migration.json](docs/audit/git_migration.json).
