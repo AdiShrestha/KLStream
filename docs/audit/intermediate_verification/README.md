@@ -14,3 +14,8 @@ predates the signed-loss/cap/extreme-arithmetic regressions now in the final sui
 
 Other retained factory logs include the caught test-file edit and restoration.
 They explain audit mistakes and evolving fixtures, never research observations.
+
+The first clean checkout passed its build/tests but its source-manifest check
+failed on five ignored pytest cache files. That failure receipt and logs are
+retained in clean_receipt_cache_boundary_failure.json and clean_cache_boundary_logs.
+The verifier excludes generated caches in its corrected source boundary.

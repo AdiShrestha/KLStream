@@ -158,3 +158,9 @@ All source bytes covered by the receipt remained unchanged during that execution
 Intermediate failures are preserved with an explicit retention limit in
 intermediate_verification/README.md. These observations are fixture verification,
 not a scientific experiment, performance result or complete semantic proof.
+
+The first clean-checkout source comparison included five ignored pytest-cache
+files in the verification manifest. The clean build and all tests passed, but
+the manifest comparison correctly failed. The verification tool now excludes
+generated caches, and the census labels them inventory-only. This auditor-tool
+correction does not change engine/factory code or make caches research inputs.

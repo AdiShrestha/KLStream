@@ -1,26 +1,34 @@
 {
   "purpose": "active-tree census and review dispositions, not complete semantic/branch coverage",
-  "created_utc": "2026-10-01T06:22:38.359539+00:00",
+  "created_utc": "2026-10-01T06:27:23.346294+00:00",
   "excluded": [
     ".git contents",
     "docs/audit/active_inventory.json"
   ],
-  "files": 309,
+  "files": 327,
   "category_counts": {
-    "policy_plan_license_or_document": 52,
-    "generated_local_inventory_only": 112,
+    "policy_plan_license_or_document": 54,
+    "generated_local_inventory_only": 119,
     "audit_receipt_or_historical_index": 18,
     "audit_tool_or_counterexample": 8,
-    "verification_output": 35,
+    "empty_placeholder": 2,
+    "verification_output": 43,
     "untrusted_context_and_critique": 2,
     "active_factory_implementation": 14,
     "historical_factory_quarantine": 32,
     "active_regression_fixture": 10,
-    "empty_placeholder": 1,
     "active_engine_or_fixture": 25
   },
   "python_parse_errors": [],
   "items": [
+    {
+      "path": ".gitattributes",
+      "bytes": 174,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "03114613c536f2f96e73610261b216190a7728ea65c7cf5d00ce6adc6e3180ac",
+      "lines": 2
+    },
     {
       "path": ".gitignore",
       "bytes": 166,
@@ -545,11 +553,11 @@
     },
     {
       "path": "docs/audit/SECOND_PASS.md",
-      "bytes": 17828,
+      "bytes": 18220,
       "category": "policy_plan_license_or_document",
       "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
-      "sha256": "743042fcb121aff22b6bf13dc02a185a5c1d392c3325d56abbec683d58c07ff2",
-      "lines": 160
+      "sha256": "46fc123d1330061f4d4183e0ecc8b13425634ed1d5ad08b86912d421dd16ce11",
+      "lines": 166
     },
     {
       "path": "docs/audit/active_engine_after.json",
@@ -582,6 +590,68 @@
       "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
       "sha256": "5a8280a13c948adce8a4de26656321556ea10708cbd4078c3af8afcd39367768",
       "lines": 51
+    },
+    {
+      "path": "docs/audit/clean_second_pass_logs/build.txt",
+      "bytes": 362,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "docs/audit/clean_second_pass_logs/clone.txt",
+      "bytes": 112,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "71440461389746544c7acdf92ce29b3f685c4354db037a5f7c8ab00c98fb9c45",
+      "lines": 2
+    },
+    {
+      "path": "docs/audit/clean_second_pass_logs/commit.txt",
+      "bytes": 41,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "83b6848a8212b8a06c8e47a1156d8a53937f54c02af2cffae109dc1891e02bda",
+      "lines": 1
+    },
+    {
+      "path": "docs/audit/clean_second_pass_logs/configure.txt",
+      "bytes": 569,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "5d0b56ca362b66ba0743a72604df53812b44b21dfec7aea396e5695b32811684",
+      "lines": 12
+    },
+    {
+      "path": "docs/audit/clean_second_pass_logs/ctest.txt",
+      "bytes": 375,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "78716c12a5a4c4641362bf72e764ba4deb516d348cd34bd70f9bd7bbe41717a3",
+      "lines": 9
+    },
+    {
+      "path": "docs/audit/clean_second_pass_logs/factory_suite.txt",
+      "bytes": 41214,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "f2f041ab4938b560f2ccbed1e4f40968e141d1b6ad44f734806103e2d24a953e",
+      "lines": 462
+    },
+    {
+      "path": "docs/audit/clean_second_pass_logs/invalid_template_certify.txt",
+      "bytes": 95,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "f98e9a83df6645e707fda72fd5f9cd71cf567c69053c2ab1757c6fc5754ec2c1",
+      "lines": 5
+    },
+    {
+      "path": "docs/audit/clean_second_pass_logs/status.txt",
+      "bytes": 0,
+      "category": "empty_placeholder",
+      "review_scope": "empty placeholder, not implemented work or observed data",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lines": 0
     },
     {
       "path": "docs/audit/defect_probes.json",
@@ -625,11 +695,11 @@
     },
     {
       "path": "docs/audit/intermediate_verification/README.md",
-      "bytes": 1011,
+      "bytes": 1325,
       "category": "verification_output",
       "review_scope": "executed or intermediate fixture observations; no research evidence",
-      "sha256": "1f2b286276943a110498f6ee4b63fa2f83ec20fbfa9b23738fc44fb9785bac3e",
-      "lines": 16
+      "sha256": "722a26b18a170773548d56e20f5ffa4b9f4c7ec4aee0dfc3dbe52340fd59a9c8",
+      "lines": 21
     },
     {
       "path": "docs/audit/intermediate_verification/before_final_training_numeric_repairs.json",
@@ -646,6 +716,76 @@
       "review_scope": "executed or intermediate fixture observations; no research evidence",
       "sha256": "0facff1d89a6c213a07fe12fa02ce174ac1c8ff4b0419eaa4b1e858b49483d3e",
       "lines": 5
+    },
+    {
+      "path": "docs/audit/intermediate_verification/clean_cache_boundary_logs/build.txt",
+      "bytes": 362,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "docs/audit/intermediate_verification/clean_cache_boundary_logs/clone.txt",
+      "bytes": 112,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "71440461389746544c7acdf92ce29b3f685c4354db037a5f7c8ab00c98fb9c45",
+      "lines": 2
+    },
+    {
+      "path": "docs/audit/intermediate_verification/clean_cache_boundary_logs/commit.txt",
+      "bytes": 41,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "83b6848a8212b8a06c8e47a1156d8a53937f54c02af2cffae109dc1891e02bda",
+      "lines": 1
+    },
+    {
+      "path": "docs/audit/intermediate_verification/clean_cache_boundary_logs/configure.txt",
+      "bytes": 569,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "5d0b56ca362b66ba0743a72604df53812b44b21dfec7aea396e5695b32811684",
+      "lines": 12
+    },
+    {
+      "path": "docs/audit/intermediate_verification/clean_cache_boundary_logs/ctest.txt",
+      "bytes": 375,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "78716c12a5a4c4641362bf72e764ba4deb516d348cd34bd70f9bd7bbe41717a3",
+      "lines": 9
+    },
+    {
+      "path": "docs/audit/intermediate_verification/clean_cache_boundary_logs/factory_suite.txt",
+      "bytes": 41214,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "f2f041ab4938b560f2ccbed1e4f40968e141d1b6ad44f734806103e2d24a953e",
+      "lines": 462
+    },
+    {
+      "path": "docs/audit/intermediate_verification/clean_cache_boundary_logs/invalid_template_certify.txt",
+      "bytes": 95,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "f98e9a83df6645e707fda72fd5f9cd71cf567c69053c2ab1757c6fc5754ec2c1",
+      "lines": 5
+    },
+    {
+      "path": "docs/audit/intermediate_verification/clean_cache_boundary_logs/status.txt",
+      "bytes": 0,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lines": 0
+    },
+    {
+      "path": "docs/audit/intermediate_verification/clean_receipt_cache_boundary_failure.json",
+      "bytes": 4714,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "5af4162447da4f3ba039399d830592f06a8ce2fd71d4d7609e21727c75d70527",
+      "lines": 142
     },
     {
       "path": "docs/audit/intermediate_verification/coverage_expectation_failure.txt",
@@ -785,10 +925,10 @@
     },
     {
       "path": "docs/audit/inventory_active.py",
-      "bytes": 4661,
+      "bytes": 4707,
       "category": "audit_tool_or_counterexample",
       "review_scope": "auditor fixture/tool; preserves bounded evidence, never a research producer",
-      "sha256": "d2e00d15ff0d6fd54d3148398715dc803a0f502573122d93550953d4c4a3e7af",
+      "sha256": "1d262fa7e7c7a8a8da5c2742ba42d2f430aa05e62126f98af4a92b2b78b7ba20",
       "lines": 65,
       "python_ast": "parsed"
     },
@@ -937,7 +1077,7 @@
       "bytes": 581,
       "category": "verification_output",
       "review_scope": "executed or intermediate fixture observations; no research evidence",
-      "sha256": "cf49b1078515b58670860e3753ba42745980af17ed4c9ed1c033fa0ce3c0943b",
+      "sha256": "c0cde22e6177c368fd689b96513ad90fa810bd72290f3ccfa957462b785e12fa",
       "lines": 12
     },
     {
@@ -945,7 +1085,7 @@
       "bytes": 387,
       "category": "verification_output",
       "review_scope": "executed or intermediate fixture observations; no research evidence",
-      "sha256": "e9841b1b77e6e9d548792a877a84156cf6638362a73dd0cf98be1a4abb8aec4d",
+      "sha256": "2d6bc083ef5c7c981cbaa185aca2348e467d453df752b669fdf74afd1069133e",
       "lines": 9
     },
     {
@@ -969,7 +1109,7 @@
       "bytes": 41180,
       "category": "verification_output",
       "review_scope": "executed or intermediate fixture observations; no research evidence",
-      "sha256": "025563e45b546c265722c80725c4d5f3bccf94418cf3243ad52e3428f3942333",
+      "sha256": "b02514fbacaf5acc1c893191f820b1d4e56029dd323ab7feb369a8dfa6e26024",
       "lines": 462
     },
     {
@@ -1001,7 +1141,7 @@
       "bytes": 578,
       "category": "verification_output",
       "review_scope": "executed or intermediate fixture observations; no research evidence",
-      "sha256": "2ce5e95dd76b59893f6b2d717d3557aa3294b6ed72bd12d809dbc0034591c331",
+      "sha256": "3cfdf3ae42e9a606e77c871ee7ad7fa161b743d188d7dae33468b47308f0ecc1",
       "lines": 12
     },
     {
@@ -1009,7 +1149,7 @@
       "bytes": 384,
       "category": "verification_output",
       "review_scope": "executed or intermediate fixture observations; no research evidence",
-      "sha256": "32ab803122a32eeacdbdf12d7de2036ad323284408b2386fe445a29d90f47b9b",
+      "sha256": "57c04d676567dfe3b8406d181fadd6c71ca718949115a726d7cf9055b28ed25a",
       "lines": 9
     },
     {
@@ -1046,11 +1186,11 @@
     },
     {
       "path": "docs/audit/second_pass_verification.json",
-      "bytes": 21731,
+      "bytes": 21175,
       "category": "audit_receipt_or_historical_index",
       "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
-      "sha256": "fb4057ae2cfcca6bbfc9e011dc08b076955810deabfd68f352869044e0d7eaf3",
-      "lines": 440
+      "sha256": "1d2d8761d32d7fa0156bdf673b513606a6d60ad365880ca54ec24de7aaf47dee",
+      "lines": 435
     },
     {
       "path": "docs/audit/verification_summary.json",
@@ -1062,10 +1202,10 @@
     },
     {
       "path": "docs/audit/verify_active.py",
-      "bytes": 9026,
+      "bytes": 9053,
       "category": "audit_tool_or_counterexample",
       "review_scope": "auditor fixture/tool; preserves bounded evidence, never a research producer",
-      "sha256": "1e36e6a6d440c2bfd556d6213ce5e0c350f82ac60b5f093ccec5577ba3ad529b",
+      "sha256": "d3bb7fd1c5e410037ffce39fccf7daa13c283a260347d5668bc72837f54583c7",
       "lines": 137,
       "python_ast": "parsed"
     },
@@ -1089,42 +1229,32 @@
     {
       "path": "factory/.pytest_cache/.gitignore",
       "bytes": 37,
-      "category": "policy_plan_license_or_document",
-      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
-      "sha256": "3ed731b65d06150c138e2dadb0be0697550888a6b47eb8c45ecc9adba8b8e9bd",
-      "lines": 2
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
     },
     {
       "path": "factory/.pytest_cache/CACHEDIR.TAG",
       "bytes": 191,
-      "category": "policy_plan_license_or_document",
-      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
-      "sha256": "37dc88ef9a0abeddbe81053a6dd8fdfb13afb613045ea1eb4a5c815a74a3bde4",
-      "lines": 4
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
     },
     {
       "path": "factory/.pytest_cache/README.md",
       "bytes": 302,
-      "category": "policy_plan_license_or_document",
-      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
-      "sha256": "73fd6fccdd802c419a6b2d983d6c3173b7da97558ac4b589edec2dfe443db9ad",
-      "lines": 8
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
     },
     {
       "path": "factory/.pytest_cache/v/cache/lastfailed",
       "bytes": 2,
-      "category": "policy_plan_license_or_document",
-      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
-      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-      "lines": 1
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
     },
     {
       "path": "factory/.pytest_cache/v/cache/nodeids",
       "bytes": 23162,
-      "category": "policy_plan_license_or_document",
-      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
-      "sha256": "623874355340bf24fc81ef6048eb12a2f2efb13898bbf2c4cf938fafce081004",
-      "lines": 282
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
     },
     {
       "path": "factory/AGENT_WORKFLOW.md",

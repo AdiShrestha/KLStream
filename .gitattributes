@@ -1,0 +1,2 @@
+# Preserve the received report byte-for-byte, including its Markdown whitespace.
+docs/audit/research_context/deep_research_received.md whitespace=-blank-at-eol,-blank-at-eof

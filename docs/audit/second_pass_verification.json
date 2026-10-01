@@ -1,6 +1,6 @@
 {
   "purpose": "executed software fixtures only; no research, performance or certification claim",
-  "started_utc": "2026-10-01T06:21:08.236351+00:00",
+  "started_utc": "2026-10-01T06:26:20.789387+00:00",
   "platform": "macOS-27.0-arm64-arm-64bit",
   "machine": "arm64",
   "python": "3.12.8 (v3.12.8:2dc476bcb91, Dec  3 2024, 14:43:19) [Clang 13.0.0 (clang-1300.0.29.30)]",
@@ -12,29 +12,29 @@
         "-S",
         "/Users/adi/Desktop/Projects/Using v3.3 New projects/Brolq New",
         "-B",
-        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-3n5ni79e/release",
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-reffu3vh/release",
         "-DCMAKE_BUILD_TYPE=Release"
       ],
       "exit_code": 0,
       "expected_exit_code": 0,
       "passed": true,
-      "wall_seconds": 0.6262111250543967,
+      "wall_seconds": 0.7501117920037359,
       "log": "docs/audit/second_pass_logs/release_configure.txt",
-      "log_sha256": "2ce5e95dd76b59893f6b2d717d3557aa3294b6ed72bd12d809dbc0034591c331"
+      "log_sha256": "3cfdf3ae42e9a606e77c871ee7ad7fa161b743d188d7dae33468b47308f0ecc1"
     },
     {
       "name": "release_build",
       "argv": [
         "cmake",
         "--build",
-        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-3n5ni79e/release",
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-reffu3vh/release",
         "--parallel",
         "2"
       ],
       "exit_code": 0,
       "expected_exit_code": 0,
       "passed": true,
-      "wall_seconds": 1.2189380840864033,
+      "wall_seconds": 1.310188208008185,
       "log": "docs/audit/second_pass_logs/release_build.txt",
       "log_sha256": "5cea48c3334f0bee6fefc220c04fca9efe3ea02fb6dd446dcdf1b8d864f0a7ee"
     },
@@ -43,15 +43,15 @@
       "argv": [
         "ctest",
         "--test-dir",
-        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-3n5ni79e/release",
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-reffu3vh/release",
         "--output-on-failure"
       ],
       "exit_code": 0,
       "expected_exit_code": 0,
       "passed": true,
-      "wall_seconds": 1.0056691250065342,
+      "wall_seconds": 0.9562736250227317,
       "log": "docs/audit/second_pass_logs/release_ctest.txt",
-      "log_sha256": "32ab803122a32eeacdbdf12d7de2036ad323284408b2386fe445a29d90f47b9b"
+      "log_sha256": "57c04d676567dfe3b8406d181fadd6c71ca718949115a726d7cf9055b28ed25a"
     },
     {
       "name": "asan_ubsan_configure",
@@ -60,30 +60,30 @@
         "-S",
         "/Users/adi/Desktop/Projects/Using v3.3 New projects/Brolq New",
         "-B",
-        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-3n5ni79e/asan_ubsan",
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-reffu3vh/asan_ubsan",
         "-DCMAKE_BUILD_TYPE=Debug",
         "-DKLSTREAM_SANITIZERS=ON"
       ],
       "exit_code": 0,
       "expected_exit_code": 0,
       "passed": true,
-      "wall_seconds": 0.5510353749850765,
+      "wall_seconds": 0.6043775420403108,
       "log": "docs/audit/second_pass_logs/asan_ubsan_configure.txt",
-      "log_sha256": "cf49b1078515b58670860e3753ba42745980af17ed4c9ed1c033fa0ce3c0943b"
+      "log_sha256": "c0cde22e6177c368fd689b96513ad90fa810bd72290f3ccfa957462b785e12fa"
     },
     {
       "name": "asan_ubsan_build",
       "argv": [
         "cmake",
         "--build",
-        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-3n5ni79e/asan_ubsan",
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-reffu3vh/asan_ubsan",
         "--parallel",
         "2"
       ],
       "exit_code": 0,
       "expected_exit_code": 0,
       "passed": true,
-      "wall_seconds": 1.103109374991618,
+      "wall_seconds": 1.1479024160653353,
       "log": "docs/audit/second_pass_logs/asan_ubsan_build.txt",
       "log_sha256": "44e233cf727ca2037af148fc5b8eb09ba7d3a749ac3248c772e8d97f461a3c7d"
     },
@@ -92,15 +92,15 @@
       "argv": [
         "ctest",
         "--test-dir",
-        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-3n5ni79e/asan_ubsan",
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-reffu3vh/asan_ubsan",
         "--output-on-failure"
       ],
       "exit_code": 0,
       "expected_exit_code": 0,
       "passed": true,
-      "wall_seconds": 1.0307442089542747,
+      "wall_seconds": 1.147705041919835,
       "log": "docs/audit/second_pass_logs/asan_ubsan_ctest.txt",
-      "log_sha256": "e9841b1b77e6e9d548792a877a84156cf6638362a73dd0cf98be1a4abb8aec4d"
+      "log_sha256": "2d6bc083ef5c7c981cbaa185aca2348e467d453df752b669fdf74afd1069133e"
     },
     {
       "name": "tsan_compile",
@@ -120,24 +120,24 @@
         "/Users/adi/Desktop/Projects/Using v3.3 New projects/Brolq New/source/include",
         "/Users/adi/Desktop/Projects/Using v3.3 New projects/Brolq New/source/tests/engine_tests.cpp",
         "-o",
-        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-3n5ni79e/engine_tests_tsan"
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-reffu3vh/engine_tests_tsan"
       ],
       "exit_code": 0,
       "expected_exit_code": 0,
       "passed": true,
-      "wall_seconds": 1.1553716659545898,
+      "wall_seconds": 1.179916916997172,
       "log": "docs/audit/second_pass_logs/tsan_compile.txt",
       "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
       "name": "tsan_run",
       "argv": [
-        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-3n5ni79e/engine_tests_tsan"
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-reffu3vh/engine_tests_tsan"
       ],
       "exit_code": 0,
       "expected_exit_code": 0,
       "passed": true,
-      "wall_seconds": 0.7317777499556541,
+      "wall_seconds": 0.7262407079106197,
       "log": "docs/audit/second_pass_logs/tsan_run.txt",
       "log_sha256": "1cecb6867602490008428bf3deff29e08c207db18d60a00071616cb468eee761"
     },
@@ -150,21 +150,21 @@
       "exit_code": 0,
       "expected_exit_code": 0,
       "passed": true,
-      "wall_seconds": 5.783879249938764,
+      "wall_seconds": 5.809869999997318,
       "log": "docs/audit/second_pass_logs/factory_suite.txt",
-      "log_sha256": "025563e45b546c265722c80725c4d5f3bccf94418cf3243ad52e3428f3942333"
+      "log_sha256": "b02514fbacaf5acc1c893191f820b1d4e56029dd323ab7feb369a8dfa6e26024"
     },
     {
       "name": "signature_removal_probe",
       "argv": [
         "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
         "/Users/adi/Desktop/Projects/Using v3.3 New projects/Brolq New/docs/audit/probe_factory_signature.py",
-        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-3n5ni79e/signature.json"
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-reffu3vh/signature.json"
       ],
       "exit_code": 0,
       "expected_exit_code": 0,
       "passed": true,
-      "wall_seconds": 0.1902445419691503,
+      "wall_seconds": 0.20446429203730077,
       "log": "docs/audit/second_pass_logs/signature_removal_probe.txt",
       "log_sha256": "18d665bf61d9781b83eddaba8e30a7a22bb4f4e33c25784fbafbfc6e2c3b87fc"
     },
@@ -173,12 +173,12 @@
       "argv": [
         "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
         "/Users/adi/Desktop/Projects/Using v3.3 New projects/Brolq New/docs/audit/probe_current_bundle.py",
-        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-3n5ni79e/bundle.json"
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-reffu3vh/bundle.json"
       ],
       "exit_code": 0,
       "expected_exit_code": 0,
       "passed": true,
-      "wall_seconds": 0.19286758301313967,
+      "wall_seconds": 0.1964815000537783,
       "log": "docs/audit/second_pass_logs/standalone_bundle_probe.txt",
       "log_sha256": "0f61096559aedae26dcbf2fccc8552fad0626108464ae64b0b12ce34adc73e41"
     },
@@ -193,7 +193,7 @@
       "exit_code": 31,
       "expected_exit_code": 31,
       "passed": true,
-      "wall_seconds": 0.06252825004048645,
+      "wall_seconds": 0.06198237498756498,
       "log": "docs/audit/second_pass_logs/invalid_template_certify.txt",
       "log_sha256": "f98e9a83df6645e707fda72fd5f9cd71cf567c69053c2ab1757c6fc5754ec2c1"
     },
@@ -208,41 +208,36 @@
         "/Users/adi/Desktop/Projects/Using v3.3 New projects/Brolq New/source/include",
         "/Users/adi/Desktop/Projects/Using v3.3 New projects/Brolq New/docs/audit/active_engine_counterexamples.cpp",
         "-o",
-        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-3n5ni79e/engine_counterexamples"
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-reffu3vh/engine_counterexamples"
       ],
       "exit_code": 0,
       "expected_exit_code": 0,
       "passed": true,
-      "wall_seconds": 0.4297233750112355,
+      "wall_seconds": 0.3898583329282701,
       "log": "docs/audit/second_pass_logs/engine_probe_compile.txt",
       "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
       "name": "engine_probe_run",
       "argv": [
-        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-3n5ni79e/engine_counterexamples"
+        "/var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-reffu3vh/engine_counterexamples"
       ],
       "exit_code": 0,
       "expected_exit_code": 0,
       "passed": true,
-      "wall_seconds": 0.36891225003637373,
+      "wall_seconds": 0.36747816705610603,
       "log": "docs/audit/second_pass_logs/engine_probe_run.txt",
       "log_sha256": "4360ffb089805f32ac0a577b9b0518fa420fbf3996475f7c580c85143d9e1b0a"
     }
   ],
   "source_sha256": {
     "CMakeLists.txt": "397a883a49f56d76081dcbcad46e17778da7f8b25ff7c4b6804b9368ac63f976",
-    "docs/audit/inventory_active.py": "d2e00d15ff0d6fd54d3148398715dc803a0f502573122d93550953d4c4a3e7af",
+    "docs/audit/inventory_active.py": "1d262fa7e7c7a8a8da5c2742ba42d2f430aa05e62126f98af4a92b2b78b7ba20",
     "docs/audit/inventory_legacy.py": "7c1b1d08ec11d5a8f5fb3da636568b633cf5c92f32a435c52c1cd206e93f0e17",
     "docs/audit/probe_current_bundle.py": "a2e93032abd6e208101e2f5f6f5d24efc937aa5473b71bf2d6dd25aa44a59adb",
     "docs/audit/probe_factory_signature.py": "44d77b0c3144475467e1efd88e90f79effc8253b4fd21231cf1f48384b0bade2",
     "docs/audit/probe_legacy.py": "d8e05ead9fbee5652807bd17d8d708c5992f4eec5c37353bcf0fa425546df994",
-    "docs/audit/verify_active.py": "1e36e6a6d440c2bfd556d6213ce5e0c350f82ac60b5f093ccec5577ba3ad529b",
-    "factory/.pytest_cache/.gitignore": "3ed731b65d06150c138e2dadb0be0697550888a6b47eb8c45ecc9adba8b8e9bd",
-    "factory/.pytest_cache/CACHEDIR.TAG": "37dc88ef9a0abeddbe81053a6dd8fdfb13afb613045ea1eb4a5c815a74a3bde4",
-    "factory/.pytest_cache/README.md": "73fd6fccdd802c419a6b2d983d6c3173b7da97558ac4b589edec2dfe443db9ad",
-    "factory/.pytest_cache/v/cache/lastfailed": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-    "factory/.pytest_cache/v/cache/nodeids": "623874355340bf24fc81ef6048eb12a2f2efb13898bbf2c4cf938fafce081004",
+    "docs/audit/verify_active.py": "d3bb7fd1c5e410037ffce39fccf7daa13c283a260347d5668bc72837f54583c7",
     "factory/AGENT_WORKFLOW.md": "d3c3fd5c185e0f9368d7ac8d2fbab4d4081b8cb0d08313e32412fd9fac5fb3aa",
     "factory/CHANGELOG.md": "a36072207d36a385ba48108c282da686bf9c67caa8ddfafbcbcbff3d7dff2b95",
     "factory/ClaudeInitialization.md": "184edabe9e3218deed2b141a7d269680e63a6377d04ef2f34fe56d6ab9c6a629",
@@ -357,18 +352,18 @@
   },
   "storage_observation_bytes": {
     "total": 494384795648,
-    "used": 374770241536,
-    "free": 119614554112
+    "used": 374767362048,
+    "free": 119617433600
   },
   "release_binary_sha256": {
     "engine_tests": "3553bc027ad2d1151f514e0dc811306fa9950cb0c73f06a65546069632414025",
     "forest_reference_dump": "a98eb981c102b231b0209cdada3aab43445b40e287246a83d05168747d2f4ac5"
   },
   "asan_ubsan_binary_sha256": {
-    "engine_tests": "a6f43ba5fb3d450dfff9c2511233685dac9cc502bb3d526f123072e5644cbef6",
-    "forest_reference_dump": "db25735068bacbeeb85af5e7fb08207240962943f6c59487d2f85fd1f539acc2"
+    "engine_tests": "209dfd6de5e8604182c050fb93a8628a48651652e09673c51a233d4c6c5f1052",
+    "forest_reference_dump": "0d65b1f7c8aa1642d28ee0a7d1384c8b17209e06c38edac2292ef88f788a2cca"
   },
-  "tsan_binary_sha256": "1175e23e75345af69be055a0a58d7e91052e08104c9d2b782054241068af9ee7",
+  "tsan_binary_sha256": "22425273c4e5a75332aa7d539af4c2328292cc51a3354809479951009bfa2cd3",
   "public_headers": {
     "count": 21,
     "failed": [],
@@ -435,6 +430,6 @@
     "passed": true
   },
   "source_unchanged_during_verification": true,
-  "finished_utc": "2026-10-01T06:21:26.902436+00:00",
+  "finished_utc": "2026-10-01T06:26:39.954936+00:00",
   "passed": true
 }

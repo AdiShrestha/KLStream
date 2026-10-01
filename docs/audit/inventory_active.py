@@ -13,7 +13,7 @@ SELF_EXCLUDED={'docs/audit/active_inventory.json'}
 
 def classify(relative, size):
     parts=relative.parts
-    if '__pycache__' in parts or any(x.startswith('build') for x in parts) or relative.suffix in ('.pyc','.pyo','.log') or relative.name=='.DS_Store':
+    if {'__pycache__','.pytest_cache','.cache','.venv'}.intersection(parts) or any(x.startswith('build') for x in parts) or relative.suffix in ('.pyc','.pyo','.log') or relative.name=='.DS_Store':
         return 'generated_local_inventory_only','path/size only; excluded from review/research'
     if parts[:3]==('factory','legacy','v2_6_0'):
         return 'historical_factory_quarantine','hashed/line-counted; inactive historical code, not semantically revalidated'

@@ -30,7 +30,7 @@ def sha(path):
 def source_hashes():
     paths=[ROOT/'CMakeLists.txt']
     paths += [p for base in ('source','factory') for p in (ROOT/base).rglob('*') if p.is_file()
-              and '__pycache__' not in p.parts and 'legacy' not in p.parts]
+              and not {'__pycache__','.pytest_cache','.cache','.venv','legacy'}.intersection(p.parts)]
     paths += list((ROOT/'docs/audit').glob('*.py'))
     return {str(p.relative_to(ROOT)):sha(p) for p in sorted(paths)}
 
