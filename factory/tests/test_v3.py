@@ -88,7 +88,7 @@ class LifecycleTests(unittest.TestCase):
   self.execute();_,ep,_=g.active(self.r);p=ep/'runs/known/attempt0001/predictions.csv';p.write_text(p.read_text().replace('0.8','0.9'));self.assertTrue(evaluate(self.r)['errors'])
  def test_forged_metrics_even_after_rehash(self):
   self.execute();_,ep,_=g.active(self.r);p=ep/'runs/known/attempt0001/result.json';x=read_json(p);x['reported_metrics']['test']['auroc']=0.;write_json(p,x);forged_output_rehash(self.r)
-  self.assertTrue(any('independent recomputation' in x['detail'] for x in evaluate(self.r)['errors']))
+  self.assertTrue(any('authenticated receipt' in x['detail'] for x in evaluate(self.r)['errors']))
  def test_phantom_prediction_even_after_rehash(self):
   self.execute();_,ep,_=g.active(self.r);p=ep/'runs/known/attempt0001/predictions.csv';p.write_text(p.read_text().replace('s8,','phantom,'));forged_output_rehash(self.r);self.assertTrue(evaluate(self.r)['errors'])
  def test_label_mismatch_even_after_rehash(self):
@@ -111,7 +111,7 @@ class LifecycleTests(unittest.TestCase):
   (self.r/'source/run.py').write_text('raise RuntimeError("intentional fixture failure")');g.freeze(self.r);self.assertNotEqual(g.run_exp(self.r,'known'),0)
   _,ep,_=g.active(self.r);self.assertTrue((ep/'runs/known/attempt0001/execution.json').exists())
  def test_successful_run_is_rechecked_not_reexecuted(self):
-  self.execute();self.assertEqual(g.run_exp(self.r,'known'),0);_,ep,_=g.active(self.r);self.assertEqual(len(list((ep/'runs/known').glob('attempt*'))),1)
+  self.execute();self.assertEqual(g.run_exp(self.r,'known'),0);_,ep,_=g.active(self.r);self.assertEqual(len([path for path in (ep/'runs/known').glob('attempt*') if path.is_dir()]),1)
  def test_record_rejects_attempt_outside_active_epoch(self):
   self.execute();_,ep,_=g.active(self.r);outside=self.r/'outside-attempt';outside.mkdir();(outside/'execution.json').write_text((ep/'runs/known/attempt0001/execution.json').read_text())
   with self.assertRaises(EvidenceError):g.record(self.r,'known','outside-attempt')

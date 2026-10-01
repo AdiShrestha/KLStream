@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-"""Audit fixture only: demonstrate unsigned acceptance in supplied factory 3.3.0.
+"""Audit fixture only: challenge the currently installed receipt verification.
 Run: PYTHONDONTWRITEBYTECODE=1 python3 docs/audit/probe_factory_signature.py OUTPUT.json
 Never use this fixture as research evidence or a release certificate.
+The preserved factory_signature_counterexample.json records the original 3.3.0
+failure. Repaired code should emit BLOCKED; never overwrite that historical file.
 """
 import contextlib
 import io

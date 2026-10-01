@@ -1,4 +1,4 @@
-# Active engine contract — foundation 0.3.0
+# Active engine contract — foundation 0.3.1
 
 This is a correctness foundation, not a full application or a validated performance
 contribution. Headers are under `source/include/klstream`, tests under `source/tests`.
@@ -44,7 +44,7 @@ must never be reported as a zero-loss run. Join then inspect cancellation/error
 status. Worker exceptions fail the run, even if some outputs were already written.
 
 Source generator `false` means permanent EOS. It is not a pause/retry signal.
-Source throttling is explicit and single-owner token accounting is required; no
+Source throttling is explicit. Token accounting and rate changes share a mutex; no
 implicit occupancy-based source pacing occurs. Research harnesses must separately
 measure offered work, source delay and admission so backpressure cannot conceal
 an overloaded offered stream. Legacy restart/work stealing APIs were removed.
@@ -59,7 +59,8 @@ per-event latency observation or complete lineage. Add explicit member-ID lineag
 before using aggregates in an experiment.
 
 `EventBatch<T,Max>` retains all constituent Events, including sequence IDs and
-source creation timestamps. The target selector runs at batch start; target is checked
+source creation timestamps. The deadline opens at first-item receipt before target selection, including selector cost.
+The target selector runs at batch start; target is checked
 in [1,Max]. Batch size is bounded by the template maximum, not a secret universal
 256-event assumption. A processing-time deadline requests partial readiness; scheduler delay and output
 backpressure can delay publication. EOS flushes partial batches.
@@ -100,8 +101,42 @@ Counters are thread-safe but counter equality is not ID conservation. Apple QoS
 requests are scheduling hints, not guaranteed P/E core pinning. GPU work is absent.
 
 Executed on the current Mac: release correctness tests, ASan/UBSan tests, a ThreadSanitizer fixture run, and
-independent compilation of 20 public headers. Tested fixtures cover queue capacity,
+independent compilation of 21 public headers. Tested fixtures cover queue capacity,
 concurrency/unique IDs, completion/drain, partial batches, pending transforms,
 exceptions, parameter rejection, overflow and small-sample model normalization.
 These checks are not formal verification, exhaustive race detection,
 cross-platform validation, production readiness or research performance evidence.
+
+## Second-pass corrections and verification
+
+Queue state distinguishes Open, Closed and Cancelled. Cancellation never reports
+drained EOS, and later close cannot replace cancellation. Operators reject cancelled
+input and premature output closure; a failed run cannot look like normal Finished.
+Close still requires producer quiescence. Source assigns monotone sequence IDs even
+when generators return Event::make; harness IDs must additionally bind run/source.
+Defaults initialize event fields, and diagnostic counter overflow raises an error.
+
+Rate changes credit elapsed time at the preceding rate. Explicit initial-clock,
+consume_at and set_rate_at APIs permit deterministic budget checks; callers must
+share a monotone clock domain. Rate is bounded by declared floor/nominal values;
+throttle validates [0,1]. EMA starts from its first valid observation and uses one
+cached raw pressure observation per update. This does not make approximate queue
+occupancy an exact conservation measure. Mutex overhead must be measured in pilots.
+
+Histogram ranks use integer fractions. Named p50/p95/p99 are exact rational ranks;
+the convenience floating API uses a documented 1e-9 grid and rejects finer values.
+Bucket lower bounds and infinite overflow remain diagnostic, not exact event tails.
+Negative drain deadlines fail before requesting source termination. Unknown worker
+statuses fail rather than looping. Cancellation still cannot interrupt a callback.
+
+The forest retains double split thresholds, calculates height in integer arithmetic
+and exposes read-only tree nodes/sample counts. Fit invalidates inspection references;
+this is not a stable disk format. A separate Python oracle reconstructs fixture
+partitions and path scores. This establishes limited independent arithmetic checks,
+not EIF equivalence, sklearn compatibility or market validity. Portable export and
+broader reference comparison remain KLS-06.
+
+Read docs/audit/SECOND_PASS.md and second_pass_verification.json for current repairs,
+executed commands, raw log hashes and residual limits. ASan/UBSan and TSan are separate
+builds. Tests use explicitly declared fixtures. No benchmark or publication result
+is accepted by the engine test executable.

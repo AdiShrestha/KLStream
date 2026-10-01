@@ -1,6 +1,7 @@
 # Start here: Architect and Implementor
 
-Read root `plan.md`, `docs/ENGINE_CONTRACT.md`, `docs/audit/AUDIT_SCOPE.md`, the active
+Read root `plan.md`, `docs/ENGINE_CONTRACT.md`, `docs/audit/AUDIT_SCOPE.md`, `docs/audit/SECOND_PASS.md`,
+`docs/audit/research_context/assessment.md`, the active
 factory constitution/specifications and the assigned contract. You need no access
 to the old folder to understand this plan. The audit inventories and excerpts
 preserve file identities and defect evidence; legacy code stays in preserved Git
@@ -26,13 +27,24 @@ Architect reviews raw inputs before the report conclusion. Same-model review is
 recorded as such. No agent may claim a factory gate is repaired solely because its
 unit tests pass; KLS-02 requires adversarial full lifecycle acceptance tests.
 
-Factory 3.3.0's existing workflow is retained. This plan supplies domain requirements
-and documents defects; it does not claim those requirements are already executable.
-Add the streaming adapter, language-aware scanning, native runtime, receipt
-verification and honest assurance transitions before freeze/run/audit/certify.
-Version the changes and retain old policies. Do not lower gates to make KLStream pass.
-No fake epoch loss curves, synthetic replacement market data, manually filled
-benchmark values, unearned INDEPENDENT review or fabricated READY status.
+Factory 3.3.1 is a local corrected derivative. Cryptographic receipt verification,
+canonical typed/legacy Python argv, signed attempt retention and truthful local
+assurance were repaired and challenged with regressions. These fixes do not accept
+the whole KLS-02 contract: native streaming profile, build/binary attestation,
+lossless event metrics, lineage/conservation dispatch and native source review are
+still missing. Same-user keys do not seal labels or isolate a malicious worker.
+Root plan section 29 gives current contract status and the next implementation.
+
+Engine 0.3.1 has additional cancellation, source-ID, token-accounting, deadline,
+quantile and forest corrections with an independent scalar oracle. KLS-01 is
+partially implemented for the documented primitive scope; full research topology
+and integration acceptance are still open. Use the verification receipt's actual
+scope; do not say every possible mathematical/scientific error has been eliminated.
+
+Do not invent epoch losses, labels, source counts, measured benchmarks, independent
+review or READY status. Keep the project plan invalid until real prerequisites
+exist. Incorrect gates must be corrected with evidence; valid negative/flat or
+budget-limited outcomes must not be edited merely to pass a heuristic.
 
 The research objective is honest knowledge. A null effect, negative controller,
 limited domain, failed replication or unresolved data-access blocker must stay

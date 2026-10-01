@@ -34,3 +34,10 @@ SEALED_EVALUATION_ATTESTED. Passing tests and this failing assurance property co
 New engine release, ASan/UBSan and ThreadSanitizer fixture checks passed; 20 public headers were
 compiled independently. All such outputs are software checks on declared fixtures,
 not published empirical evidence. See `verification_summary.json` and `plan.md`.
+
+## Second-pass status — 2026-10-01
+
+The preceding counts/results describe the initial audit. See SECOND_PASS.md,
+active_inventory.json and second_pass_verification.json for current implementation
+repairs, file dispositions and executed checks. The signature-removal gap is now
+repaired locally; native streaming and scientific prerequisites remain open.

@@ -1,5 +1,10 @@
 # Coverage matrix: supplied findings and v2.7 proposals
 
+> Historical foundation/audit document. Current second-pass status is in
+> docs/audit/SECOND_PASS.md and its verification receipt; plan.md section 29
+> supersedes earlier present-tense gaps. No research readiness is claimed.
+
+
 | Finding / proposal | v3 treatment | Hard machine gate? |
 |---|---|---|
 | F-001, F-014 / D-075 | Recomputed sensitivity curves, planned levels, repeats; flat curves become diagnostics requiring review | Evidence audit + review |

@@ -2,8 +2,8 @@
 
 These tests go BEYOND the attack registry. They attempt to find gaps,
 race conditions, edge cases, and novel bypasses that the v3.3.0
-hardening might have missed. Every test that passes means the factory
-is secure; every failure is a real loophole.
+hardening might have missed. These finite checks exercise specific behaviors; passing does not prove security.
+Failures require diagnosis and do not automatically prove an exploitable loophole.
 """
 import contextlib
 import hashlib
@@ -692,14 +692,12 @@ class LifecycleBypassStressTests(unittest.TestCase):
         self.assertFalse(cert_path.exists())
 
     def test_mutated_engine_after_freeze_caught(self):
-        """If the factory code changes after freeze, audit must catch it."""
-        g.freeze(self.r)
-        self.assertEqual(g.run_exp(self.r, 'known'), 0)
-        # The engine hash in freeze was computed at freeze time
-        # Changing engine code would change engine_hash()
-        _, _, f = g.active(self.r)
-        # Simulate by checking the binding
-        self.assertEqual(f['engine_sha256'], g.engine_hash())
+        from tests.test_v3 import evaluate
+        g.freeze(self.r);self.assertEqual(g.run_exp(self.r,'known'),0)
+        self.assertEqual(evaluate(self.r)['errors'],[])
+        with patch.object(g,'engine_hash',return_value='0'*64):
+            result=evaluate(self.r)
+        self.assertTrue(any(error['code']=='FREEZE' and 'factory code changed' in error['detail'] for error in result['errors']))
 
     def test_source_mutation_between_freeze_and_run(self):
         """Mutating source between freeze and run must be detected."""

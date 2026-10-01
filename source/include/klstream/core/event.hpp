@@ -23,10 +23,10 @@ namespace klstream {
 template <typename Payload>
 struct Event {
     static_assert(std::is_trivially_copyable_v<Payload>, "Event payload must be trivially copyable");
-    std::uint64_t timestamp_ns;  // source creation nanoseconds in the process steady-clock domain
-    std::uint64_t key;           // routing / grouping key
-    std::uint64_t seq;           // sequence number (set by source, monotonic)
-    Payload       data;          // user payload — must be trivially copyable
+    std::uint64_t timestamp_ns{0};  // source creation nanoseconds in the process steady-clock domain
+    std::uint64_t key{0};           // routing / grouping key
+    std::uint64_t seq{0};           // sequence number (set by source, monotonic)
+    Payload       data{};          // user payload — must be trivially copyable
 
     // ── Factory helpers ───────────────────────────────────────────────────
     static Event make(Payload d, std::uint64_t k = 0, std::uint64_t s = 0) {

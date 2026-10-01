@@ -1,4 +1,4 @@
-# Active dynamic rules — v3.3.0
+# Active dynamic rules — v3.3.1
 
 **DR-001 Evidence before status:** output schemas, hashes, and exit codes establish integrity only; predictions and observations must be recomputed.
 
@@ -18,10 +18,10 @@
 
 Each rule is enforced only where `gatekeeper_spec.md` says it is. The remainder belongs in the review and is printed as a limit. New rules require a reproducing regression test and an explicit false-positive analysis.
 
-## v3.2.0–v3.3.0 verification rules
+## v3.2.0–v3.3.1 verification rules
 
 ### D-074 (Category: Scientific sufficiency, Status: ACTIVE)
-Training convergence evidence is required for comparative claims. Evidence: one incident, this project. Implementation: `Audit.training` and `Audit.training_sufficiency` check epochs, loss slope, criterion, and justification. Verification: regression fixtures cover short, declining, and converged traces.
+Training evidence is method-specific; explicit convergence claims require support, while registered budget-limited nonconvergence remains admissible with a diagnostic. Evidence: one incident, this project. Implementation: `Audit.training` and `Audit.training_sufficiency` check epochs, loss slope, criterion, and justification. Verification: regression fixtures cover short, declining, and converged traces.
 
 ### D-075 (Category: Sensitivity, Status: ACTIVE)
 A sensitivity sweep with a degenerate flat response is surfaced for investigation unless explicitly expected. Evidence: one incident, this project. Implementation: `Audit.analyses` and audit diagnostics. Verification: flat-curve fixture.
@@ -36,7 +36,7 @@ Comparative claims require minimum total and per-class sample support and an exp
 Undisclosed synthetic fallbacks are blocked; disclosed test-only fallbacks remain visible warnings. Evidence: one incident, this project. Implementation: `acquisition_audit`. Verification: fallback fixtures.
 
 ### D-079 (Category: Results, Status: ACTIVE)
-Below-chance results are mandatory stops unless explicitly reported as null. Evidence: one incident, this project. Implementation: `verify_result_plausibility`. Verification: AUROC fixture.
+Applicable AUROC chance diagnostics require investigation. Negative and inconclusive results are valid; F1 and accuracy have no universal chance threshold. Evidence: one incident, this project. Implementation: `verify_result_plausibility`. Verification: AUROC fixture.
 
 ### D-080 (Category: Results, Status: ACTIVE)
 Suspiciously perfect evidence requires an investigation note. Evidence: one incident, this project. Implementation: `verify_result_plausibility`. Verification: p=0 and all-supported fixtures.
@@ -63,7 +63,7 @@ Comparative and causal contracts require scientific sufficiency, split, and plau
 Evidence parsing rejects duplicate keys, non-finite constants, and symlink/path escapes at every component. Evidence: observed undocumented mechanism in a noncompliant build. Implementation: `engine.io.read_json` and shared readers. Verification: parser and path fixtures.
 
 ### D-088 (Category: Attempts, Status: ACTIVE)
-Every execution attempt is retained and only the latest successful attempt can certify. Evidence: observed undocumented mechanism in a noncompliant build. Implementation: epoch attempt records and audit. Verification: failed-then-success fixture.
+Every dispatched local attempt is authenticated in a ledger and retained. Failed attempts require amendments; missing ledger members block audit. Outside-workspace history is not known. Evidence: observed undocumented mechanism in a noncompliant build. Implementation: Audit.experiment and authenticated epoch attempt records. Verification: failed-then-success fixture.
 
 ### D-089 (Category: Reproducibility, Status: ACTIVE)
 Benchmark-critical nondeterministic results require fresh-process replay within tolerance. Evidence: observed undocumented mechanism in a noncompliant build. Implementation: `Audit.claims`. Verification: mismatch fixture.
@@ -83,7 +83,7 @@ Ablations above five components require a disclosed fractional-factorial alias s
 ### D-094 (Category: Execution safety, Status: ACTIVE)
 Experiment commands execute as argv lists with allowlisted experiment IDs. Evidence: observed undocumented mechanism in a noncompliant build. Implementation: `engine.plan.validate` and `safe_args`. Verification: shell metacharacter fixture.
 
-## v3.3.0 trust-boundary rules
+## v3.3.1 trust-boundary rules
 
 ### D-095 (Category: Execution contract, Status: ACTIVE)
 Experiment execution uses typed contracts; the supervisor constructs the launch command from `runtime_id` and `entrypoint`. Shell wrappers, inline-code flags, and free-form interpreter flags are rejected. Evidence: trust-boundary analysis. Implementation: `validate_contract` and `resolve_contract`. Verification: ATK-001, ATK-002, ATK-018 fixtures.
@@ -92,19 +92,19 @@ Experiment execution uses typed contracts; the supervisor constructs the launch 
 Frozen file inventories produce a Merkle root over sorted (path, SHA-256) pairs. Symlinks, device files, FIFOs, sockets, and importable binaries (.pyc, .so, .dylib) are rejected. Evidence: trust-boundary analysis. Implementation: `engine.io.merkle_root` and `inventory`. Verification: ATK-004, ATK-005 fixtures.
 
 ### D-097 (Category: Receipt signing, Status: ACTIVE)
-Execution receipts are signed by the supervisor using Ed25519 (or HMAC-SHA256 fallback). Receipts bind 16 fields including run nonce, snapshot root, interpreter hash, dependency lock hash, and timestamps. Evidence: trust-boundary analysis. Implementation: `build_receipt` and `verify_receipt_signature`. Verification: ATK-007, ATK-008 fixtures.
+Execution receipts are signed by the supervisor using Ed25519 (or HMAC-SHA256 fallback). Version-2 signatures bind all receipt metadata and a complete execution digest, including current nonce, snapshot, interpreter, dependencies and timestamps. Local key holders are trusted; this is not sealed isolation. Evidence: trust-boundary analysis. Implementation: `build_receipt` and `verify_receipt_signature`. Verification: ATK-007, ATK-008 fixtures.
 
 ### D-098 (Category: Schema validation, Status: ACTIVE)
 All evidence validators use strict typed schemas that reject boolean/string/integer confusion, empty structures satisfying vacuous checks, and justification strings bypassing numeric requirements. Evidence: trust-boundary analysis. Implementation: `expect_str` and `engine.schema`. Verification: ATK-012 fixtures.
 
 ### D-099 (Category: Recursive plausibility, Status: ACTIVE)
-Plausibility analysis recursively traverses all result containers (computed_runs, comparisons, derived_analyses) to detect zero p-values, below-chance metrics, and implausibly narrow CIs at any nesting depth. Evidence: trust-boundary analysis. Implementation: `_deep_result_findings`. Verification: ATK-013 fixtures.
+Plausibility analysis recursively traverses all result containers (computed_runs, comparisons, derived_analyses) to check finite p-values, applicable AUROC chance diagnostics and narrow CIs within a bounded nesting depth; excessive depth fails. Evidence: trust-boundary analysis. Implementation: `_deep_result_findings`. Verification: ATK-013 fixtures.
 
 ### D-100 (Category: Reproduction identity, Status: ACTIVE)
-Reproductions must match the original's model identity, config digest, training mode, and runtime. Relabeling a different model as a reproduction is a hard provenance failure. Evidence: trust-boundary analysis. Implementation: `_compute_assurance_level` and `engine.audit.Audit.claims`. Verification: ATK-014 fixtures.
+Reproductions must match the original's model identity, config digest, complete training policy, score kind, seed and canonical runtime contract. Relabeling a different model as a reproduction is a hard provenance failure. Evidence: trust-boundary analysis. Implementation: `_compute_assurance_level` and `engine.audit.Audit.claims`. Verification: ATK-014 fixtures.
 
 ### D-101 (Category: Assurance level, Status: ACTIVE)
-Audit reports and release certifications declare explicit machine-readable assurance levels with checkable prerequisites. Levels: STRUCTURALLY_VALIDATED, SUPERVISOR_ATTESTED, SEALED_EVALUATION_ATTESTED, INDEPENDENT_REVIEW_COMPLETE, READY_FOR_HUMAN_SUBMISSION_REVIEW. Evidence: trust-boundary analysis. Implementation: `_assurance_with_review`. Verification: assurance level fixtures.
+Audit reports and release certifications declare explicit machine-readable assurance levels with checkable prerequisites. Implemented assurance: STRUCTURALLY_VALIDATED, SUPERVISOR_ATTESTED, BLOCKED. Review mode and READY_FOR_HUMAN_SUBMISSION_REVIEW report status are separate; no sealed/independent assurance is implemented. Evidence: trust-boundary analysis. Implementation: `_assurance_with_review`. Verification: assurance level fixtures.
 
 ### D-102 (Category: Attack registry, Status: ACTIVE)
-An attack registry of 18 behavioral mutation tests maps each security invariant to a concrete attack fixture. A release candidate is blocked until every listed attack fails through the complete lifecycle. Evidence: trust-boundary analysis. Implementation: `verify_attack_registry`. Verification: attack registry well-formedness and all 18 ATK fixtures.
+The 18-entry registry identifies selected regression definitions. Its validator checks definitions and structure, not execution. Observed full-suite receipts separately establish exercised test coverage, including selected lifecycle mutations; no universal security proof follows. Evidence: trust-boundary analysis. Implementation: `verify_attack_registry`. Verification: attack registry well-formedness and all 18 ATK fixtures.

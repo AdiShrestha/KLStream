@@ -235,7 +235,7 @@ class SnapshotTests(unittest.TestCase):
             (root / 'source/run.py').write_text('x = 1\n')
             (root / 'source/__pycache__').mkdir()
             (root / 'source/__pycache__/run.cpython-312.pyc').write_bytes(b'\x00')
-            # __pycache__ is excluded, but top-level .pyc should be rejected
+            # Importable cache bytecode and top-level bytecode are both rejected.
             (root / 'source/run.pyc').write_bytes(b'\x00')
             with self.assertRaises(EvidenceError):
                 inventory(root, ['source'])
@@ -249,19 +249,19 @@ class SnapshotTests(unittest.TestCase):
                 inside(root, 'project/./file.txt')
 
     def test_merkle_root_deterministic(self):
-        files = {'a/b.py': 'abc123', 'a/c.py': 'def456'}
+        files = {'a/b.py': 'a'*64, 'a/c.py': 'c'*64}
         root1 = merkle_root(files)
         root2 = merkle_root(files)
         self.assertEqual(root1, root2)
 
     def test_merkle_root_changes_on_mutation(self):
-        files1 = {'a/b.py': 'abc123'}
-        files2 = {'a/b.py': 'abc124'}
+        files1 = {'a/b.py': 'a'*64}
+        files2 = {'a/b.py': 'b'*64}
         self.assertNotEqual(merkle_root(files1), merkle_root(files2))
 
     def test_merkle_root_changes_on_path_change(self):
-        files1 = {'a/b.py': 'abc123'}
-        files2 = {'a/c.py': 'abc123'}
+        files1 = {'a/b.py': 'a'*64}
+        files2 = {'a/c.py': 'a'*64}
         self.assertNotEqual(merkle_root(files1), merkle_root(files2))
 
     def test_freeze_includes_merkle_root(self):
@@ -273,7 +273,7 @@ class SnapshotTests(unittest.TestCase):
             self.assertIn('snapshot_merkle_root', f)
             self.assertTrue(len(f['snapshot_merkle_root']) == 64)
 
-    def test_source_mutation_during_run_detected(self):
+    def test_source_difference_after_run_detected(self):
         """After a run, mutated source files are detected by the audit."""
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
@@ -378,7 +378,7 @@ class RecursivePlausibilityTests(unittest.TestCase):
         findings = g._deep_result_findings(obj)
         self.assertTrue(any(kind == 'below_chance' for kind, _ in findings))
 
-    def test_deeply_nested_issue_detected(self):
+    def test_universal_accuracy_chance_rule_removed(self):
         obj = {
             'derived_analyses': {
                 'sensitivity': {
@@ -387,7 +387,7 @@ class RecursivePlausibilityTests(unittest.TestCase):
             }
         }
         findings = g._deep_result_findings(obj)
-        self.assertTrue(any(kind == 'below_chance' for kind, _ in findings))
+        self.assertFalse(any(kind == 'below_chance' for kind, _ in findings))
 
     def test_flat_clean_results_no_findings(self):
         obj = {'entries': [{'metric': 'auroc', 'value': 0.85, 'verdict': 'SUPPORTED'}]}
@@ -406,15 +406,15 @@ class AssuranceLevelTests(unittest.TestCase):
         out = {'errors': [], 'checks_executed': ['X'], 'computed_runs': {}}
         self.assertEqual(g._compute_assurance_level(out), 'STRUCTURALLY_VALIDATED')
 
-    def test_sealed_evaluation_with_receipts(self):
+    def test_result_path_does_not_establish_authentication(self):
         out = {'errors': [], 'checks_executed': ['X'],
                'computed_runs': {'exp1': {'result_path': 'some/path'}}}
-        self.assertEqual(g._compute_assurance_level(out), 'SEALED_EVALUATION_ATTESTED')
+        self.assertEqual(g._compute_assurance_level(out), 'STRUCTURALLY_VALIDATED')
 
-    def test_review_promotes_assurance(self):
+    def test_review_boolean_cannot_establish_independence(self):
         self.assertEqual(
-            g._assurance_with_review('SEALED_EVALUATION_ATTESTED', True),
-            'INDEPENDENT_REVIEW_COMPLETE'
+            g._assurance_with_review('SUPERVISOR_ATTESTED', True),
+            'SUPERVISOR_ATTESTED'
         )
 
     def test_blocked_stays_blocked_with_review(self):
@@ -558,17 +558,15 @@ class AttackTests(unittest.TestCase):
     # ATK-006
     def test_source_mutation_during_run_detected(self):
         with tempfile.TemporaryDirectory() as td:
-            root = Path(td)
-            fixture(root)
-            redir = contextlib.redirect_stdout(io.StringIO())
-            redir.__enter__()
-            g.freeze(root)
-            self.assertEqual(g.run_exp(root, 'known'), 0)
-            (root / 'source/run.py').write_text(SCRIPT + '\n# injected\n')
-            p = g.plan_at(root)
-            _, _, f = g.active(root)
-            self.assertFalse(g.source_inputs(root, p, f))
-            redir.__exit__(None, None, None)
+            root=Path(td);fixture(root)
+            script=SCRIPT+"\n(root/'source/run.py').write_text((root/'source/run.py').read_text()+'\\n# changed by fixture worker\\n')\n"
+            (root/'source/run.py').write_text(script)
+            with contextlib.redirect_stdout(io.StringIO()):
+                g.freeze(root)
+                with self.assertRaises(EvidenceError):g.run_exp(root,'known')
+                _,ep,_=g.active(root)
+                record=read_json(ep/'runs/known/attempt0001/execution.json')
+                self.assertNotEqual(record['inputs_before'],record['inputs_after'])
 
     # ATK-007
     def test_receipt_forgery_rejected(self):
@@ -606,6 +604,8 @@ class AttackTests(unittest.TestCase):
             _, ep, _ = g.active(root)
             attempt = ep / 'runs/known/attempt0001'
             self.assertTrue(attempt.exists(), 'Failed attempt must be retained')
+            shutil.rmtree(attempt)
+            with self.assertRaises(EvidenceError):g.run_exp(root,'known')
             redir.__exit__(None, None, None)
 
     # ATK-010
@@ -658,25 +658,15 @@ class AttackTests(unittest.TestCase):
 
     # ATK-014 (Reproduction relabeling — unit test for the check)
     def test_reproduction_relabeling_rejected(self):
-        """A reproduction must match the original's model identity."""
-        # This is tested at the audit level; exercise the validator
+        from tests.test_v3 import evaluate
         with tempfile.TemporaryDirectory() as td:
-            root = Path(td)
-            p = fixture(root)
-            # Two experiments with different models cannot be reproductions of each other
-            p['experiments'].append({
-                'id': 'repro', 'model': 'DIFFERENT_MODEL', 'seed': 42,
-                'role': 'reproduction', 'reproduces': 'known',
-                'command': p['experiments'][0]['command'],
-                'code_paths': p['experiments'][0]['code_paths'],
-                'config': {'different': True},
-                'threshold': .5, 'evaluation_splits': ['validation', 'test'],
-                'training': {'mode': 'deterministic', 'rationale': 'test'}
-            })
-            write_json(root / g.ROOT_PLAN, p)
-            # The plan validation may catch this or the audit will
-            # Here we just verify the principle: model mismatch
-            self.assertNotEqual(p['experiments'][0]['model'], p['experiments'][1]['model'])
+            root=Path(td);p=fixture(root)
+            reproduction=dict(p['experiments'][0],id='repro',model='DIFFERENT_MODEL',role='reproduction',reproduces='known')
+            p['experiments'].append(reproduction);write_json(root/g.ROOT_PLAN,p)
+            with contextlib.redirect_stdout(io.StringIO()):
+                g.freeze(root);self.assertEqual(g.run_exp(root,'known'),0);self.assertEqual(g.run_exp(root,'repro'),0)
+                result=evaluate(root)
+            self.assertTrue(any(error['code']=='CLAIMS' and 'model identity mismatch' in error['detail'] for error in result['errors']))
 
     # ATK-015
     def test_phantom_prediction_blocked(self):
@@ -700,12 +690,16 @@ class AttackTests(unittest.TestCase):
 
     # ATK-016
     def test_runtime_substitution_detected(self):
-        """Runtime attestation captures interpreter hash."""
-        from engine.supervisor import runtime_attestation
-        rt = runtime_attestation()
-        self.assertIn('interpreter_hash', rt)
-        self.assertIn('python_version', rt)
-        self.assertIn('platform_system', rt)
+        from tests.test_v3 import evaluate
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);fixture(root)
+            with contextlib.redirect_stdout(io.StringIO()):
+                g.freeze(root);self.assertEqual(g.run_exp(root,'known'),0)
+                self.assertEqual(evaluate(root)['errors'],[])
+                _,ep,_=g.active(root);path=ep/'runs/known/attempt0001/execution.json'
+                record=read_json(path);record['interpreter_hash']='0'*64;write_json(path,record)
+                result=evaluate(root)
+            self.assertTrue(any(error['code']=='RUN:known' and 'authenticated receipt' in error['detail'] for error in result['errors']))
 
     # ATK-017
     def test_bundle_tampering_detected(self):
@@ -770,8 +764,8 @@ class LifecycleV33Tests(unittest.TestCase):
         self.assertIn('run_nonce', rec)
         self.assertTrue(len(rec['run_nonce']) > 10)
 
-    def test_version_is_3_3_0(self):
-        self.assertEqual(g.VERSION, '3.3.0')
+    def test_version_is_local_3_3_1(self):
+        self.assertEqual(g.VERSION, '3.3.1')
 
 
 class StandaloneVerifierTests(unittest.TestCase):

@@ -1,4 +1,4 @@
-"""Attack registry: behavioral mutation tests for every security invariant.
+"""Regression registry for selected local integrity checks; not a security proof.
 
 Each entry has four required fields:
     invariant       — what the system promises
@@ -6,9 +6,9 @@ Each entry has four required fields:
     attack_fixture  — the test that exercises the bypass
     expected_transition — what must happen (BLOCKED)
 
-A release candidate is blocked until every listed attack fails through the
-complete lifecycle. "The mechanism exists" is not enough; the system
-demonstrates that the mechanism blocks a concrete attack.
+Registry validation checks names and structure, not that every test executed.
+The test suite and its observed receipt are separate evidence. Several historical
+fixtures are unit checks; their existence is not complete lifecycle coverage.
 """
 
 ATTACK_REGISTRY = [
@@ -55,7 +55,7 @@ ATTACK_REGISTRY = [
     {
         'id': 'ATK-006',
         'invariant': 'no_mutable_source_race',
-        'description': 'Source mutation during execution must be detected by post-run hash check',
+        'description': 'A source difference remaining at the post-run hash check is detected; restore-before-check races are not isolated',
         'implementation': 'gatekeeper.run_exp',
         'attack_fixture': 'tests.test_v3_3_hardening.AttackTests.test_source_mutation_during_run_detected',
         'expected_transition': 'BLOCKED',
@@ -126,8 +126,8 @@ ATTACK_REGISTRY = [
     },
     {
         'id': 'ATK-015',
-        'invariant': 'no_hidden_label_copying',
-        'description': 'Predictions with label values from held-out data must be detected',
+        'invariant': 'no_phantom_prediction_id',
+        'description': 'Unknown prediction IDs are rejected; label copying is not sealed or automatically prevented',
         'implementation': 'engine.audit.Audit.experiment',
         'attack_fixture': 'tests.test_v3_3_hardening.AttackTests.test_phantom_prediction_blocked',
         'expected_transition': 'BLOCKED',
@@ -172,6 +172,19 @@ def verify_attack_registry():
         if aid in ids:
             errors.append(f'duplicate attack id: {aid}')
         ids.add(aid)
+    import ast
+    from pathlib import Path
+    package=Path(__file__).resolve().parents[1]
+    for entry in ATTACK_REGISTRY:
+        reference=entry.get('attack_fixture','').split('.')
+        if len(reference)!=4 or reference[0]!='tests':
+            errors.append('invalid fixture reference: '+entry.get('id','?'));continue
+        try:
+            tree=ast.parse((package/'tests'/(reference[1]+'.py')).read_text())
+            classes=[node for node in tree.body if isinstance(node,ast.ClassDef) and node.name==reference[2]]
+            if len(classes)!=1 or not any(isinstance(node,ast.FunctionDef) and node.name==reference[3] for node in classes[0].body):
+                errors.append('fixture not defined: '+entry['attack_fixture'])
+        except (OSError,SyntaxError) as ex:errors.append(str(ex))
     return errors
 
 

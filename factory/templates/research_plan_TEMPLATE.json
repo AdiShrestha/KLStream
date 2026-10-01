@@ -1,6 +1,6 @@
 {
   "schema_version": 3,
-  "factory_version": "3.3.0",
+  "factory_version": "3.3.1",
   "project_id": "replace-with-stable-id",
   "profile": "binary_classification",
   "intent": "research",

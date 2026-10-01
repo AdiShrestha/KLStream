@@ -11,13 +11,13 @@ namespace klstream {
 // Return value of IOperator::tick(). The worker thread uses this to decide
 // what to do next:
 //
-//   Processed -> reset backoff counter, immediately call tick() again.
-//   Idle      -> increment backoff counter, apply spin/yield/sleep policy.
+//   Processed -> schedule the next unfinished operator in this worker.
+//   Idle      -> yield if an entire worker round has no progress.
 //   Blocked   -> output queue was full; do NOT pop input on the next tick()
 //               (the operator must remember the un-pushed event internally).
-//               Increment backoff counter to give the downstream time to drain.
+//               A no-progress worker round yields to downstream threads.
 enum class OpStatus : std::uint8_t {
-    Processed = 0,  // One event was successfully processed and pushed.
+    Processed = 0,  // Local progress; may be partial batch assembly or intentional filtering.
     Idle      = 1,  // Input queue was empty; nothing to do.
     Finished  = 3, // EOS: no future tick calls; outputs must already be closed.
     Blocked   = 2,  // Output queue was full; event is held inside operator.
@@ -31,7 +31,7 @@ enum class OpStatus : std::uint8_t {
 //   1. Construct the operator (pass queue pointers, lambda, etc. in ctor).
 //   2. Runtime calls init() once on the owning thread before the first tick().
 //   3. Runtime calls tick() in a tight loop for the operator's lifetime.
-//   4. Runtime calls shutdown() once when stopping (after setting stop flag).
+//   4. Runtime calls shutdown() once after successful init, on EOS, cancellation or error.
 //
 // Threading: init(), tick(), and shutdown() are always called from the same
 // worker thread. The operator does not need to protect its own state with
@@ -53,7 +53,8 @@ public:
     // Core scheduling unit. Called repeatedly. See OpStatus for semantics.
     [[nodiscard]] virtual OpStatus tick() = 0;
 
-    // Called once after the stop flag is set. Flush, close files, etc.
+    // Called once after successful init. Research completion must be signalled by
+    // Finished from tick; shutdown alone does not establish a lossless drain.
     virtual void shutdown() {}
 
     // Called by the coordinator; overrides must be thread-safe. Sources stop

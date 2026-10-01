@@ -2,11 +2,20 @@
 
 **Audit date:** 2026-09-30. **Active project:** this new folder and its replacement GitHub main. **Author hardware:** Apple M3 MacBook Air, 8 CPU cores, 10 GPU cores, 16 GB unified memory, 512 GB storage, as supplied by the author. **Current status:** correctness foundation migrated; research system incomplete; no submission readiness or new empirical result claimed. **Audience:** the author, an Architect session and an Implementor session with access only to this repository.
 
+
+**Second-pass update (2026-10-01):** read section 29 and
+[SECOND_PASS.md](docs/audit/SECOND_PASS.md) before acting on initial factory-gap
+findings. Engine 0.3.1 and a **local Factory 3.3.1 derivative** repair additional
+observed defects. Initial 0.3.0/3.3.0 findings and their receipts remain historical
+counterexamples; several are now fixed. Native streaming execution and the research
+system remain incomplete. The supplied Deep Research report is preserved and
+critically assessed in [assessment.md](docs/audit/research_context/assessment.md).
+
 This plan is deliberately detailed. It records observed defects, the boundaries of the audit, the engine migration, the factory integration problem, a defensible research design, executable implementation contracts and release criteria. It must not be shortened into a checklist that discards its assumptions. The goal is an honest, reproducible systems study. A negative, null, mixed or inconclusive result is acceptable. No desired speedup, AUC, stability property, significance verdict or publication outcome is a requirement.
 
 ## 1. Decision and scientific status
 
-The legacy repository cannot currently support its strong scientific claims. The most serious problems are demonstrated rather than inferred from unattractive coding style: the academic-sample files match a local generator byte for byte; the main experiment matrix computes simulated quantities without invoking the C++ engine; an ROC/PR figure generator constructs curves without predictions; the verdict path declares support despite a multiplicity-adjusted nonsignificant result; selected statistical and split functions fail small counterexamples; native lifecycle/model defects are reproducible; and the supplied factory accepts a signature-deleted execution while claiming sealed assurance.
+The legacy repository cannot currently support its strong scientific claims. The most serious problems are demonstrated rather than inferred from unattractive coding style: the academic-sample files match a local generator byte for byte; the main experiment matrix computes simulated quantities without invoking the C++ engine; an ROC/PR figure generator constructs curves without predictions; the verdict path declares support despite a multiplicity-adjusted nonsignificant result; selected statistical and split functions fail small counterexamples; native lifecycle/model defects are reproducible; and the original supplied factory accepted a signature-deleted execution while claiming sealed assurance (now repaired in the local 3.3.1 derivative).
 
 These defects invalidate the affected evidence and its interpretations. They do not establish the author's intent, prove that every legacy measurement is invented, or mean that the underlying idea has no merit. Some legacy microbenchmarks really execute C++ and collect clock values. They still do not validate the separate simulator-based paper matrix, market authenticity or matched comparison design. Treat evidence by producing path and scope, not by the presence of a file named `verified`, a large result directory, a certificate, a manuscript or a successful exit code.
 
@@ -201,9 +210,9 @@ Legacy README says MIT while actual engine license/metadata indicate AGPL. Ignor
 
 The active engine retains AGPL in `source/LICENSE`; supplied factory terms are preserved separately in `factory/LICENSE`; root LICENSE explains scopes. No new data is migrated. Builds are offline. KLS-13 validates a clean checkout and lawful data access; KLS-14 chooses licenses for new research artifacts without assuming all third-party bytes can be redistributed. Preserve Git history with tags rather than force deleting the scientific record.
 
-## 5. Factory 3.3.0: compatibility and blocking gaps
+## 5. Initial Factory 3.3.0 findings: historical counterexamples and open integration
 
-The factory's objectives align with this rehabilitation: immutable attempts, strict paths, frozen decisions, independent metrics, honest negative results and minimal human workflow. However, an objective written in a constitution is not an implemented enforcement property. The existing full self-test suite passed **276 tests** when permitted local Unix sockets; a restricted-sandbox run had one socket PermissionError. Both facts must be reported accurately. Passing self-tests does not negate the independent counterexample below.
+This section records the initial 3.3.0 audit; section 29 supersedes its current-status statements. The factory's objectives align with this rehabilitation: immutable attempts, strict paths, frozen decisions, independent metrics, honest negative results and minimal human workflow. However, an objective written in a constitution is not an implemented enforcement property. The existing full self-test suite passed **276 tests** when permitted local Unix sockets; a restricted-sandbox run had one socket PermissionError. Both facts must be reported accurately. Passing self-tests does not negate the independent counterexample below.
 
 ### G01 — Streaming claims have no native machine domain (P0)
 
@@ -259,7 +268,7 @@ The active C++17 foundation builds through root `CMakeLists.txt` without network
 
 Concrete corrections include typed queue allocation and release-mode capacity validation; source EOS and exactly-once pending retries; propagated operator completion; cancellation distinguished from successful drain; exception propagation; final partial-window/batch flushing; constituent IDs/timestamps preserved; explicit feedback direction and finite parameters; actual-psi model normalization; varying-feature selection; unfitted/nonfinite rejection; future-clock rejection; and diagnostic overflow/empty-data handling.
 
-Tests use disclosed generated fixtures. Release correctness checks, ASan/UBSan checks and a ThreadSanitizer fixture run passed on this Mac. Each of 20 public headers compiled independently. Queue tests reconcile 40,000 concurrent fixture values; runtime tests reconcile a finite 15,000-event pipeline and early drain. These counts describe tests, not study observations. Formal memory-model proof, external-platform execution, exhaustive race/scheduler coverage and performance characterization have not been established. A sanitizer pass covers the exercised fixture paths, not every possible interleaving.
+Tests use disclosed generated fixtures. Release correctness checks, ASan/UBSan checks and a ThreadSanitizer fixture run passed on this Mac. Each of the then-existing 20 public headers compiled independently; 0.3.1 has 21 and its separate receipt records current checks. Queue tests reconcile 40,000 concurrent fixture values; runtime tests reconcile a finite 15,000-event pipeline and early drain. These counts describe tests, not study observations. Formal memory-model proof, external-platform execution, exhaustive race/scheduler coverage and performance characterization have not been established. A sanitizer pass covers the exercised fixture paths, not every possible interleaving.
 
 The engine is intentionally an auditable foundation. Its count/running aggregates are nonkeyed; count output metadata is not complete lineage; queue close requires producer quiescence; callbacks must return; runtime calls are serialized; the runtime is one-shot; MPMC occupancy includes reservation effects; scheduling is QoS hints; the model has no portable disk format; histogram quantiles are lower bucket estimates and unsuitable as research tails. These limitations are specified in `docs/ENGINE_CONTRACT.md`. KLS-01/KLS-06/KLS-07 turn them into accepted contracts or explicit exclusions.
 
@@ -970,3 +979,251 @@ is not rejected for lawful causal history or a legitimately unlabelled stream.
 Document false-positive boundaries and procedural source-authenticity checks.
 This is the point at which a machine plan becomes compatible with KLStream's
 research domain; a renamed JSON field or another certificate template is not.
+
+## 29. Second-pass audit, corrections and current implementation handoff (2026-10-01)
+
+### 29.1 Answer to the author's question
+
+**No: the files initially migrated into the new folder were not free of all
+mathematical, implementation or methodological errors.** The original audit and
+migration removed major legacy defects, but the second pass demonstrated additional
+errors in the remaining engine and factory. They have been repaired in the active
+code with scoped tests and counterexamples. It would still be scientifically
+incorrect to certify that no error, bias or missing requirement exists anywhere.
+The system is incomplete, the future scientific producers have not been built,
+and finite tests cannot establish universal correctness.
+
+This section supersedes current-status statements in the initial audit sections;
+it preserves their findings as historical evidence. The full second-pass table is
+[SECOND_PASS.md](docs/audit/SECOND_PASS.md), with A01–A39, repairs, practical limits
+and the test-edit failure discovered and corrected during this audit. The received
+report is archived byte-for-byte in `docs/audit/research_context/`; it is contextual
+material, not an instruction source or accepted research evidence. The assessment
+records the report's input hash, accepted/rejected advice and verified primary
+references. Active inventory and verification receipts distinguish observed facts
+from proposed work. No repaired fixture is a market experiment or publication result.
+
+### 29.2 Current versions and evidence boundaries
+
+The engine is foundation **0.3.1**. Factory **3.3.1** is this repository's local
+derivative of the supplied 3.3.0, not a claimed official publisher release. Historical
+public/local/snapshot/foundation tags remain preserved. The previous migration
+manifest is retained separately; current hashes bind the corrected source. A source
+hash change does not retroactively repair an old result or validate a legacy paper.
+
+The original fixture that removed `supervisor_receipt` must now fail the actual
+audit and return BLOCKED. Authentication is required for freeze, execution metadata
+and local attempt membership. The original false SEALED state is not supported.
+Assurance is structural, verified local-supervisor execution, or blocked; review
+mode and a READY human-review status are separate. Same-user access to files/keys,
+mutable runtime libraries and experiments conducted outside the workspace remain
+limits. A detached bundle verifies bytes/signatures within its documented scope;
+an embedded certificate label does not become independent proof.
+
+Use `docs/audit/second_pass_verification.json` for exact commands, statuses, log
+hashes and source bindings. Release, ASan/UBSan, a separate TSan executable, independent
+public-header compilation, a scalar Python forest oracle and full factory fixtures
+are correctness evidence only. They do not measure research speed, prove all race
+interleavings, authenticate observational data or establish external validity.
+Restricted system-query failures and unavailable observations are explicit rather
+than silently filled with the author's hardware specifications. Successful initial
+or intermediate test counts are historical; report the final receipt for current code.
+
+### 29.3 What changed in the pure engine
+
+Queue cancellation is distinct from producer completion. Cancelled queues never
+report drained EOS; close cannot overwrite cancellation; all supported operators
+reject cancelled input or prematurely closed output. Destruction and producer-close
+ownership still require joined/quiescent callers. The MPMC queue has bounded slots
+and approximate occupancy, without a universal lock-freedom or fairness theorem.
+Do not interpret an atomic state or an empty observation as global conservation.
+
+Source now assigns monotone sequence identities when a generator returns default
+Event::make metadata. Default event fields are initialized, sequence/count overflow
+is explicit, and the future harness must bind identities to run and source to avoid
+cross-run collisions. These identities do not supply the missing raw-feature lineage
+or aggregate/window membership by themselves.
+
+Token accounting refills at the preceding rate before a rate change; a deterministic
+clock API rejects backwards time. Mutable tokens and clock state share a mutex,
+while a current-rate observation is atomic. The new synchronization may cost time;
+its overhead is an empirical question, not a hidden optimization claim. Rate floor,
+nominal bound, initial burst and throttle fraction are policy inputs to be frozen.
+EMA begins with the first valid observation and retains one raw snapshot, preventing
+an implicit zero-start transient and inconsistent duplicate pressure samples.
+
+The batch deadline opens at first-item receipt before target selection. Selector
+cost is therefore included, although scheduler delay and blocked publication can
+still exceed the deadline. Histograms compute nearest ranks using rational integers;
+coarse bucket lower bounds and infinite overflow remain unsuitable as exact research
+tails. Negative drain deadlines fail before requesting source termination; unknown
+operator statuses fail explicitly; callbacks must still return before cancellation
+can join their workers.
+
+The forest uses double thresholds and integer height calculation, with exact harmonic
+leaf normalization and documented selection among varying axis-aligned features.
+It is not Extended Isolation Forest, and it does not promise sklearn score/RNG parity.
+A read-only structural snapshot permits a separate Python oracle to check fixture
+partitions, node sample counts, depth limits, leaf corrections and query scores.
+This is a useful independent small reference, not the full persistence, broad
+reference-parity or model-selection contract. Portable serialization remains absent.
+
+### 29.4 What changed in the factory
+
+Current audit verifies complete execution digests, signed metadata, key identity,
+canonical argv, input/output hashes, nonce and signed local attempt ledger. Frozen
+roots use a domain-separated SHA256 tree; output inventory includes binary/cache
+files, and frozen importable bytecode is rejected even beneath __pycache__. Runtime
+identity uses the actual executable hash rather than a literal fallback. Verification
+never generates keys or downgrades Ed25519 to HMAC. Symmetric HMAC verification
+material contains a secret and must never be exported as a public key.
+
+Typed and converted legacy Python launches share a single resolver. Ordered literal
+arguments survive conversion; unsafe wrappers/modules/inline code and unsupported
+resource policies fail before dispatch. Child environment is bounded and excludes
+signer variables and unrelated credentials. Python -I ignores PYTHONHASHSEED, so
+algorithm seeding must be explicit. Wall time is measured; unavailable CPU/RSS
+values are null. Process-group timeout cleanup is implemented, without claiming
+hostile-process containment or network isolation.
+
+Ranking outputs are no longer forced to be probabilities. Ranking mode computes
+AUROC/AP and threshold metrics, without Brier/log loss. Paired sign-flip extremeness
+is unit-invariant in the regression contrast. Chance checks no longer assign a
+universal 0.5 reference to F1/accuracy; exact verdict parsing preserves NOT_SUPPORTED.
+Flat sensitivity, legitimate small failure taxonomies and zero observed failures
+remain admissible with appropriate diagnostics/search coverage. Fixed-budget
+nonconvergence is recorded rather than selectively extended to improve results;
+an explicit unsupported convergence claim still fails. Signed minimized loss
+objectives are valid, and an early-stopping run reaching its registered cap retains
+its result with a diagnostic rather than pretending that patience fired. Extreme
+quantile interpolation and standardized effects use numerically stable arithmetic.
+
+Hardware rows distinguish aggregate service rate from completion rate over explicit
+trial endpoints and require consistent warmup/phase/count semantics. Neither field
+establishes offered-load streaming throughput. Code-directory expansion prevents
+omitting nested producers from static review; unsupported languages remain explicit
+semantic-review requirements. The standalone verifier handles current nested signed
+records independently. Selected weak regression fixtures were replaced with actual
+source-mutation, runtime-substitution, failed-deletion and reproduction-relabel paths.
+The coverage map checks static attribution/reachability, with explicit procedural
+and shared-check rationales; it does not prove semantic enforcement.
+The registry checks definitions; the complete runner separately executes unit and
+function-style fixtures. Neither is a general proof against malicious authors.
+
+Incorrect subordinate policy was also corrected. Universal convergence, fixed
+seed/epoch floors, forced nonflat sensitivity, artificial class balancing and a
+blanket ban on declared simulation can bias the project toward impressive-looking
+rather than valid evidence. Replacing those rules is authorized by the user's
+substantive repair request and documented with reasons. Method-specific evidence,
+prospective precision, explicit origins and frozen choices remain required.
+
+### 29.5 Current KLS contract states
+
+| Contract | Current status | Remaining acceptance |
+|---|---|---|
+| KLS-00 | Initial migration accepted under its published preservation receipt | Preserve those refs; commit/read back the corrected continuation without force rewriting history |
+| KLS-01 | Partially implemented and tested for the documented primitive scope | Research topology/integration, whole-pipeline terminal identities, supported graph/key semantics and independent challenge of any added concurrency |
+| KLS-02 | Local Python integrity/assurance repairs implemented; full contract open | Native streaming profile, supervised compilation/binary attestation, language-aware provenance and actual event/metric/lineage/conservation dispatch |
+| KLS-03 | Critical context assessment and selected primary-source entry points available | Full-paper comparison matrix, mechanism feasibility and credible novelty/negative-result contribution memo |
+| KLS-04 | Not accepted | Authentic lawful raw inputs, provider schema/rights, acquired-byte receipts and label scope; no generator fallback |
+| KLS-05 | Not implemented | Causal parser/features, rejection audit, ancestry, actual splits and independent future-mutation/golden transform checks |
+| KLS-06 | Small scalar forest reference added; full contract open | Portable bounded export/loader, broader convention-matched references, train/validation selection and malformed-model tests |
+| KLS-07 | Not implemented | Native replay/inference harness, pointwise scores, lossless offered/admitted/completed traces, clock/I/O failure checks and independent accounting |
+| KLS-08–09 | Not accepted | Credible tuned policies, isolated controls, actual pilots, thermal/order/overhead diagnosis and prospective precision |
+| KLS-10–15 | Not started as research | Accepted prerequisites, fresh confirmation, raw-derived analysis, reproduction, manuscript/artifact and final cold review |
+
+Do not convert this table into completed status merely because repaired primitive
+functions exist. Do not rerun repaired unit fixtures under intent=research and call
+them accepted studies. The project template remains invalid and methodology remains
+DRAFT/NOT FROZEN; no research epoch is silently created by this audit.
+
+### 29.6 Next Architect decision: feasible contribution before campaign
+
+The initial direction is reasonable, subject to novelty and actual mechanism benefit.
+Use a bounded-queue CPU inference study, with source pacing and batch sizing separated.
+A wrapped scalar forest may not amortize useful computation; the first pilot must
+be allowed to reveal no speedup or worse latency. Describe the actual service kernel
+and fixed costs, and measure its isolated batching curve on development inputs.
+Do not choose a different workload after observing the holdout solely to recover
+a positive story. If another workload is chosen prospectively, document the reason
+and new scope before confirmation.
+
+Prior adaptive inference and queue systems mean that “dynamic batch size” alone
+is not established novelty. The report assessment provides verified entry points,
+including serverless inference, training-specific work, existing batching tooling,
+bounded queues and a recent simulator preprint. Read applicable full papers, pin
+implementations, and compare mechanisms/resources instead of importing their
+headline numbers. Training/GPU/serverless results are related work when their
+assumptions cannot be matched on this CPU laptop.
+
+A defensible result could characterize operating regions in which occupancy feedback
+helps, fails or oscillates; quantify the effect of source pacing on apparently good
+latency; or reveal that strong tuned fixed/deadline policies match a more complex
+controller. That possibility is a hypothesis requiring a literature-backed precision
+and contribution argument. Repairing code and reporting a null effect alone do not
+guarantee publishability, and “elite venue” cannot be a metric acceptance threshold.
+
+Freeze offered arrival schedules independently of queue/controller outcomes. Account
+for every offered identity, late source release, admission delay, service start/end,
+completion, explicit rejection and unresolved/cancelled outcome. Report observation
+and drain horizons separately. Never reduce offered load invisibly or omit failed
+settings to claim stable throughput. An unbounded-queue ablation changes the resource
+problem and may only be an explicitly unmatched diagnostic. Warmup must be chosen
+prospectively, not by waiting until an overloaded queue happens to look favorable.
+
+Random labels attached to a percentage of market rows are not anomaly ground truth.
+They may be a named negative control with justified null interpretation. Features,
+fitting and scores must be unaffected by inaccessible evaluation-label mutation;
+supervised training-label mutation can legitimately change a model. Provider times
+are decimal seconds after midnight and prices are dollars multiplied by 10,000;
+neither is a process steady-clock latency observation. Cross-domain time mapping
+and misconduct labels cannot be guessed.
+
+### 29.7 Next Implementor sequence and acceptance examples
+
+First preserve current source/hash receipts and inspect SECOND_PASS regressions.
+Then implement a small reviewed native fixture profile within the actual factory,
+with compiler executable/version/argv, frozen headers/config/lock identity, native
+binary digest, exact launch argv and captured exit/output bindings. A generated
+finite trace is legitimate fixture evidence for adapter acceptance, without any
+observational or performance claim. An unsupported profile/runtime must remain a
+failure until it has that implementation.
+
+Add a lossless pointwise finite replay path and a separately implemented acceptance
+verifier. Demonstrate that the release gate rejects a missing offered row, duplicate
+completion, reordered/future clock, fabricated score, wrong model/binary, changed
+raw input, mismatched member lineage, telemetry truncation and premature success
+following cancellation. Verify a clean fixture baseline first, so rejection is caused
+by each intended corruption rather than an already invalid template. Preserve all
+attempts and log exact observed transitions. Extend this to a genuinely declared
+simulation case with scoped model assumptions, not invented market provenance.
+
+Acquire authentic development data independently where available, implement causal
+raw-to-feature lineage and train/validation-only model/policy selection, then run
+resource-feasibility pilots. Keep root research_plan invalid until native profile,
+actual raw provenance, schedule, analysis units, metric dispatch and fixed decisions
+exist together. Select practical effect/precision bounds prospectively; no hardcoded
+winning effect or universal replication count belongs in source code.
+
+Use builds with parallelism two as a reasonable development starting point on this
+16 GB unified-memory laptop; measure actual peak usage and swap before increasing
+parallelism. ASan/UBSan and TSan use distinct binaries. Trace retention, raw-data
+sizes, free disk, instrumented overhead and fanless sustained behavior need current
+observations. GPU work is absent; the 10 GPU cores are not an acceleration result.
+Unavailable energy/temperature is explicit missing measurement, not an estimated
+number. One-machine confirmation supports that machine/workload scope until actual
+external replication exists.
+
+The receiving agents should produce inspectable contract reports, preserve all
+limits and make no promise that all flaws are gone. The acceptance goal remains
+honest and informative evidence, including failure, null and negative outcomes.
+
+### 29.8 Final observed check counts
+
+The final second-pass receipt reports 326 factory tests, 21 independently compiled
+public headers, two Release CTests, two ASan/UBSan CTests and a separate successful
+TSan fixture execution. The actual signature-removal audit is BLOCKED, and the
+independent nested bundle mutation is rejected after recomputing ZIP hashes.
+The root template returns NOT_CERTIFIED/31. These counts describe executed checks;
+they are not sample sizes, benchmark results or proof of a completed KLS contract.
+Intermediate states and retention limits are in docs/audit/intermediate_verification.

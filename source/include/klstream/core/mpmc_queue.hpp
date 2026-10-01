@@ -1,6 +1,7 @@
 #pragma once
 
 #include <klstream/core/config.hpp>
+#include <klstream/core/queue_state.hpp>
 #include <atomic>
 #include <stdexcept>
 #include <limits>
@@ -55,7 +56,7 @@ public:
     // ── Enqueue ───────────────────────────────────────────────────────────
 
     [[nodiscard]] bool try_push(const T& val) noexcept {
-        if (!running_.load(std::memory_order_acquire)) return false;
+        if (!is_running()) return false;
         std::size_t pos = enqueue_pos_.load(std::memory_order_relaxed);
         for (;;) {
             Slot& slot = buffer_[pos & mask_];
@@ -80,7 +81,7 @@ public:
     bool push(const T& val) noexcept {
         int spin = 0, yields = 0;
         while (!try_push(val)) {
-            if (!running_.load(std::memory_order_relaxed)) {
+            if (!is_running()) {
                 return false;
             }
             if (spin < SPIN_BEFORE_YIELD) {
@@ -133,7 +134,7 @@ public:
     bool pop(T& out) noexcept {
         int spin = 0, yields = 0;
         while (!try_pop(out)) {
-            if (!running_.load(std::memory_order_relaxed)) {
+            if (!is_running()) {
                 return try_pop(out);
             }
             if (spin < SPIN_BEFORE_YIELD) {
@@ -164,19 +165,19 @@ public:
 
     // Publish EOS after all producers are quiescent; cancellation uses stop().
     void close() noexcept {
-        stop();
+        auto expected = QueueState::Open;
+        state_.compare_exchange_strong(expected, QueueState::Closed, std::memory_order_acq_rel);
     }
 
     [[nodiscard]] bool is_drained() const noexcept {
-        return !is_running() && empty();
+        return state_.load(std::memory_order_acquire) == QueueState::Closed && empty();
     }
-
-    void stop() noexcept {
-        running_.store(false, std::memory_order_release);
+    [[nodiscard]] bool is_cancelled() const noexcept {
+        return state_.load(std::memory_order_acquire) == QueueState::Cancelled;
     }
-
+    void stop() noexcept { state_.store(QueueState::Cancelled, std::memory_order_release); }
     [[nodiscard]] bool is_running() const noexcept {
-        return running_.load(std::memory_order_acquire);
+        return state_.load(std::memory_order_acquire) == QueueState::Open;
     }
 
     // Approximate occupancy in [0.0, 1.0].
@@ -215,7 +216,7 @@ private:
 
     alignas(CACHE_LINE_SIZE) std::atomic<std::size_t> enqueue_pos_{0};
     alignas(CACHE_LINE_SIZE) std::atomic<std::size_t> dequeue_pos_{0};
-    alignas(CACHE_LINE_SIZE) std::atomic<bool>        running_{true};
+    alignas(CACHE_LINE_SIZE) std::atomic<QueueState>  state_{QueueState::Open};
 };
 
 } // namespace klstream

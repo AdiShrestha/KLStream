@@ -1,5 +1,10 @@
 > Supplied factory documentation: this records factory/template history, not KLStream research evidence. The current KLStream audit is in `plan.md` and `docs/audit/`. In particular, the supplied factory still accepts a deleted supervisor signature; its assurance wording must be repaired through KLS-02. Historical test counts here are not new research observations.
 
+> Historical foundation/audit document. Current second-pass status is in
+> docs/audit/SECOND_PASS.md and its verification receipt; plan.md section 29
+> supersedes earlier present-tense gaps. No research readiness is claimed.
+
+
 # Forensic audit of the supplied v2.6 test project
 
 This is an independent read-only audit. It does not import the test project's model, training, analysis, or hardware modules. `docs/audit_tools/audit_v26_project.py` reads Parquet with PyArrow, computes standard metrics with scikit-learn, extracts the original metric function with Python AST, and cross-references taxonomy IDs. Its output is `docs/v26_forensic_results.json`.

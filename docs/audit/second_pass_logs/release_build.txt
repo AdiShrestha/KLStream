@@ -1,0 +1,6 @@
+[ 50%] Building CXX object CMakeFiles/forest_reference_dump.dir/source/tests/forest_reference_dump.cpp.o
+[ 50%] Building CXX object CMakeFiles/engine_tests.dir/source/tests/engine_tests.cpp.o
+[ 75%] Linking CXX executable forest_reference_dump
+[ 75%] Built target forest_reference_dump
+[100%] Linking CXX executable engine_tests
+[100%] Built target engine_tests

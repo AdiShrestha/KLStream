@@ -146,7 +146,7 @@ def inventory(root, paths, *, reject_dangerous_ext=True):
             if f.is_symlink():
                 raise EvidenceError('symlink in frozen inputs')
             _reject_special_file(f)
-            if f.is_file() and '__pycache__' not in f.parts:
+            if f.is_file():
                 ext = f.suffix.lower()
                 if ext in _DANGEROUS_EXTENSIONS:
                     if reject_dangerous_ext:
@@ -155,22 +155,38 @@ def inventory(root, paths, *, reject_dangerous_ext=True):
                             f'({ext} files can be imported without source and must be '
                             f'explicitly whitelisted)'
                         )
-                    continue
                 out[str(f.relative_to(root))]=sha(f)
     if not out:
         raise EvidenceError('empty input inventory')
     return out
 
 def merkle_root(file_hashes):
-    """Compute a Merkle root over a dict of {path: sha256_hex}.
-
-    Files are sorted by path to produce a deterministic root.
-    Returns the hex digest of the Merkle root.
-    """
+    """SHA256 binary tree v2: sorted length-prefixed leaves, domain-separated
+    internal nodes, duplicate the final odd node at each level. No empty root."""
     if not file_hashes:
         raise EvidenceError('cannot compute merkle root of empty inventory')
-    h = hashlib.sha256()
-    for path in sorted(file_hashes.keys()):
-        h.update(path.encode('utf-8'))
-        h.update(bytes.fromhex(file_hashes[path]))
-    return h.hexdigest()
+    nodes=[]
+    for path, value in sorted(file_hashes.items()):
+        if not isinstance(path,str) or not isinstance(value,str) or len(value)!=64:
+            raise EvidenceError('invalid snapshot leaf')
+        try: raw=bytes.fromhex(value)
+        except ValueError as ex: raise EvidenceError('invalid snapshot hash') from ex
+        if len(raw)!=32: raise EvidenceError('invalid snapshot hash length')
+        encoded=path.encode('utf-8')
+        nodes.append(hashlib.sha256(b'\x00'+len(encoded).to_bytes(8,'big')+encoded+raw).digest())
+    while len(nodes)>1:
+        if len(nodes)%2: nodes.append(nodes[-1])
+        nodes=[hashlib.sha256(b'\x01'+nodes[i]+nodes[i+1]).digest() for i in range(0,len(nodes),2)]
+    return nodes[0].hex()
+
+
+def declared_code_files(root,paths):
+    """Expand declared source directories for static review, preserving identities."""
+    result=set()
+    for relative in paths:
+        path=inside(root,relative)
+        candidates=path.rglob('*') if path.is_dir() else [path]
+        for file in candidates:
+            if file.is_file() and file.suffix.lower() in ('.py','.c','.cc','.cpp','.cxx','.h','.hpp'):
+                result.add(str(file.relative_to(Path(root))))
+    return sorted(result)

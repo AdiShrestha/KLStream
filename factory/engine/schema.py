@@ -41,7 +41,8 @@ def expect_float(v, field='value', *, finite=True, minimum=None, maximum=None):
         raise ValidationError(field, 'boolean is not a number', v)
     if not isinstance(v, (int, float)):
         raise ValidationError(field, 'must be a number', v)
-    fv = float(v)
+    try: fv = float(v)
+    except OverflowError as ex: raise ValidationError(field,'number exceeds finite floating representation',v) from ex
     if finite and not math.isfinite(fv):
         raise ValidationError(field, 'must be finite', v)
     if minimum is not None and fv < minimum:
@@ -89,7 +90,7 @@ def expect_dict(v, field='value', *, required_keys=None):
 
 def expect_enum(v, allowed, field='value'):
     """Exact match against allowed values. No case folding, no coercion."""
-    if v not in allowed:
+    if not isinstance(v,str) or v not in allowed:
         raise ValidationError(field, f'must be one of {sorted(allowed) if isinstance(allowed, set) else list(allowed)}', v)
     return v
 
@@ -131,6 +132,7 @@ def validate_training_manifest(obj, field='manifest'):
     curve = c.get('loss_curve')
     if curve is not None:
         expect_list(curve, f'{field}.loss_curve', min_len=0)
+        for value in curve: expect_float(value,f'{field}.loss_curve item')
 
     threshold = c.get('criterion_threshold')
     if threshold is not None:
@@ -156,8 +158,8 @@ def validate_split_manifest(obj, field='manifest'):
     for k, v in counts.items():
         if type(v) is bool:
             raise ValidationError(f'{field}.test_label_distribution.{k}', 'boolean is not a count', v)
-        if not isinstance(v, (int, float)):
-            raise ValidationError(f'{field}.test_label_distribution.{k}', 'must be a number', v)
+        if type(v) is not int:
+            raise ValidationError(f'{field}.test_label_distribution.{k}', 'must be an integer count', v)
         if not math.isfinite(float(v)) or v < 0:
             raise ValidationError(f'{field}.test_label_distribution.{k}', 'must be finite and >= 0', v)
 
@@ -178,12 +180,14 @@ def validate_plausibility_entry(entry, field='entry'):
             raise ValidationError(f'{field}.p_value', 'boolean is not a p-value', p)
         if not isinstance(p, (int, float)):
             raise ValidationError(f'{field}.p_value', 'must be a number', p)
+        expect_float(p, f'{field}.p_value', minimum=0, maximum=1)
     # confidence_interval must be [low, high] of numbers
     ci = entry.get('confidence_interval', entry.get('ci'))
     if ci is not None:
         expect_list(ci, f'{field}.confidence_interval', min_len=2, max_len=2)
         for i, v in enumerate(ci):
             expect_float(v, f'{field}.confidence_interval[{i}]')
+        if ci[0]>ci[1]: raise ValidationError(f'{field}.confidence_interval','reversed interval',ci)
     return entry
 
 

@@ -27,6 +27,8 @@ public:
         if (!input_ || !output_ || !selector_ || deadline_.count() <= 0) throw std::invalid_argument("Invalid batch operator");
     }
     OpStatus tick() override {
+        if (input_->is_cancelled()) throw std::runtime_error("Input cancelled; EOS was not reached");
+        if (!output_->is_running()) throw std::runtime_error("Output closed or cancelled before operator completion");
         if (pending_) {
             if (!output_->try_push(batch_)) return OpStatus::Blocked;
             pending_ = false; batch_.count = 0;
@@ -38,9 +40,9 @@ public:
         Event<T> input{};
         if (input_->try_pop(input)) {
             if (!batch_.count) {
+                opened_ = std::chrono::steady_clock::now();
                 target_ = selector_();
                 if (!target_ || target_ > Max) throw std::out_of_range("Batch selector outside storage bound");
-                opened_ = std::chrono::steady_clock::now();
             }
             batch_.events[batch_.count++] = input;
             if (batch_.count == target_) pending_ = true;

@@ -52,6 +52,7 @@ private:
                     const auto s = operators_[i]->tick();
                     if (s == OpStatus::Finished) { done[i] = true; --left; progress = true; }
                     else if (s == OpStatus::Processed) progress = true;
+                    else if (s != OpStatus::Idle && s != OpStatus::Blocked) throw std::runtime_error("Invalid operator status");
                 }
                 if (!progress) std::this_thread::yield();
             }

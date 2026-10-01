@@ -1,5 +1,10 @@
 > Supplied factory documentation: this records factory/template history, not KLStream research evidence. The current KLStream audit is in `plan.md` and `docs/audit/`. In particular, the supplied factory still accepts a deleted supervisor signature; its assurance wording must be repaired through KLS-02. Historical test counts here are not new research observations.
 
+> Historical foundation/audit document. Current second-pass status is in
+> docs/audit/SECOND_PASS.md and its verification receipt; plan.md section 29
+> supersedes earlier present-tense gaps. No research readiness is claimed.
+
+
 # Migrating v2.6 projects
 
 V3 does not silently bless v2.6 artifacts. Keep the old Factory under `factory/legacy/v2_6_0/` for historical reproduction. Create a new plan that names the real source/data, recompute every prediction with `factory/engine/metrics.py`, repair labels and group splits, rerun all preregistered seeds with a real stopping policy, and derive failure analysis from prediction IDs. A v2.6 `contract_report.md`, SHA-256, or PASS line is not a v3 receipt.

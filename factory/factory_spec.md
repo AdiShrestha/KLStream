@@ -1,4 +1,4 @@
-# Factory specification — v3.3.0
+# Factory specification — v3.3.1
 
 ## Active repository
 
@@ -6,7 +6,7 @@
 
 ## Lifecycle
 
-The Architect authors the plan and claim/evidence map. The Implementor executes each planned seed using an argv command with `{run_dir}` and `{seed}`. The wrapper captures immutable inputs, outputs, stdout/stderr, exit status, timing, and environment bindings. A successful command is then independently recorded; a failed or rejected attempt remains. The audit reloads current bytes and recomputes predictions, joins, metrics, statistical comparisons, ablations, sensitivity and hardware rows. The Architect writes a review tied to the audit digest. Only `certify` emits a scoped release report.
+The Architect authors the plan and claim/evidence map. The Implementor executes each planned seed using an argv command with `{run_dir}` and `{seed}`. The wrapper captures authenticated input snapshots, outputs, stdout/stderr, exit status, timing, and environment bindings. A successful command is then independently recorded; a failed or rejected attempt remains. The audit reloads current bytes and recomputes predictions, joins, metrics, statistical comparisons, ablations, sensitivity and hardware rows. The Architect writes a review tied to the audit digest. Only `certify` emits a scoped release report.
 
 A new hypothesis, dataset, method, stopping rule, threshold, or post-test repair requires `freeze --amendment REASON`. Earlier epochs remain in `.factory/epoch_NNNN/`; their findings cannot be erased or counted as current evidence. The active freeze includes every file beneath each declared frozen path and the active policy-code hash.
 
@@ -18,6 +18,15 @@ The plan is the contract. The gate rejects omitted fields rather than inferring 
 
 0 means the requested lifecycle operation completed and, for audit/certify, all checks in that operation passed. 31 means malformed/missing evidence or unsafe lifecycle state; 32 means scientific evidence or diagnostics block; 33 means review missing, stale, or unresolved. No exit code means journal acceptance.
 
-## v3.3.0 evidence additions
+## v3.3.1 evidence additions
 
-A training or evaluation run records `convergence_evidence` (epochs, criterion, threshold, loss curve, early-stopping state, and any justification), `test_label_distribution`, `evaluation_sample_size`, and an optional sample-size justification. Claim and verdict JSON artifacts may carry `investigation_note`; it is required when `verify-result-plausibility` reports a below-chance or suspicious-perfection finding. No-mock invariant passes identify the producing script/function and its `acquisition-audit` result.
+A training or evaluation run records `convergence_evidence` (epochs, criterion, threshold, loss curve, early-stopping state, and any justification), `test_label_distribution`, `evaluation_sample_size`, and an optional sample-size justification. Claim and verdict JSON artifacts may carry `investigation_note`; it is required when `verify-result-plausibility` reports an applicable AUROC or suspicious-perfection diagnostic. No-mock invariant passes identify the producing script/function and its `acquisition-audit` result.
+
+## Local 3.3.1 limits
+
+The active binary profile does not implement KLStream native streaming. Frozen
+bytes and local receipts do not isolate same-user processes or prevent label
+copying. Fixed-budget nonconvergence remains an admissible diagnostic unless a
+convergence claim is made. Training evidence must suit the method; no generated
+forest epoch trace is permitted. Review and READY report status do not upgrade
+local assurance to SEALED or INDEPENDENT. See SCIENTIFIC_CHECKS.md and SECOND_PASS.

@@ -46,6 +46,7 @@ public:
         return await_done(timeout);
     }
     bool drain(std::chrono::milliseconds timeout = std::chrono::seconds(30)) {
+        if (timeout.count() < 0) throw std::invalid_argument("Negative runtime timeout");
         std::lock_guard<std::mutex> lock(mutex_);
         if (state_ == RuntimeState::Stopped) return completed_;
         if (state_ != RuntimeState::Running && state_ != RuntimeState::Draining) throw std::logic_error("Drain requires a started runtime");

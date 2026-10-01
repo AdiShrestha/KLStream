@@ -2,8 +2,8 @@ schema_version: 2
 principles:
   C70:
     level: A
-    mechanism: "Audit.training (D-074)"
-    rationale_if_null: null
+    mechanism: null
+    rationale_if_null: "Scientific budget adequacy and user authority require procedural review; training checks cannot establish these judgments."
   C71:
     level: A
     mechanism: "verify_coverage_liveness (D-082)"
@@ -42,7 +42,7 @@ principles:
     rationale_if_null: null
   C80:
     level: A
-    mechanism: "certify (D-085)"
+    mechanism: "Audit.experiment (D-088)"
     rationale_if_null: null
   C81:
     level: A
@@ -62,7 +62,7 @@ principles:
     rationale_if_null: null
   C85:
     level: A
-    mechanism: "validate_contract (D-095)"
+    mechanism: "engine.contract.validate_contract (D-095)"
     rationale_if_null: null
   C86:
     level: A
@@ -70,11 +70,11 @@ principles:
     rationale_if_null: null
   C87:
     level: A
-    mechanism: "build_receipt (D-097)"
+    mechanism: "engine.supervisor.verify_receipt_signature (D-097)"
     rationale_if_null: null
   C88:
     level: A
-    mechanism: "expect_str (D-098)"
+    mechanism: "engine.schema.expect_str (D-098)"
     rationale_if_null: null
   C89:
     level: A
@@ -82,13 +82,13 @@ principles:
     rationale_if_null: null
   C90:
     level: A
-    mechanism: "_compute_assurance_level (D-100)"
-    rationale_if_null: null
+    mechanism: null
+    rationale_if_null: "Reproduction identity is checked within Audit.claims, shared with C81; there is no separate enforcement callable or independent execution guarantee."
   C91:
     level: A
     mechanism: "_assurance_with_review (D-101)"
     rationale_if_null: null
   C92:
     level: A
-    mechanism: "verify_attack_registry (D-102)"
+    mechanism: "engine.attacks.verify_attack_registry (D-102)"
     rationale_if_null: null

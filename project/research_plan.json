@@ -6,7 +6,7 @@
   "data_origin": "observational",
   "dependency_lock": "source/requirements.lock",
   "experiments": [],
-  "factory_version": "3.3.0",
+  "factory_version": "3.3.1",
   "frozen_paths": [
     "source",
     "data",

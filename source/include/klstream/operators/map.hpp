@@ -37,6 +37,8 @@ public:
     void attach_metrics(OperatorMetrics* m) override { metrics_ = m; }
 
     OpStatus tick() override {
+        if (input_->is_cancelled()) throw std::runtime_error("Input cancelled; EOS was not reached");
+        if (!output_->is_running()) throw std::runtime_error("Output closed or cancelled before operator completion");
         // If we have a pending output from a previous Blocked tick, try again.
         if (has_pending_) {
             if (output_->try_push(pending_)) {

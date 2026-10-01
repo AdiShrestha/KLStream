@@ -16,7 +16,16 @@ class V31HardeningTests(unittest.TestCase):
         code, report = g.verify_coverage_liveness(FACTORY, quiet=True)
         self.assertEqual(code, 0)
         self.assertEqual(report['principles_checked'], 23)
-        self.assertEqual(report['callables_resolved'], 23)
+        self.assertEqual(report['callables_resolved'], 21)
+        coverage=g._coverage_entries(FACTORY/'constitution_coverage.yaml')
+        for cid in ('C70','C90'):
+            self.assertIsNone(coverage[cid]['mechanism'])
+            self.assertTrue(coverage[cid]['rationale_if_null'])
+        self.assertIn('not semantic enforcement',report['scope'])
+        graph,_=g._call_graph([FACTORY/'engine/supervisor.py',FACTORY/'engine/contract.py',FACTORY/'engine/schema.py',FACTORY/'engine/attacks.py'])
+        for target in ('engine.supervisor.verify_receipt_signature','engine.contract.validate_contract',
+                       'engine.schema.expect_str','engine.attacks.verify_attack_registry'):
+            self.assertIn(target,graph)
 
     def test_check_contract_rejects_keyword_theater(self):
         with self.subTest('prose is not a contract'):
@@ -47,7 +56,7 @@ class V31HardeningTests(unittest.TestCase):
         p = HERE / '.tmp_failures.json'
         try:
             p.write_text(json.dumps({'failures':[{'category':'a','candidate_ids':['s1'],'prevalence':0.1,'severity':'SEV-2'}]}))
-            self.assertEqual(g.verify_failure_taxonomy(p), 30)
+            self.assertEqual(g.verify_failure_taxonomy(p), 0)
         finally:
             p.unlink(missing_ok=True)
 

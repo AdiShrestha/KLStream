@@ -1,3 +1,30 @@
+# CHANGELOG — local Factory 3.3.1 derivative
+
+## 3.3.1 — KLStream integrity and scientific-policy repairs (2026-10-01)
+
+This is a local derivative of the supplied 3.3.0, not a claimed upstream release.
+See `../docs/audit/SECOND_PASS.md` for A13–A36, counterexamples and limits.
+
+- Authenticate freeze, complete version-2 execution receipts and attempt ledgers;
+  verify in audit, require amendments after failures, reject deleted attempts.
+- Share ordered typed/legacy argv; reject unsupported resource enforcement;
+  restrict child environment and record actual wall time with unavailable CPU/RSS.
+- Hash binary outputs, reject cached input bytecode, build domain-separated Merkle
+  roots, expand code directories, and independently verify nested bundle receipts.
+- Keep assurance at implemented structural/local levels. Same-user keys do not
+  establish sealed evaluation. Review status does not establish independence.
+- Separate ranking from probabilities, make sign-flip comparisons unit-invariant,
+  preserve legitimate negative/flat/fixed-budget outcomes and zero-observed failures.
+- Correct coverage module identities and distinguish named checks from procedural
+  rationales; static callability never proves semantic enforcement.
+- Accept signed minimized objectives and registered early-stopping cap outcomes;
+  stabilize quantile interpolation and standardized effects at extreme scales.
+- Strengthen selected lifecycle mutations; include supplied function-style tests.
+  Registry existence and test counts are not proofs of security or scientific truth.
+
+Earlier entries below describe historical implementations and aspirations. Where
+contradicted, the current code, this entry and SECOND_PASS define present behavior.
+
 # CHANGELOG — Factory v3.3.0
 
 ## v3.3.0 — trust-boundary hardening

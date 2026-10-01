@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/adi/Desktop/Projects/Using v3.3 New projects/Brolq New/docs/audit/probe_current_bundle.py", line 40, in <module>
+    value=read_json(execution);value['runtime']['interpreter_sha256']='0'*64;write_json(execution,value)
+                               ~~~~~^^^^^^^^^^^
+KeyError: 'runtime'

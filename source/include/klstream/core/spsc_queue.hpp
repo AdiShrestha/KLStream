@@ -1,6 +1,7 @@
 #pragma once
 
 #include <klstream/core/config.hpp>
+#include <klstream/core/queue_state.hpp>
 #include <atomic>
 #include <stdexcept>
 #include <limits>
@@ -63,7 +64,7 @@ public:
                 return false; // Queue is full.
             }
         }
-        if (!running_.load(std::memory_order_acquire)) return false;
+        if (!is_running()) return false;
         buffer_[wi] = val;
         write_idx_.store(next_wi, std::memory_order_release);
         return true;
@@ -74,7 +75,7 @@ public:
     bool push(const T& val) noexcept {
         int spin = 0, yields = 0;
         while (!try_push(val)) {
-            if (!running_.load(std::memory_order_relaxed)) {
+            if (!is_running()) {
                 return false;
             }
             if (spin < SPIN_BEFORE_YIELD) {
@@ -124,7 +125,7 @@ public:
     bool pop(T& out) noexcept {
         int spin = 0, yields = 0;
         while (!try_pop(out)) {
-            if (!running_.load(std::memory_order_relaxed)) {
+            if (!is_running()) {
                 return try_pop(out);
             }
             if (spin < SPIN_BEFORE_YIELD) {
@@ -156,19 +157,19 @@ public:
 
     // Close only after producers are quiescent. Consumers may drain existing values.
     void close() noexcept {
-        stop();
+        auto expected = QueueState::Open;
+        state_.compare_exchange_strong(expected, QueueState::Closed, std::memory_order_acq_rel);
     }
 
     [[nodiscard]] bool is_drained() const noexcept {
-        return !is_running() && empty();
+        return state_.load(std::memory_order_acquire) == QueueState::Closed && empty();
     }
-
-    void stop() noexcept {
-        running_.store(false, std::memory_order_release);
+    [[nodiscard]] bool is_cancelled() const noexcept {
+        return state_.load(std::memory_order_acquire) == QueueState::Cancelled;
     }
-
+    void stop() noexcept { state_.store(QueueState::Cancelled, std::memory_order_release); }
     [[nodiscard]] bool is_running() const noexcept {
-        return running_.load(std::memory_order_acquire);
+        return state_.load(std::memory_order_acquire) == QueueState::Open;
     }
 
     // Approximate occupancy in [0.0, 1.0].
@@ -205,7 +206,7 @@ private:
     alignas(CACHE_LINE_SIZE) std::size_t              write_idx_cached_{0};
     alignas(CACHE_LINE_SIZE) std::atomic<std::size_t> read_idx_{0};
     alignas(CACHE_LINE_SIZE) std::size_t              read_idx_cached_{0};
-    alignas(CACHE_LINE_SIZE) std::atomic<bool>        running_{true};
+    alignas(CACHE_LINE_SIZE) std::atomic<QueueState>  state_{QueueState::Open};
 
     const std::size_t capacity_;
     const std::size_t mask_;

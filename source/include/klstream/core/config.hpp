@@ -6,8 +6,7 @@
 namespace klstream {
 
 // ── Cache line size ────────────────────────────────────────────────────────
-// Apple Silicon (M1/M2/M3): hw.cachelinesize = 128.
-// x86-64 (Intel/AMD):        64.
+// Conservative alignment defaults selected by architecture, not a hardware census.
 // Verify on your machine:  sysctl -n hw.cachelinesize
 //
 // IMPORTANT: Every alignas() in the hot path uses this constant.
@@ -27,7 +26,7 @@ inline constexpr std::size_t DEFAULT_QUEUE_CAPACITY = 4096;
 // ── Backpressure thresholds ────────────────────────────────────────────────
 // Soft threshold: when EMA occupancy fraction exceeds this, start throttling.
 inline constexpr double BP_SOFT_THRESHOLD = 0.70;
-// Hard threshold: when instantaneous occupancy exceeds this, block immediately.
+// Hard threshold: when instantaneous occupancy exceeds this, throttle to the configured positive floor.
 inline constexpr double BP_HARD_THRESHOLD = 0.95;
 
 // ── Worker backoff parameters ──────────────────────────────────────────────

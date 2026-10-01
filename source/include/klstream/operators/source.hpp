@@ -8,6 +8,7 @@
 #include <functional>
 #include <memory>
 #include <stdexcept>
+#include <limits>
 
 namespace klstream {
 // A false generator return means permanent EOS. Callbacks must not block
@@ -26,6 +27,7 @@ public:
     void attach_metrics(OperatorMetrics* m) override { metrics_ = m; }
     void request_finish() noexcept override { finish_.store(true, std::memory_order_release); }
     OpStatus tick() override {
+        if (!output_->is_running()) throw std::runtime_error("Output closed or cancelled before operator completion");
         // A token was consumed on generation; a retry never consumes another.
         if (has_pending_) {
             if (!output_->try_push(pending_)) { if (metrics_) metrics_->events_blocked.increment(); return OpStatus::Blocked; }
@@ -37,6 +39,8 @@ public:
         if (limiter_ && !limiter_->try_consume()) { if (metrics_) metrics_->events_idle.increment(); return OpStatus::Idle; }
         Event<T> event{};
         if (!generator_(event, seq_)) { output_->close(); return OpStatus::Finished; }
+        event.seq = seq_;
+        if (seq_ == std::numeric_limits<std::uint64_t>::max()) throw std::overflow_error("Source sequence exhausted");
         ++seq_;
         if (!output_->try_push(event)) {
             pending_ = event; has_pending_ = true;

@@ -149,10 +149,65 @@ void math_and_configuration() {
     one_feature.fit(sparse); CHECK(one_feature.anomaly_score(sparse[0]) != one_feature.anomaly_score(sparse[2]) || one_feature.anomaly_score(sparse[1]) != one_feature.anomaly_score(sparse[2]));
 }
 
+void second_audit_regressions() {
+    // Cancellation cannot be counted as a complete finite stream.
+    SPSCQueue<Event<int>> cancelled(2); cancelled.stop(); cancelled.close();
+    CHECK(cancelled.is_cancelled()); CHECK(!cancelled.is_drained());
+    SinkOperator<int> sink("cancelled", &cancelled, [](const auto&) {});
+    Runtime r; r.register_op(&sink, r.add_worker()); r.start();
+    rejects([&] { r.wait_until_done(1s); }); CHECK(r.state() == RuntimeState::Failed);
+    MPMCQueue<int> m(2); m.stop(); m.close(); CHECK(m.is_cancelled()); CHECK(!m.is_drained());
+    SPSCQueue<Event<int>> in(2), out(2); out.close();
+    MapOperator<int,int> map("closed", &in, &out, [](int x) { return x; });
+    rejects([&] { map.tick(); });
+    // Source assigns identity even when the callback uses the default Event::make.
+    SPSCQueue<Event<int>> generated(4);
+    SourceOperator<int> source("ids", &generated, [](auto& e, auto seq) { e = Event<int>::make(1); return seq < 3; });
+    for (int i=0;i<3;++i) CHECK(source.tick()==OpStatus::Processed);
+    CHECK(source.tick()==OpStatus::Finished);
+    for (std::uint64_t i=0;i<3;++i) { Event<int> e{}; CHECK(generated.try_pop(e)); CHECK(e.seq==i); }
+    SPSCQueue<Event<int>> delayed_in(2); SPSCQueue<EventBatch<int,4>> delayed_out(2);
+    BatchOperator<int,4> delayed("controller_cost", &delayed_in, &delayed_out,
+        [] { std::this_thread::sleep_for(10ms); return 4; }, 1ms);
+    CHECK(delayed_in.try_push(Event<int>::make(1))); CHECK(delayed.tick()==OpStatus::Processed);
+    CHECK(delayed.tick()==OpStatus::Processed); CHECK(delayed.tick()==OpStatus::Processed);
+    EventBatch<int,4> partial{}; CHECK(delayed_out.try_pop(partial)); CHECK(partial.count==1);
+    // Rate transition credits the preceding second at 10/s, then the next at 1/s.
+    const auto t0 = TokenBucketRateLimiter::Clock::time_point{};
+    TokenBucketRateLimiter bucket(10,100,1,t0);
+    for (int i=0;i<100;++i) CHECK(bucket.try_consume_at(t0));
+    CHECK(!bucket.try_consume_at(t0)); bucket.set_rate_at(1,t0+1s);
+    for (int i=0;i<10;++i) CHECK(bucket.try_consume_at(t0+1s));
+    CHECK(!bucket.try_consume_at(t0+1s)); CHECK(bucket.try_consume_at(t0+2s));
+    CHECK(!bucket.try_consume_at(t0+2s)); rejects([&] { bucket.try_consume_at(t0); });
+    rejects([&] { bucket.set_rate(-1); }); rejects([&] { bucket.throttle(1.1); });
+    TokenBucketRateLimiter live(1000,100,1);
+    std::thread adjust([&] { for (int i=0;i<2000;++i) { live.throttle(.5); live.recover(); } });
+    for (int i=0;i<2000;++i) (void)live.try_consume(); adjust.join();
+    struct FakeQueue { double value; double occupancy() const { return value; } } fake{.9};
+    EMAOccupancyTracker<FakeQueue> ema(fake); ema.update(); CHECK(ema.ema()==.9); CHECK(ema.soft_pressure());
+    fake.value=0; CHECK(ema.raw()==.9); ema.reset(); ema.update(); CHECK(ema.ema()==0);
+    fake.value=std::numeric_limits<double>::quiet_NaN(); rejects([&] { ema.update(); });
+    LatencyHistogram h; for (std::uint64_t i=0;i<100;++i) h.record(i*1000);
+    CHECK(h.percentile(.07)==6); CHECK(h.percentile(7,100)==6);
+    CHECK(h.p50()==49); CHECK(h.p95()==94); CHECK(h.p99()==98);
+    Counter counter; counter.increment(std::numeric_limits<std::uint64_t>::max()); rejects([&] { counter.increment(); });
+    IdleOp idle; Runtime timeout; timeout.register_op(&idle,timeout.add_worker()); timeout.start();
+    rejects([&] { timeout.drain(-1ms); }); CHECK(timeout.state()==RuntimeState::Running); timeout.stop();
+    // Adjacent float endpoints and huge finite ranges must fit/score without a
+    // rounded empty split; repeated fitting with the same seed is deterministic.
+    IsolationForest<1> forest(20,8,3);
+    std::vector<IsolationForest<1>::Point> training{{0},{std::nextafter(0.0f,1.0f)}, {1}, {2}, {3}, {4}, {5}, {6}};
+    forest.fit(training); const auto score=forest.anomaly_score({3});
+    CHECK(std::isfinite(score) && score>0 && score<=1); forest.fit(training); CHECK(forest.anomaly_score({3})==score);
+    forest.fit({{-std::numeric_limits<float>::max()},{std::numeric_limits<float>::max()}});
+    CHECK(forest.anomaly_score({0})==.5);
+}
+
 int main() {
     try {
         queue_contracts(); concurrent_queues(); runtime_completion(false); runtime_completion(true);
-        runtime_failure(); operators_and_partial_batches(); math_and_configuration();
+        runtime_failure(); operators_and_partial_batches(); math_and_configuration(); second_audit_regressions();
         std::cout << "Foundation correctness checks passed; test fixtures only.\n";
     } catch (const std::exception& e) { std::cerr << e.what() << '\n'; return 1; }
 }

@@ -7,8 +7,10 @@ import math
 from collections import Counter, defaultdict
 from pathlib import Path
 from statistics import mean
-from .io import read_json,read_csv,inside,sha,digest,inventory
+from .io import read_json,read_csv,inside,sha,digest,inventory,declared_code_files
 from .metrics import binary_metrics,paired_inference,holm,number,quantile,EvidenceError
+from .supervisor import verify_receipt_signature,verify_freeze,execution_binding
+from .contract import experiment_contract,resolve_contract
 from .plan import validate,need,REVIEW_TOPICS
 
 class Audit:
@@ -27,6 +29,7 @@ class Audit:
         try:fn();self.executed.append(name)
         except (EvidenceError,ValueError,KeyError,TypeError,IndexError,OSError,OverflowError) as e:self.error(name,e)
     def frozen(self):
+        verify_freeze(self.freeze)
         need(inventory(self.root,self.p['frozen_paths'])==self.freeze['files'],'frozen input changed, including added/deleted source files')
         need(sha(self.root/'project/research_plan.json')==self.freeze['plan_sha256'],'plan changed after freeze')
         need(self.engine_hash==self.freeze['engine_sha256'],'active factory code changed after freeze')
@@ -38,13 +41,15 @@ class Audit:
         for e in self.p['experiments']:
             if e['role'] not in ('benchmark','baseline','control','ablation','sensitivity','ood'):
                 continue
-            for rel in e.get('code_paths',[]):
+            for rel in declared_code_files(self.root,e.get('code_paths',[])):
                 p=inside(self.root,rel); txt=p.read_text(errors='replace')
                 random_calls=re.findall(r'(?i)\b(?:rng|random|np\.random|numpy\.random)\.(?:normal|uniform|randn|random|choice)\b',txt)
                 result_words=re.search(r'(?i)(?:result|metric|hypothesis|taxonomy|registry|prediction).{0,100}(?:json|csv|parquet|write_text|to_csv)',txt)
                 fake_words=re.search(r'(?i)\b(?:mock|synthetic|fabricat|hardcoded substitute|fallback data)\b',txt)
                 if random_calls and result_words:self.diagnostic('RNG_IN_RESULT_PRODUCER',f'{rel}: random sampling appears in a result-producing module; demonstrate training-only use')
                 if fake_words and result_words:self.diagnostic('FABRICATION_LANGUAGE',f'{rel}: fabrication/mock language appears in a result-producing module')
+                if p.suffix!='.py':
+                    self.diagnostic('UNSUPPORTED_STATIC_LANGUAGE',rel+': requires domain source review');continue
                 try: ast.parse(txt,filename=str(p))
                 except SyntaxError as ex:self.error('SOURCE_SYNTAX',f'{rel}: {ex}')
     def cohort(self):
@@ -85,20 +90,41 @@ class Audit:
             need(max(train)<min(val) and max(val)<min(test),'temporal order violated; do not stratify away future/past constraints')
     def experiment(self,e):
         eid=e['id'];base=self.epoch/'runs'/eid
-        attempts=sorted(base.glob('attempt*')) if base.exists() else []
+        attempts=sorted(path for path in base.glob('attempt*') if path.is_dir()) if base.exists() else []
         need(bool(attempts),eid+': no execution receipt')
+        need([a.name for a in attempts]==[f'attempt{i:04d}' for i in range(1,len(attempts)+1)],eid+': attempt sequence has gaps or invalid names')
+        ledger=self.j(str((base/'attempt_ledger.json').relative_to(self.root)));verify_receipt_signature(ledger)
+        need(ledger.get('ledger_version')==1 and ledger.get('project_id')==self.p['project_id'] and ledger.get('epoch')==self.freeze['epoch'] and ledger.get('experiment_id')==eid and ledger.get('freeze_sha256')==sha(self.epoch/'freeze.json'),eid+': attempt ledger identity mismatch')
+        need(ledger.get('public_key_id')==self.freeze['freeze_attestation']['public_key_id'],eid+': ledger signing key mismatch')
+        entries=ledger['entries'];need([entry['attempt'] for entry in entries]==[a.name for a in attempts],eid+': attempt membership differs from authenticated ledger')
         good=[]
-        for a in attempts:
+        for a,entry in zip(attempts,entries):
             rel=str((a/'execution.json').relative_to(self.root));r=self.j(rel)
+            need(r.get('run_nonce')==entry['run_nonce'],eid+': nonce differs from attempt ledger')
             need(r.get('experiment_id')==eid and r.get('seed')==e['seed'],eid+': execution identity mismatch')
             need(r.get('freeze_sha256')==sha(self.epoch/'freeze.json'),eid+': stale freeze binding')
             need(r.get('inputs_before')==self.freeze['files'],eid+': pre-execution input binding mismatch')
             need(r.get('inputs_after')==self.freeze['files'],eid+': source/data changed during run')
             need(r.get('engine_sha256')==self.engine_hash,eid+': code binding mismatch')
-            expected=[arg.replace('{run_dir}',str(a.resolve())).replace('{seed}',str(e['seed'])).replace('{experiment_id}',eid) for arg in e['command']]
-            need(r.get('argv')==expected,eid+': executed command differs from plan')
-            outputs=inventory(self.root,[str(a.relative_to(self.root))]);outputs.pop(rel,None)
+            contract=experiment_contract(e,self.root)
+            expected,_,_=resolve_contract(contract,a,e['seed'],eid)
+            need(r.get('argv')==expected and r.get('execution_contract')==contract,eid+': executed command differs from plan')
+            outputs=inventory(self.root,[str(a.relative_to(self.root))],reject_dangerous_ext=False);outputs.pop(rel,None)
             need(outputs==r.get('outputs'),eid+': output hash/membership changed since execution')
+            signed=r.get('supervisor_receipt');verify_receipt_signature(signed)
+            need(signed.get('public_key_id')==self.freeze['freeze_attestation']['public_key_id'],eid+': supervisor key changed within epoch')
+            need(signed.get('receipt_version')==2 and signed.get('execution_binding')==execution_binding(r),eid+': execution metadata differs from authenticated receipt')
+            expected_fields={'project_id':self.p['project_id'],'epoch':self.freeze['epoch'],
+                'experiment_id':eid,'seed':e['seed'],'run_nonce':r.get('run_nonce'),
+                'input_root':digest(self.freeze['files']),'output_root':digest(outputs),
+                'snapshot_merkle_root':self.freeze['snapshot_merkle_root'],'launch_spec':digest(expected),
+                'dependency_lock_hash':sha(self.root/self.p['dependency_lock']),
+                'interpreter_hash':r.get('interpreter_hash'),'runtime_id':contract['runtime_id'],
+                'exit_status':r.get('exit_code'),'supervisor_version':self.freeze['factory_version'],
+                'policy_version':str(self.p['schema_version']),'started_at':r.get('started_at'),'finished_at':r.get('finished_at')}
+            need(all(signed.get(key)==value for key,value in expected_fields.items()),eid+': signed receipt identity or binding mismatch')
+            need(signed.get('resource_observations',{}).get('wall_time_seconds')==r.get('duration_sec'),eid+': signed wall-time binding mismatch')
+            need(not r.get('receipt_error'),eid+': failed execution authentication')
             self.bindings.update(outputs)
             if r.get('exit_code')==0 and not r.get('record_error'):good.append(a)
             else:self.diagnostic('FAILED_ATTEMPT',f'{eid}: {a.name}, exit {r.get("exit_code")}; retained; no silent deletion')
@@ -122,16 +148,16 @@ class Audit:
             ids=sorted(s for s in data if self.coh[s]['split']==split)
             y=[self.coh[s]['label'] for s in ids];scores=[data[s]['score'] for s in ids]
             need(min(y.count('0'),y.count('1'))>=self.p['policy']['min_class_count'],eid+': class count insufficient in '+split)
-            metrics=binary_metrics(y,scores,e['threshold']);out[split]=metrics
+            metrics=binary_metrics(y,scores,e['threshold'],score_kind=e.get('score_kind','probability'));out[split]=metrics
             reported=r['reported_metrics'][split]
-            need(set(reported)==set(metrics),eid+': must report all six defined metrics; AUPRC alias not accepted')
+            need(set(reported)==set(metrics),eid+': must report exactly the metrics defined for the declared score kind')
             for k,v in metrics.items():need(abs(number(reported[k])-v)<=self.p['policy']['metric_tolerance'],f'{eid}: {split}.{k} differs from independent recomputation ({v})')
             if len(set(scores))==1:self.diagnostic('CONSTANT_PREDICTION',eid+': '+split)
             if set(map(float,scores))<={0.,1.}:self.diagnostic('SATURATED_PREDICTION',eid+': '+split)
             if metrics['auroc']<.5:self.diagnostic('BELOW_CHANCE',eid+': '+split)
             if metrics['auroc']==1.:self.diagnostic('PERFECT_RANKING',eid+': '+split)
         self.training(e,r,a)
-        self.computed[eid]={'metrics':out,'seed':e['seed'],'model':e['model'],'predictions_sha256':sha(predpath),'result_path':str((a/'result.json').relative_to(self.root))}
+        self.computed[eid]={'metrics':out,'seed':e['seed'],'model':e['model'],'predictions_sha256':sha(predpath),'result_path':str((a/'result.json').relative_to(self.root)),'supervisor_signature_verified':True,'authentication_scheme':signed['signature_scheme'],'trust_scope':signed['trust_scope']}
         self.observed[eid]=data;self.reports[eid]=r
     def training(self,e,result,a):
         t=e['training'];eid=e['id']
@@ -143,7 +169,7 @@ class Audit:
         epochs=[int(r['epoch']) for r in rows]
         self.training_sufficiency(t,eid,rows,epochs)
         tr=[number(r['train_loss']) for r in rows];va=[number(r['validation_loss']) for r in rows]
-        need(all(x>=0 for x in tr+va),eid+': negative/nonfinite losses')
+        # Finite signed objectives are legitimate; their orientation is declared.
         need(result['epochs_trained']==len(rows),eid+': declared epochs differ from raw history')
         chosen=result['checkpoint_epoch'];need(type(chosen) is int and chosen in epochs,eid+': checkpoint epoch absent from history')
         if t['mode']=='early_stopping':
@@ -152,12 +178,20 @@ class Audit:
                 if loss<best-t['min_delta']:best=loss;best_epoch=epoch;bad=0
                 else:bad+=1
                 if epoch>=t['min_epochs'] and bad>=t['patience']:stop=epoch;break
-            need(stop==len(rows),eid+': early-stop event not supported by validation trace; budget exhaustion is not convergence')
+            if stop is None:
+                need(len(rows)==t['max_epochs'],eid+': neither frozen early-stop event nor budget cap reached')
+                self.diagnostic('EARLY_STOPPING_BUDGET_CAP',eid+': cap reached without early stopping; retain the registered result')
+                need(not t.get('claim_convergence',False),eid+': convergence claim unsupported by cap exhaustion')
+            else:
+                need(stop==len(rows),eid+': execution continued beyond frozen early-stop event')
             need(chosen==best_epoch,eid+': selected checkpoint violates frozen validation selection')
         else:
             w=t['tail_window'];need(len(rows)==t['max_epochs'],eid+': fixed budget not completed')
-            drift=abs(mean(va[-w:])-mean(va[-2*w:-w]))/max(abs(mean(va[-2*w:-w])),1e-12)
-            need(drift<=t['relative_tolerance'],eid+': validation still changing at budget cap; extend prospectively')
+            before,after=mean(va[-2*w:-w]),mean(va[-w:])
+            drift=abs(after-before)/abs(before) if before else (0 if after==0 else float('inf'))
+            if drift>t['relative_tolerance']:
+                self.diagnostic('NONCONVERGED_AT_REGISTERED_BUDGET',eid+': report the budget-limited result; do not extend selectively to force convergence')
+                need(not t.get('claim_convergence',False),eid+': explicit convergence claim unsupported by registered trace rule')
             need(chosen==min(range(len(va)),key=lambda i:va[i])+1,eid+': fixed-budget best checkpoint mismatch')
         for key in ('checkpoint','initial_checkpoint'):
             p=inside(a,result[key]);need(self.file(str(p.relative_to(self.root))).stat().st_size>0,eid+': empty checkpoint')
@@ -255,23 +289,34 @@ class Audit:
         # Trial rows come from an executed experiment's already hashed output directory.
         eid=h['experiment_id'];need(eid in self.computed,'hardware run not validated')
         result=self.reports[eid];base=Path(self.computed[eid]['result_path']).parent
-        rows=self.table(str(base/result['hardware_trials']),{'phase','warmup','duration_sec','samples','batch_size','elapsed_sec'})
-        measured=[r for r in rows if r['warmup']=='0'];need(measured and any(r['warmup']=='1' for r in rows),'measured trials and excluded warmup needed')
-        for r in rows:
-            need(number(r['duration_sec'])>0 and number(r['samples'])>0,'invalid measured duration/sample count')
-        batch1=[number(r['duration_sec'])*1000 for r in measured if int(r['batch_size'])==1 and r['phase']=='inference']
-        need(len(batch1)>=h['min_trials'],'batch-one latency trials below preregistered minimum')
-        total_time=sum(number(r['duration_sec']) for r in measured if r['phase']=='inference')
-        total_samples=sum(number(r['samples']) for r in measured if r['phase']=='inference')
-        span=max(number(r['elapsed_sec']) for r in measured)-min(number(r['elapsed_sec']) for r in measured)
-        need(span>=number(h['minimum_sustained_seconds']),'sustained measurement shorter than registered duration')
-        self.hardware_results={'latency_ms':{str(q):quantile(batch1,q) for q in (.5,.9,.99)},'throughput_samples_sec':total_samples/total_time,'sustained_span_sec':span}
+        rows=self.table(str(base/result['hardware_trials']),{'phase','warmup','duration_sec','samples','batch_size','start_elapsed_sec','end_elapsed_sec'})
+        need(all(row['warmup'] in ('0','1') and row['phase'] in ('train','inference') for row in rows),'unrecognized phase/warmup cannot be silently excluded')
+        measured=[row for row in rows if row['warmup']=='0' and row['phase']=='inference']
+        need(measured and any(row['warmup']=='1' and row['phase']=='inference' for row in rows),'inference measurements and declared warmup needed')
+        for row in rows:
+            duration=number(row['duration_sec']);start=number(row['start_elapsed_sec']);end=number(row['end_elapsed_sec'])
+            need(duration>0 and start>=0 and end>start,'invalid trial clock interval')
+            need(math.isclose(duration,end-start,rel_tol=1e-8,abs_tol=1e-9),'trial duration differs from clock endpoints')
+            need(re.fullmatch(r'[1-9][0-9]*',row['samples']) and re.fullmatch(r'[1-9][0-9]*',row['batch_size']),'samples and batch_size must be positive integer counts')
+            if row['phase']=='inference':need(int(row['samples'])==int(row['batch_size']),'trial must measure one batch; do not treat a run duration as point latency')
+        batch1=[number(row['duration_sec'])*1000 for row in measured if row['batch_size']=='1']
+        need(len(batch1)>=h['min_trials'],'batch-one service observations below registered minimum')
+        service_time=sum(number(row['duration_sec']) for row in measured)
+        samples=sum(int(row['samples']) for row in measured)
+        span=max(number(row['end_elapsed_sec']) for row in measured)-min(number(row['start_elapsed_sec']) for row in measured)
+        need(span>=number(h['minimum_sustained_seconds']),'observed inference horizon shorter than registered duration')
+        self.hardware_results={'batch_one_service_latency_ms':{str(q):quantile(batch1,q) for q in (.5,.9,.99)},
+            'aggregate_service_rate_samples_sec':samples/service_time,
+            'observed_completion_rate_samples_sec':samples/span,'observed_inference_horizon_sec':span,
+            'scope':'classification service trials; no offered-load, end-to-end latency or stability guarantee'}
         if h.get('energy_claim'):
-            need(all('energy_joules' in r for r in measured),'energy claim needs measured joules per trial')
-            self.hardware_results['joules_per_sample']=sum(number(r['energy_joules']) for r in measured)/sum(number(r['samples']) for r in measured)
+            need(all('energy_joules' in row for row in measured),'energy claim needs measured joules per inference batch')
+            energy=[number(row['energy_joules']) for row in measured];need(min(energy)>=0,'negative energy observation')
+            self.hardware_results['joules_per_inference_sample']=sum(energy)/samples
         if h.get('memory_claim'):
             for phase in ('train','inference'):
-                vals=[number(r['peak_memory_bytes']) for r in measured if r['phase']==phase]
+                selected=[row for row in rows if row['phase']==phase and row['warmup']=='0']
+                vals=[number(row['peak_memory_bytes']) for row in selected]
                 need(vals and min(vals)>0,'separate measured training/inference memory required')
                 self.hardware_results['peak_'+phase+'_bytes']=max(vals)
         # Authenticity of device sensors, synchronization, memory scopes needs source review.
@@ -294,7 +339,9 @@ class Audit:
             need(ref_exp is not None,'reproduction references unknown experiment')
             need(e['model']==ref_exp['model'],f'reproduction model identity mismatch: {e["model"]} != {ref_exp["model"]}')
             need(e['config']==ref_exp['config'],f'reproduction config differs from original; declare explicitly')
-            need(e['training']['mode']==ref_exp['training']['mode'],'reproduction training mode differs')
+            need(e['training']==ref_exp['training'],'reproduction training policy differs')
+            need(e.get('score_kind','probability')==ref_exp.get('score_kind','probability'),'reproduction score semantics differ')
+            need(experiment_contract(e,self.root)==experiment_contract(ref_exp,self.root),'reproduction execution contract differs')
             a=self.observed[e['id']];b=self.observed[ref];need(set(a)==set(b),'reproduction ID mismatch')
             tol=self.p['policy']['metric_tolerance']
             need(all(abs(float(a[s]['score'])-float(b[s]['score']))<=tol for s in a),'prediction replay disagrees; report nondeterminism and preregister justified tolerance')

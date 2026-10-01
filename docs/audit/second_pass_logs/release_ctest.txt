@@ -1,0 +1,9 @@
+Test project /var/folders/9p/6sf6gv2144l27mm74tx4dqrr0000gn/T/klstream-final-verification-3n5ni79e/release
+    Start 1: forest_independent_reference
+1/2 Test #1: forest_independent_reference .....   Passed    0.56 sec
+    Start 2: engine_correctness
+2/2 Test #2: engine_correctness ...............   Passed    0.43 sec
+
+100% tests passed out of 2
+
+Total Test time (real) =   0.98 sec

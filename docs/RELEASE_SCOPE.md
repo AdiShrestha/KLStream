@@ -1,5 +1,10 @@
 > Supplied factory documentation: this records factory/template history, not KLStream research evidence. The current KLStream audit is in `plan.md` and `docs/audit/`. In particular, the supplied factory still accepts a deleted supervisor signature; its assurance wording must be repaired through KLS-02. Historical test counts here are not new research observations.
 
+> Historical foundation/audit document. Current second-pass status is in
+> docs/audit/SECOND_PASS.md and its verification receipt; plan.md section 29
+> supersedes earlier present-tense gaps. No research readiness is claimed.
+
+
 # Release scope and limits
 
 `READY_FOR_HUMAN_SUBMISSION_REVIEW` means the frozen evidence is internally admissible and the required adversarial review is recorded. It is not “publication ready,” a guarantee of scientific truth, external validity, causal identification, novelty, or journal acceptance.

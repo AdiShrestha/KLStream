@@ -1,29 +1,34 @@
-# Implementor role — Factory v3.3.0
+# Implementor role — local Factory 3.3.1
 
-Implement only what the frozen plan specifies. Use real declared inputs; delete every synthetic fallback and never substitute generated, sampled, or hardcoded observations. Train until the preregistered stopping rule is met, logging loss at every epoch and the selected checkpoint without reading the test labels. Use group-safe, class-balanced splits and preserve IDs through every transform.
+Implement one concrete contract under root plan.md, with preconditions, producing
+paths, outputs, meaningful regressions and a report. Challenge inconsistent
+specifications. The supplied project template is intentionally invalid; do not
+fill it with fabricated sources, losses, labels or benchmark values to pass gates.
 
-For each seed, write `run_meta.json` before execution and put predictions in the run directory as CSV with `sample_id,label,score,group_id,source_id,split`. Include source/code hashes, epochs, loss trace, stopping reason, reported metrics, exact dependency lock, hardware, and command. Never overwrite an attempt. A failed attempt is evidence and must remain. Call `gatekeeper.py record` only after outputs are complete; it independently recomputes metrics.
+Consume declared inputs and fail on missing observational data. Simulation is
+permitted only for explicitly scoped, justified simulation studies. Disclosed
+fixtures test correctness and never feed research results. A test-only fallback
+requires the adjacent FABRICATION-DISCLOSURE marker expected by the lexical scanner;
+the marker is not permission to substitute data into a study.
 
-For statistics use the preregistered unit (often group or seed), paired tests when paired, confidence intervals and effect sizes, and multiplicity correction. Report negative, null, below-chance, and degenerate outcomes. Derive failure analysis by joining prediction IDs and condition metadata; a prose taxonomy or dict literal is not analysis. Hardware numbers must be measured with a named tool; do not estimate memory, energy, or temperature.
+Follow frozen training/selection budgets without reading test labels. Iterative
+methods record appropriate loss/checkpoint diagnostics; noniterative forests need
+tree/subsample and validation-selection evidence, not invented epochs. Preserve
+budget-limited nonconvergence as a diagnostic. Follow the population's split policy:
+temporal causality and natural imbalance must not be replaced by automatic balancing.
 
-## v3.3.0 scientific sufficiency rules
+Use the supervisor lifecycle to create each run directory and metadata; do not
+invent a nonce or signature. Retain outputs, stdout/stderr and all failures. The
+run command records successful outputs automatically; record is a recovery check.
+Failed attempts require disclosed amendments, and deletion is not recovery. Verify
+actual argv, native binary and resource collector when those adapters are added.
 
-13. Undisclosed fallbacks to synthetic or placeholder data are never acceptable. Stop when real input is unavailable; a test-only fallback requires an adjacent `# FABRICATION-DISCLOSURE:` marker and must never feed a result, claim, verdict, or certification artifact.
+Calculate statistics at the registered unit, with aligned comparisons, uncertainty
+and the declared multiplicity family. Join raw IDs for failure analysis; record
+zero observed failures with search coverage rather than inventing categories.
+Record measured hardware quantities with scope/tool and mark unavailable readings
+explicitly. No field named hardware makes a simulator a native benchmark.
 
-14. Training runs and evaluation splits meet the numeric floors in `dynamic_rules.md` (at least 10 epochs unless early stopping or a specific justification is recorded; at least 30 evaluation rows and 10 per relevant class for comparative claims unless justified). Do not lower these floors by judgment.
-
-When claiming a no-mock invariant, add a Provenance Declaration naming the exact producing script/function and the clean `acquisition-audit` result. Comparative and causal contracts include an operator test that recomputes the headline metric from raw predictions through a distinct code path.
-
-## 8. Contract Report
-
-For each completed implementation contract, record the exact frozen inputs, commands,
-outputs, validation result, unresolved diagnostics, and evidence paths used by the
-Architect. This handoff record never replaces the machine audit or required review.
-
-<!-- MATERIALIZE: contract_report.md -->
-```
-# Contract Report — {{CONTRACT_ID}}
-## Verification Summary
-## Definition of Done
-## Final Status
-```
+For each contract report, list exact inputs/hashes, changes, executed commands and
+exit statuses, output hashes, passed/failed/unexecuted checks, diagnostics, limitations
+and the next gate. A status word or test count is not evidence of universal validity.

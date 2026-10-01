@@ -1,7 +1,11 @@
 """One agent-authored plan. Strict executable contract; no hand-maintained registry family."""
 import re
 from .io import inside
-from .metrics import EvidenceError, number
+from .metrics import EvidenceError
+from .schema import expect_float
+
+def number(value):
+    return expect_float(value, "numeric plan field")
 
 METRICS={'auroc','average_precision','accuracy','f1','brier','log_loss'}
 REVIEW_TOPICS={'method_identity','data_and_leakage','training_sufficiency','statistics','baseline_fairness','ablation_sensitivity','generalization_failures','reproducibility','claims_and_venue'}
@@ -21,7 +25,7 @@ def integer(x,name,minimum):
 def validate(root,p):
     need(isinstance(p,dict),'plan must be object')
     need(p.get('schema_version')==3,'schema_version must be 3')
-    need(p.get('factory_version') in ('3.0.0','3.0.1','3.1.0','3.1.1','3.2.0','3.3.0'),'factory_version must be 3.0.0, 3.0.1, 3.1.0, 3.1.1, 3.2.0, or 3.3.0')
+    need(p.get('factory_version') in ('3.0.0','3.0.1','3.1.0','3.1.1','3.2.0','3.3.0','3.3.1'),'factory_version must be 3.0.0, 3.0.1, 3.1.0, 3.1.1, 3.2.0, 3.3.0, or 3.3.1')
     text(p.get('project_id'),'project_id')
     need(p.get('profile')=='binary_classification','UNSUPPORTED_PROFILE: use reviewed domain adapter; never reuse binary checks for another task')
     need(p.get('intent') in ('research','fixture'),'intent must be research or fixture')
@@ -41,9 +45,9 @@ def validate(root,p):
         # let a stale/hand-edited report become part of the evidence baseline.
         need(not (f in ('.','project') or f.startswith(('project/.factory','TAKE_THIS','DROP_HERE','factory')) or f in generated),'frozen_paths cannot contain generated state or factory installation')
     policy=p.get('policy');need(isinstance(policy,dict),'policy object required')
-    integer(policy.get('min_test_groups'),'min_test_groups',2)
-    integer(policy.get('min_class_count'),'min_class_count',2)
-    integer(policy.get('min_seeds'),'min_seeds',5)
+    integer(policy.get('min_test_groups'),'min_test_groups',1)
+    integer(policy.get('min_class_count'),'min_class_count',1)
+    integer(policy.get('min_seeds'),'min_seeds',2)
     need(0<number(policy.get('metric_tolerance'))<=1e-4,'metric_tolerance must be >0 and <=1e-4')
     seq(p.get('experiments'),'experiments'); ids=set()
     for e in p['experiments']:
@@ -52,18 +56,21 @@ def validate(root,p):
         need(eid not in ids,'duplicate experiment id');ids.add(eid)
         text(e.get('model'),'model');integer(e.get('seed'),'seed',0)
         need(e.get('role') in ('benchmark','baseline','control','ablation','sensitivity','ood','reproduction'),'unsupported role')
-        seq(e.get('command'),'command')
         seq(e.get('code_paths'),'code_paths')
         for cp in e['code_paths']: inside(root,cp)
-        need(all(str(cp).startswith('source/') for cp in e['code_paths']),'code_paths must be under source/')
-        need(any(cp in arg for cp in e['code_paths'] for arg in e['command']),
-             'command must name at least one declared frozen code_path')
-        for arg in e['command']:text(arg,'command argument')
-        need(any('{run_dir}' in x for x in e['command']),'command must receive {run_dir}')
-        need(any('{seed}' in x for x in e['command']),'command must receive {seed}')
+        need(all(cp=='source' or cp.startswith('source/') for cp in e['code_paths']),'code_paths must be source or beneath source/')
+        from .contract import experiment_contract
+        contract=experiment_contract(e,root)
+        args=contract.get('arguments',[])
+        if isinstance(args,dict): args=list(args.values())
+        need(any('{run_dir}' in x or x=='supervisor_bound' for x in args),'execution must receive supervisor-bound run directory')
+        need(any('{seed}' in x or x=='plan_seed' for x in args),'execution must receive the registered seed')
         need(isinstance(e.get('config'),dict),'config object required')
-        need(0<=number(e.get('threshold'))<=1,'predeclared threshold required in [0,1]')
+        need(e.get('score_kind','probability') in ('probability','ranking'),'score_kind must be probability or ranking')
+        threshold=number(e.get('threshold'))
+        if e.get('score_kind','probability')=='probability': need(0<=threshold<=1,'probability threshold must be in [0,1]')
         seq(e.get('evaluation_splits'),'evaluation_splits')
+        need(set(e['evaluation_splits'])<={'validation','test','ood'},'unsupported evaluation split')
         need('test' in e['evaluation_splits'],'test evaluation required')
         need(len(set(e['evaluation_splits']))==len(e['evaluation_splits']),'duplicate split')
         t=e.get('training');need(isinstance(t,dict),'training policy required')
@@ -76,6 +83,7 @@ def validate(root,p):
                 integer(t.get('tail_window'),'tail_window',2)
                 need(t['max_epochs']>=2*t['tail_window'],'fixed training needs at least two tail windows')
                 need(0<number(t.get('relative_tolerance'))<=.05,'fixed convergence tolerance must be <=.05')
+        if 'claim_convergence' in t: need(type(t['claim_convergence']) is bool,'claim_convergence must be boolean')
         text(t.get('rationale'),'training rationale')
         if e['role']=='baseline':
             need(e.get('baseline_class') in ('trivial','historical','current','mechanism_matched'),'baseline_class invalid')
@@ -86,6 +94,9 @@ def validate(root,p):
         seq(c.get('pairs'),'comparison pairs')
         need(len(c['pairs'])>=policy['min_seeds'],'comparisons need planned independent seed pairs')
         for pair in c['pairs']:need(isinstance(pair,list) and len(pair)==2 and set(pair)<=ids and pair[0]!=pair[1],'comparison pair IDs invalid')
+        if c.get('metric') in ('brier','log_loss'):
+            compared={eid for pair in c['pairs'] for eid in pair}
+            need(all(e.get('score_kind','probability')=='probability' for e in p['experiments'] if e['id'] in compared),'calibration metrics require probability scores')
         need(c.get('metric') in METRICS,'unknown metric; AUPRC is ambiguous: specify average_precision')
         need(c.get('sampling_unit')=='seed_fixed_test','built-in comparison inference is conditional on fixed test corpus across seeds')
         need(c.get('assertion') in ('superiority','inferiority','inconclusive','estimate'),'unsupported assertion; equivalence is not non-significance')

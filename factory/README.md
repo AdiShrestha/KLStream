@@ -1,6 +1,11 @@
-# Active v3.3 policy
+# Active local v3.3.1 policy
 
-Start with the root README. Authority: user brief → constitution → factory specification → frozen project methodology/plan → implementation. Only v3.3.0 files outside `legacy/` govern active projects.
+Start with the root README. Authority: user brief → constitution → factory specification → frozen project methodology/plan → implementation. Only v3.3.1 files outside `legacy/` govern active projects.
+
+3.3.1 is this project's local corrected derivative, not a claimed upstream release.
+Read `../docs/audit/SECOND_PASS.md` and SCIENTIFIC_CHECKS.md for implemented boundaries.
+Only Python/stdlib binary classification is supported; native streaming is pending.
+Authenticated local execution is not sealed evaluation or independent review.
 
 `gatekeeper.py` provides init, freeze, run, record, audit, certify, status, and handoff. Certification also runs provenance, tier, plausibility, coverage-liveness, and attack-registry gates automatically; the diagnostic commands remain available for CI. `run . all` automatically records and validates outputs, preserving failed attempts. `record` is a recovery/diagnostic command, normally unnecessary. `engine/metrics.py` recomputes independently from the project's metric code; `engine/audit.py` joins and validates current evidence; `engine/plan.py` defines the accepted plan contract; `engine/io.py` rejects malformed JSON and unsafe evidence paths; `engine/contract.py` enforces typed execution contracts; `engine/supervisor.py` provides Ed25519/HMAC receipt signing; `engine/schema.py` provides strict typed validators; `engine/attacks.py` defines the 18-entry attack registry.
 

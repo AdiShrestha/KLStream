@@ -8,7 +8,7 @@ as a LOBSTER academic sample, simulated quantities presented as timings, fabrica
 plots, invalid statistical verdicts, engine defects and factory assurance gaps.
 
 The current deliverable is a small C++17 engine foundation, an evidence-backed
-research plan, and Software Factory 3.3.0. It is **not submission ready**. No new
+research plan, and the locally corrected Software Factory 3.3.1. It is **not submission ready**. No new
 research benchmark or market-anomaly result has been produced. Generated inputs
 in the tests and defect probes are explicitly test fixtures.
 
@@ -24,11 +24,18 @@ ctest --test-dir build-sanitizers --output-on-failure
 The engine build requires CMake, a C++17 compiler and threads; it downloads no
 dependencies. Factory tests use `python3 factory/run_self_tests.py`; the complete
 suite includes local Unix sockets and requires an environment permitting them.
-Passing those tests does not resolve the factory defects documented in the plan.
-Do not freeze a confirmatory epoch or trust certification until KLS-02 is complete.
+The second audit repaired additional engine and factory defects; see
+[SECOND_PASS.md](docs/audit/SECOND_PASS.md) for repairs and remaining limits.
+The native streaming factory profile is still missing.
+Do not freeze a confirmatory KLStream epoch until KLS-02 is complete.
 The placeholder `project/research_plan.json` is intentionally not a valid study.
 
 Architect and Implementor sessions start at [project/agent_handoff.md](project/agent_handoff.md).
+The supplied Deep Research report was assessed critically in
+[assessment.md](docs/audit/research_context/assessment.md).
+Current verification is in
+[second_pass_verification.json](docs/audit/second_pass_verification.json); these are
+correctness fixtures, not research results.
 API boundaries and residual risks are in [docs/ENGINE_CONTRACT.md](docs/ENGINE_CONTRACT.md).
 Audit scope, inventories and reproduced counterexamples are in [docs/audit](docs/audit).
 Git preservation receipts are in [docs/audit/git_migration.json](docs/audit/git_migration.json).

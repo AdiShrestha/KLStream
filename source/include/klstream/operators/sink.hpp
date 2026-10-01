@@ -39,6 +39,7 @@ public:
     void attach_metrics(OperatorMetrics* m) override { metrics_ = m; }
 
     OpStatus tick() override {
+        if (input_->is_cancelled()) throw std::runtime_error("Input cancelled; EOS was not reached");
         Event<T> ev;
         if (!input_->try_pop(&ev)) {
             if (input_->is_drained()) return OpStatus::Finished;

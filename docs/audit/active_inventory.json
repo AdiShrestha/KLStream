@@ -1,0 +1,2305 @@
+{
+  "purpose": "active-tree census and review dispositions, not complete semantic/branch coverage",
+  "created_utc": "2026-10-01T06:22:38.359539+00:00",
+  "excluded": [
+    ".git contents",
+    "docs/audit/active_inventory.json"
+  ],
+  "files": 309,
+  "category_counts": {
+    "policy_plan_license_or_document": 52,
+    "generated_local_inventory_only": 112,
+    "audit_receipt_or_historical_index": 18,
+    "audit_tool_or_counterexample": 8,
+    "verification_output": 35,
+    "untrusted_context_and_critique": 2,
+    "active_factory_implementation": 14,
+    "historical_factory_quarantine": 32,
+    "active_regression_fixture": 10,
+    "empty_placeholder": 1,
+    "active_engine_or_fixture": 25
+  },
+  "python_parse_errors": [],
+  "items": [
+    {
+      "path": ".gitignore",
+      "bytes": 166,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "283d6426ea5d21405ea418b2993e13a65b9c3e8bdd52386597623da781a05f7a",
+      "lines": 15
+    },
+    {
+      "path": "CMakeLists.txt",
+      "bytes": 2091,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "397a883a49f56d76081dcbcad46e17778da7f8b25ff7c4b6804b9368ac63f976",
+      "lines": 36
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1175,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "c4ffa46489fbd76ee95159f1653719e95302ee6dcd1ade1b6d0d757186138c9c",
+      "lines": 19
+    },
+    {
+      "path": "README.md",
+      "bytes": 2571,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "7de94767127c5092578e8f0eacc075b7070225f430694fdbec0c8fb743cddefe",
+      "lines": 44
+    },
+    {
+      "path": "bootstrap.sh",
+      "bytes": 542,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "60e751321c9e474792b06023c41881fd89bbc34944eb30d7c1123a3fab6088e5",
+      "lines": 15
+    },
+    {
+      "path": "build-audit-release/CMakeCache.txt",
+      "bytes": 14179,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/4.4.1/CMakeCXXCompiler.cmake",
+      "bytes": 6537,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/4.4.1/CMakeDetermineCompilerABI_CXX.bin",
+      "bytes": 33560,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/4.4.1/CMakeSystem.cmake",
+      "bytes": 360,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/4.4.1/CompilerIdCXX/CMakeCXXCompilerId.cpp",
+      "bytes": 29651,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/4.4.1/CompilerIdCXX/a.out",
+      "bytes": 33736,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/4.4.1/CompilerIdCXX/apple-sdk.cpp",
+      "bytes": 32,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/CMakeConfigureLog.yaml",
+      "bytes": 110884,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/CMakeDirectoryInformation.cmake",
+      "bytes": 717,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/InstallScripts.json",
+      "bytes": 158,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/Makefile.cmake",
+      "bytes": 7863,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/Makefile2",
+      "bytes": 4417,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/Progress/2",
+      "bytes": 5,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/TargetDirectories.txt",
+      "bytes": 431,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/cmake.check_cache",
+      "bytes": 85,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/engine_tests.dir/DependInfo.cmake",
+      "bytes": 813,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/engine_tests.dir/build.make",
+      "bytes": 5639,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/engine_tests.dir/cmake_clean.cmake",
+      "bytes": 349,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/engine_tests.dir/compiler_depend.internal",
+      "bytes": 83816,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/engine_tests.dir/compiler_depend.make",
+      "bytes": 171209,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/engine_tests.dir/compiler_depend.ts",
+      "bytes": 119,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/engine_tests.dir/depend.make",
+      "bytes": 96,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/engine_tests.dir/flags.make",
+      "bytes": 316,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/engine_tests.dir/link.txt",
+      "bytes": 159,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/engine_tests.dir/progress.make",
+      "bytes": 43,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/engine_tests.dir/source/tests/engine_tests.cpp.o",
+      "bytes": 143216,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/engine_tests.dir/source/tests/engine_tests.cpp.o.d",
+      "bytes": 86480,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CMakeFiles/progress.marks",
+      "bytes": 2,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/CTestTestfile.cmake",
+      "bytes": 741,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/Makefile",
+      "bytes": 6170,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/Testing/Temporary/CTestCostData.txt",
+      "bytes": 34,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/Testing/Temporary/LastTest.log",
+      "bytes": 827,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/cmake_install.cmake",
+      "bytes": 2093,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-release/engine_tests",
+      "bytes": 136480,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeCache.txt",
+      "bytes": 14188,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/4.4.1/CMakeCXXCompiler.cmake",
+      "bytes": 6537,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/4.4.1/CMakeDetermineCompilerABI_CXX.bin",
+      "bytes": 33560,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/4.4.1/CMakeSystem.cmake",
+      "bytes": 360,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/4.4.1/CompilerIdCXX/CMakeCXXCompilerId.cpp",
+      "bytes": 29651,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/4.4.1/CompilerIdCXX/a.out",
+      "bytes": 33736,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/4.4.1/CompilerIdCXX/apple-sdk.cpp",
+      "bytes": 32,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/CMakeConfigureLog.yaml",
+      "bytes": 110923,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/CMakeDirectoryInformation.cmake",
+      "bytes": 720,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/InstallScripts.json",
+      "bytes": 161,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/Makefile.cmake",
+      "bytes": 7863,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/Makefile2",
+      "bytes": 4432,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/TargetDirectories.txt",
+      "bytes": 443,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/cmake.check_cache",
+      "bytes": 85,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/engine_tests.dir/DependInfo.cmake",
+      "bytes": 813,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/engine_tests.dir/build.make",
+      "bytes": 5660,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/engine_tests.dir/cmake_clean.cmake",
+      "bytes": 349,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/engine_tests.dir/compiler_depend.internal",
+      "bytes": 83896,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/engine_tests.dir/compiler_depend.make",
+      "bytes": 171373,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/engine_tests.dir/compiler_depend.ts",
+      "bytes": 119,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/engine_tests.dir/depend.make",
+      "bytes": 96,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/engine_tests.dir/flags.make",
+      "bytes": 359,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/engine_tests.dir/link.txt",
+      "bytes": 178,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/engine_tests.dir/progress.make",
+      "bytes": 43,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/engine_tests.dir/source/tests/engine_tests.cpp.o",
+      "bytes": 3592128,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/engine_tests.dir/source/tests/engine_tests.cpp.o.d",
+      "bytes": 86563,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CMakeFiles/progress.marks",
+      "bytes": 2,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/CTestTestfile.cmake",
+      "bytes": 747,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/Makefile",
+      "bytes": 6182,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/Testing/Temporary/CTestCostData.txt",
+      "bytes": 34,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/Testing/Temporary/LastTest.log",
+      "bytes": 833,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/cmake_install.cmake",
+      "bytes": 2097,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "build-audit-sanitizers/engine_tests",
+      "bytes": 1814336,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "data/README.md",
+      "bytes": 436,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "5f76fd0ecca5d3064c028dd8790dae54038707b0df75c9d6413c4af172283411",
+      "lines": 7
+    },
+    {
+      "path": "docs/COVERAGE.md",
+      "bytes": 2541,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "657185d91130bf8b62ae7f2ec88f815078cbf9a028f0571178edd321f0ace061",
+      "lines": 25
+    },
+    {
+      "path": "docs/ENGINE_CONTRACT.md",
+      "bytes": 9259,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "dfb5500904291e4651f13988baf8e57957d5e96f2ce35818bc15b70759e4dede",
+      "lines": 142
+    },
+    {
+      "path": "docs/FORENSIC_AUDIT.md",
+      "bytes": 3107,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "1fd8d56ffee2e06c56fcc4bffdc53f3d60b5806063fd17c114e23548b48190bf",
+      "lines": 25
+    },
+    {
+      "path": "docs/MIGRATION.md",
+      "bytes": 1714,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "d9254227093ad798390e9aed71abc275c3a9f2a86288c477fdc0e1236bcda3ae",
+      "lines": 12
+    },
+    {
+      "path": "docs/REFERENCES.md",
+      "bytes": 744,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "39f49d2e91034798f85ec7f909897ec3b45b811036bee1eb58f29c7d540ef97e",
+      "lines": 10
+    },
+    {
+      "path": "docs/RELEASE_SCOPE.md",
+      "bytes": 1436,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "9209efa5f376243b2d871c80e9a685fe33c5a57eee7999fc50791a8fa390101b",
+      "lines": 12
+    },
+    {
+      "path": "docs/SCHEMA.md",
+      "bytes": 2312,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "43b17d35b0f5596c57a7fb14408f6144679b22239555e7d95fa49db722d47fff",
+      "lines": 15
+    },
+    {
+      "path": "docs/VALIDATION.md",
+      "bytes": 2930,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "93482cf97a0620cfbf6583c30e085cfb3945d4be6b0a878d4064c0968f63c72f",
+      "lines": 34
+    },
+    {
+      "path": "docs/audit/AUDIT_SCOPE.md",
+      "bytes": 2807,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "2cb55b03042d321d095c6e0aa7fbd4dc471c473db62604f2e4cfb7a275119c46",
+      "lines": 43
+    },
+    {
+      "path": "docs/audit/SECOND_PASS.md",
+      "bytes": 17828,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "743042fcb121aff22b6bf13dc02a185a5c1d392c3325d56abbec683d58c07ff2",
+      "lines": 160
+    },
+    {
+      "path": "docs/audit/active_engine_after.json",
+      "bytes": 189,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "4360ffb089805f32ac0a577b9b0518fa420fbf3996475f7c580c85143d9e1b0a",
+      "lines": 1
+    },
+    {
+      "path": "docs/audit/active_engine_before.json",
+      "bytes": 189,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "780ca52d4a148d79d89e6db8ed2757d36b6d21e7fce36733d9e3bd3c00ab3505",
+      "lines": 1
+    },
+    {
+      "path": "docs/audit/active_engine_counterexamples.cpp",
+      "bytes": 1092,
+      "category": "audit_tool_or_counterexample",
+      "review_scope": "auditor fixture/tool; preserves bounded evidence, never a research producer",
+      "sha256": "d95df0739265ab3d8aa5d57858f87da5d4e6e367ab7e95f280b9d325c902e3a0",
+      "lines": 17
+    },
+    {
+      "path": "docs/audit/clean_checkout_verification.json",
+      "bytes": 1481,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "5a8280a13c948adce8a4de26656321556ea10708cbd4078c3af8afcd39367768",
+      "lines": 51
+    },
+    {
+      "path": "docs/audit/defect_probes.json",
+      "bytes": 1647,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "997d57c3a5c12dafcc545348bcbb3935f9426e29a9e5feaf47e2dafe54f4ee37",
+      "lines": 44
+    },
+    {
+      "path": "docs/audit/factory_signature_counterexample.json",
+      "bytes": 196,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "5af41594072d625ec298a2c946faf17fd611072c66b6c6ab1c59b850c55e0483",
+      "lines": 7
+    },
+    {
+      "path": "docs/audit/factory_signature_repaired.json",
+      "bytes": 387,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "18d665bf61d9781b83eddaba8e30a7a22bb4f4e33c25784fbafbfc6e2c3b87fc",
+      "lines": 16
+    },
+    {
+      "path": "docs/audit/findings.json",
+      "bytes": 35606,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "dcbac1d4d04672ab07285d25f03396eb7ddd34ef7ffccbd09fa5428013bfa836",
+      "lines": 253
+    },
+    {
+      "path": "docs/audit/git_migration.json",
+      "bytes": 2708,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "5306f5c7dd0d1990516c5fcbbef8ebf539faab525761c5fb34625bc390ced326",
+      "lines": 57
+    },
+    {
+      "path": "docs/audit/intermediate_verification/README.md",
+      "bytes": 1011,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "1f2b286276943a110498f6ee4b63fa2f83ec20fbfa9b23738fc44fb9785bac3e",
+      "lines": 16
+    },
+    {
+      "path": "docs/audit/intermediate_verification/before_final_training_numeric_repairs.json",
+      "bytes": 21731,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "a00472ba598740aacf11c3c11c05d25afaeb9beaed63abfcc4db013cc896e9e3",
+      "lines": 440
+    },
+    {
+      "path": "docs/audit/intermediate_verification/bundle_fixture_setup_error.txt",
+      "bytes": 336,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "0facff1d89a6c213a07fe12fa02ce174ac1c8ff4b0419eaa4b1e858b49483d3e",
+      "lines": 5
+    },
+    {
+      "path": "docs/audit/intermediate_verification/coverage_expectation_failure.txt",
+      "bytes": 42304,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "b18cc46a5aedf3902afa05728fa23c128af2a65527d34254d4c670de415c4c23",
+      "lines": 483
+    },
+    {
+      "path": "docs/audit/intermediate_verification/coverage_expectation_run.json",
+      "bytes": 21628,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "2810addad881b6b6fe6d1d502b4d19601f374d7f7fd3ba92c4301f2e2d262f01",
+      "lines": 439
+    },
+    {
+      "path": "docs/audit/intermediate_verification/first_full_run.json",
+      "bytes": 20598,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "f02fbc9c85eb94d1fb02a14264a3237e8b0f0158b5d780bc1b467ea4b7d0e667",
+      "lines": 413
+    },
+    {
+      "path": "docs/audit/intermediate_verification/klstream-factory-audit-tests-2.txt",
+      "bytes": 42240,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "e4a0f9d6985e2d8d771b214ae35bff321721c3e8e60308c5f4f72f3a01c29431",
+      "lines": 497
+    },
+    {
+      "path": "docs/audit/intermediate_verification/klstream-factory-audit-tests-3.txt",
+      "bytes": 38782,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "422a99dd623476d8bc3b3ec6473195b11fbedcc6fc063777715ca6e2be8d185a",
+      "lines": 448
+    },
+    {
+      "path": "docs/audit/intermediate_verification/klstream-factory-audit-tests-final.txt",
+      "bytes": 40140,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "8ecf3e012133d1915d988002aed981e79ae73f64b0e3ad136c14603c81809790",
+      "lines": 455
+    },
+    {
+      "path": "docs/audit/intermediate_verification/klstream-factory-audit-tests-full.txt",
+      "bytes": 38171,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "16e86868a9709fd7a92c068fc3003cbef6960a279e62fc86df9c5dde705cb238",
+      "lines": 439
+    },
+    {
+      "path": "docs/audit/intermediate_verification/klstream-factory-audit-tests-restored.txt",
+      "bytes": 39160,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "63862b94a969163a5c02b3a7b9c3ec7cd3aacc1bee8bf626f4de7e3c4a2c743f",
+      "lines": 443
+    },
+    {
+      "path": "docs/audit/intermediate_verification/klstream-factory-audit-tests-strengthened.txt",
+      "bytes": 36857,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "c0bf69dd834aa967ce321dcaa21a2f35e2f79902b4ef9a44c9f94edbaf2b9397",
+      "lines": 428
+    },
+    {
+      "path": "docs/audit/intermediate_verification/klstream-factory-audit-tests-verified.txt",
+      "bytes": 39325,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "73ea5814faceb5ee686a803045cf723a5e449c620cf756d4ad88d9dd601e6dd0",
+      "lines": 446
+    },
+    {
+      "path": "docs/audit/intermediate_verification/klstream-factory-audit-tests.txt",
+      "bytes": 41452,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "049d6337e0f3f9f7d69e58aa3eca6369d2e200f8627d96f5f61b0d7a2565f874",
+      "lines": 537
+    },
+    {
+      "path": "docs/audit/intermediate_verification/klstream-factory-current.txt",
+      "bytes": 42146,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "4d5fcf1aecc3323eb3f5c07cf3f693c58dc4ad01c142ca83ace51b68dc98daa6",
+      "lines": 480
+    },
+    {
+      "path": "docs/audit/intermediate_verification/klstream-factory-policy-final.txt",
+      "bytes": 40317,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "d8fa5af06d2b8ec2eef1e44dfee0893eb9f7b58f63579b1d2d2a53d9ddab68b6",
+      "lines": 457
+    },
+    {
+      "path": "docs/audit/intermediate_verification/klstream-factory-selftests-unrestricted.txt",
+      "bytes": 33562,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "5ba72bae96b261afc59dab6da238e048a9912b3e78a88937808482a12fb72f6c",
+      "lines": 413
+    },
+    {
+      "path": "docs/audit/intermediate_verification/klstream-factory-selftests.txt",
+      "bytes": 34173,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "ddb2213d6eefae67aec56ef27cb84bf9dd37a51d404d0abcfa347ef264b4e2fb",
+      "lines": 422
+    },
+    {
+      "path": "docs/audit/intermediate_verification/module_attribution_failure.txt",
+      "bytes": 42304,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "17cb5a6a9e239e7cb091cc47d35d6c57405cc65b31eecd5815f0050242852dd5",
+      "lines": 483
+    },
+    {
+      "path": "docs/audit/intermediate_verification/module_attribution_run.json",
+      "bytes": 21629,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "fe351ce420ab6ff9233bd708132b6c0496dfe3811180f688ceb1b136a936d8dc",
+      "lines": 439
+    },
+    {
+      "path": "docs/audit/inventory_active.py",
+      "bytes": 4661,
+      "category": "audit_tool_or_counterexample",
+      "review_scope": "auditor fixture/tool; preserves bounded evidence, never a research producer",
+      "sha256": "d2e00d15ff0d6fd54d3148398715dc803a0f502573122d93550953d4c4a3e7af",
+      "lines": 65,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "docs/audit/inventory_legacy.py",
+      "bytes": 5558,
+      "category": "audit_tool_or_counterexample",
+      "review_scope": "auditor fixture/tool; preserves bounded evidence, never a research producer",
+      "sha256": "7c1b1d08ec11d5a8f5fb3da636568b633cf5c92f32a435c52c1cd206e93f0e17",
+      "lines": 96,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "docs/audit/inventory_summary.json",
+      "bytes": 598,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "74671ca007e081e4e4d2d7edd06fadf11af508a54cfabc71f7c679e3a8c4d89c",
+      "lines": 16
+    },
+    {
+      "path": "docs/audit/legacy_cpp_counterexamples.cpp",
+      "bytes": 2035,
+      "category": "audit_tool_or_counterexample",
+      "review_scope": "auditor fixture/tool; preserves bounded evidence, never a research producer",
+      "sha256": "54c8955cdee11a2989458bf20da9e0de9f0b56ad53fdd994939b35ea5bd4bcad",
+      "lines": 29
+    },
+    {
+      "path": "docs/audit/legacy_cpp_counterexamples.json",
+      "bytes": 277,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "e73f28ff486aeaac963256dccbefa0b0d447243a9500e513d2f0010694b9354a",
+      "lines": 8
+    },
+    {
+      "path": "docs/audit/legacy_csv_index.json",
+      "bytes": 284169,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "a127bb61f2d8a2967b41abe5927c8d086d5841167340c4f4176765d7efc2e0a6",
+      "lines": 11209
+    },
+    {
+      "path": "docs/audit/legacy_evidence_excerpts.md",
+      "bytes": 24327,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "f6015bd568eafef98007be96b30699f176ae7bcab0ea72a8137d7b0c954e38f0",
+      "lines": 631
+    },
+    {
+      "path": "docs/audit/legacy_inventory.json",
+      "bytes": 2186018,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "573e5e2b5723813b20031bb15a410e4c2a0658d8eabf2f279a96dbd3dc7791b7",
+      "lines": 65334
+    },
+    {
+      "path": "docs/audit/legacy_json_index.json",
+      "bytes": 29735,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "4b5257fd5311f2220a133be39a5adff3f50c905964fa4f8271465b72df88105f",
+      "lines": 1124
+    },
+    {
+      "path": "docs/audit/legacy_text_index.json",
+      "bytes": 467560,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "6c5f90bbb3d3abf9f2a4342c054a5f8b1be57b41ce7e595633f43637e64d5d8f",
+      "lines": 13450
+    },
+    {
+      "path": "docs/audit/migration_manifest.json",
+      "bytes": 11800,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "e7f7db316c949d5865997e55bbe5bd14c5f98544db9ae7f38ec463dc2a06aeb5",
+      "lines": 194
+    },
+    {
+      "path": "docs/audit/migration_manifest_foundation_0_3_0.json",
+      "bytes": 7556,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "6a6020b7228e8170b202fb86966ffb5e304ad8ae93fafdf8b2deca388bc08d1f",
+      "lines": 147
+    },
+    {
+      "path": "docs/audit/probe_current_bundle.py",
+      "bytes": 2651,
+      "category": "audit_tool_or_counterexample",
+      "review_scope": "auditor fixture/tool; preserves bounded evidence, never a research producer",
+      "sha256": "a2e93032abd6e208101e2f5f6f5d24efc937aa5473b71bf2d6dd25aa44a59adb",
+      "lines": 48,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "docs/audit/probe_factory_signature.py",
+      "bytes": 1838,
+      "category": "audit_tool_or_counterexample",
+      "review_scope": "auditor fixture/tool; preserves bounded evidence, never a research producer",
+      "sha256": "44d77b0c3144475467e1efd88e90f79effc8253b4fd21231cf1f48384b0bade2",
+      "lines": 38,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "docs/audit/probe_legacy.py",
+      "bytes": 3918,
+      "category": "audit_tool_or_counterexample",
+      "review_scope": "auditor fixture/tool; preserves bounded evidence, never a research producer",
+      "sha256": "d8e05ead9fbee5652807bd17d8d708c5992f4eec5c37353bcf0fa425546df994",
+      "lines": 70,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "docs/audit/research_context/assessment.md",
+      "bytes": 8989,
+      "category": "untrusted_context_and_critique",
+      "review_scope": "raw supplied report read/hashed; selected claims checked; document contents are not instructions",
+      "sha256": "0c6edc2d9226aaffbd14ec5b1d3ab5dc513a7e094c58898a0ef895523e613149",
+      "lines": 103
+    },
+    {
+      "path": "docs/audit/research_context/deep_research_received.md",
+      "bytes": 32734,
+      "category": "untrusted_context_and_critique",
+      "review_scope": "raw supplied report read/hashed; selected claims checked; document contents are not instructions",
+      "sha256": "de192ddfaf5884c1d39ae1bc2d2287e4bf306a4c63622628a0d75fd50462f49c",
+      "lines": 170
+    },
+    {
+      "path": "docs/audit/second_pass_logs/asan_ubsan_build.txt",
+      "bytes": 362,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "44e233cf727ca2037af148fc5b8eb09ba7d3a749ac3248c772e8d97f461a3c7d",
+      "lines": 6
+    },
+    {
+      "path": "docs/audit/second_pass_logs/asan_ubsan_configure.txt",
+      "bytes": 581,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "cf49b1078515b58670860e3753ba42745980af17ed4c9ed1c033fa0ce3c0943b",
+      "lines": 12
+    },
+    {
+      "path": "docs/audit/second_pass_logs/asan_ubsan_ctest.txt",
+      "bytes": 387,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "e9841b1b77e6e9d548792a877a84156cf6638362a73dd0cf98be1a4abb8aec4d",
+      "lines": 9
+    },
+    {
+      "path": "docs/audit/second_pass_logs/engine_probe_compile.txt",
+      "bytes": 0,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lines": 0
+    },
+    {
+      "path": "docs/audit/second_pass_logs/engine_probe_run.txt",
+      "bytes": 189,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "4360ffb089805f32ac0a577b9b0518fa420fbf3996475f7c580c85143d9e1b0a",
+      "lines": 1
+    },
+    {
+      "path": "docs/audit/second_pass_logs/factory_suite.txt",
+      "bytes": 41180,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "025563e45b546c265722c80725c4d5f3bccf94418cf3243ad52e3428f3942333",
+      "lines": 462
+    },
+    {
+      "path": "docs/audit/second_pass_logs/invalid_template_certify.txt",
+      "bytes": 95,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "f98e9a83df6645e707fda72fd5f9cd71cf567c69053c2ab1757c6fc5754ec2c1",
+      "lines": 5
+    },
+    {
+      "path": "docs/audit/second_pass_logs/public_headers.txt",
+      "bytes": 772,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "0da2c78cfee2e7502b6150d8bb6c931bb9ab9f3c59a60756c0f67f5cf6866556",
+      "lines": 41
+    },
+    {
+      "path": "docs/audit/second_pass_logs/release_build.txt",
+      "bytes": 362,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "5cea48c3334f0bee6fefc220c04fca9efe3ea02fb6dd446dcdf1b8d864f0a7ee",
+      "lines": 6
+    },
+    {
+      "path": "docs/audit/second_pass_logs/release_configure.txt",
+      "bytes": 578,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "2ce5e95dd76b59893f6b2d717d3557aa3294b6ed72bd12d809dbc0034591c331",
+      "lines": 12
+    },
+    {
+      "path": "docs/audit/second_pass_logs/release_ctest.txt",
+      "bytes": 384,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "32ab803122a32eeacdbdf12d7de2036ad323284408b2386fe445a29d90f47b9b",
+      "lines": 9
+    },
+    {
+      "path": "docs/audit/second_pass_logs/signature_removal_probe.txt",
+      "bytes": 387,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "18d665bf61d9781b83eddaba8e30a7a22bb4f4e33c25784fbafbfc6e2c3b87fc",
+      "lines": 16
+    },
+    {
+      "path": "docs/audit/second_pass_logs/standalone_bundle_probe.txt",
+      "bytes": 953,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "0f61096559aedae26dcbf2fccc8552fad0626108464ae64b0b12ce34adc73e41",
+      "lines": 26
+    },
+    {
+      "path": "docs/audit/second_pass_logs/tsan_compile.txt",
+      "bytes": 0,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lines": 0
+    },
+    {
+      "path": "docs/audit/second_pass_logs/tsan_run.txt",
+      "bytes": 58,
+      "category": "verification_output",
+      "review_scope": "executed or intermediate fixture observations; no research evidence",
+      "sha256": "1cecb6867602490008428bf3deff29e08c207db18d60a00071616cb468eee761",
+      "lines": 1
+    },
+    {
+      "path": "docs/audit/second_pass_verification.json",
+      "bytes": 21731,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "fb4057ae2cfcca6bbfc9e011dc08b076955810deabfd68f352869044e0d7eaf3",
+      "lines": 440
+    },
+    {
+      "path": "docs/audit/verification_summary.json",
+      "bytes": 3526,
+      "category": "audit_receipt_or_historical_index",
+      "review_scope": "machine-readable evidence/census; large historical indexes not manually certified row by row",
+      "sha256": "13bc704f9817b23a704409c9c054d88545f221d5d54c4afabf38db3e7219f92d",
+      "lines": 84
+    },
+    {
+      "path": "docs/audit/verify_active.py",
+      "bytes": 9026,
+      "category": "audit_tool_or_counterexample",
+      "review_scope": "auditor fixture/tool; preserves bounded evidence, never a research producer",
+      "sha256": "1e36e6a6d440c2bfd556d6213ce5e0c350f82ac60b5f093ccec5577ba3ad529b",
+      "lines": 137,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "docs/audit_tools/audit_v26_project.py",
+      "bytes": 3496,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "a2ca09f44158376a71d0216136d00820a02d0ae19076b661f3927e1cc325c279",
+      "lines": 43,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "docs/v26_forensic_results.json",
+      "bytes": 33755,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "b17bf13a1839e5a2fa5261cf827cbcbd729a7b436bbaa3398aa5bb7243cb914c",
+      "lines": 1092
+    },
+    {
+      "path": "factory/.pytest_cache/.gitignore",
+      "bytes": 37,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "3ed731b65d06150c138e2dadb0be0697550888a6b47eb8c45ecc9adba8b8e9bd",
+      "lines": 2
+    },
+    {
+      "path": "factory/.pytest_cache/CACHEDIR.TAG",
+      "bytes": 191,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "37dc88ef9a0abeddbe81053a6dd8fdfb13afb613045ea1eb4a5c815a74a3bde4",
+      "lines": 4
+    },
+    {
+      "path": "factory/.pytest_cache/README.md",
+      "bytes": 302,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "73fd6fccdd802c419a6b2d983d6c3173b7da97558ac4b589edec2dfe443db9ad",
+      "lines": 8
+    },
+    {
+      "path": "factory/.pytest_cache/v/cache/lastfailed",
+      "bytes": 2,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "lines": 1
+    },
+    {
+      "path": "factory/.pytest_cache/v/cache/nodeids",
+      "bytes": 23162,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "623874355340bf24fc81ef6048eb12a2f2efb13898bbf2c4cf938fafce081004",
+      "lines": 282
+    },
+    {
+      "path": "factory/AGENT_WORKFLOW.md",
+      "bytes": 1381,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "d3c3fd5c185e0f9368d7ac8d2fbab4d4081b8cb0d08313e32412fd9fac5fb3aa",
+      "lines": 10
+    },
+    {
+      "path": "factory/CHANGELOG.md",
+      "bytes": 15595,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "a36072207d36a385ba48108c282da686bf9c67caa8ddfafbcbcbff3d7dff2b95",
+      "lines": 219
+    },
+    {
+      "path": "factory/ClaudeInitialization.md",
+      "bytes": 102,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "184edabe9e3218deed2b141a7d269680e63a6377d04ef2f34fe56d6ab9c6a629",
+      "lines": 1
+    },
+    {
+      "path": "factory/DEEP_RESEARCH.md",
+      "bytes": 986,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "85ebeea5d674179f3b9a8d2f53adc64f4300612421ba83672dc2b07df2f9cfe6",
+      "lines": 5
+    },
+    {
+      "path": "factory/LICENSE",
+      "bytes": 1916,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "c97ec7c35c967d232a830fb9de01932c436d79d9ed52d9096314c51ca7c8520f",
+      "lines": 28
+    },
+    {
+      "path": "factory/README.md",
+      "bytes": 2012,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "9e4581262e020bdd09b9d06bc66e13c12fdbb8cbe5dc72c5e0ca39183a0284b2",
+      "lines": 14
+    },
+    {
+      "path": "factory/SCIENCE_PROTOCOL.md",
+      "bytes": 2502,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "111bb0896e8f945faf49b0667dce7d43968398d460c0fd8bf7067c138f3705d0",
+      "lines": 38
+    },
+    {
+      "path": "factory/SCIENTIFIC_CHECKS.md",
+      "bytes": 3662,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "7e357211206efde6630e17a0856d54395fe79a858d7316ef606a0b9d93a33eba",
+      "lines": 52
+    },
+    {
+      "path": "factory/VERSION",
+      "bytes": 6,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "ef2a79c2f7dc37800a73fd9930b307824ce20af920cbc7159323456418e77e6b",
+      "lines": 1
+    },
+    {
+      "path": "factory/__pycache__/gatekeeper.cpython-312.pyc",
+      "bytes": 119292,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/__pycache__/verify_bundle_standalone.cpython-312.pyc",
+      "bytes": 10431,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/architect_spec.md",
+      "bytes": 1769,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "c1d0ddba48219c76254f24247a1451e490d82c4449d60bca8254254181adab07",
+      "lines": 27
+    },
+    {
+      "path": "factory/bootstrap_manifest.yaml",
+      "bytes": 377,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "14dbf561b4018f961129f4ea098f1df21d7c5cd3ee5609994ee25cb7587a04b8",
+      "lines": 12
+    },
+    {
+      "path": "factory/constitution.md",
+      "bytes": 13343,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "9e6cf3b730787683c2d39767199d2fc6e6d438adf5a7d67e73d19a837fa4ad03",
+      "lines": 191
+    },
+    {
+      "path": "factory/constitution_coverage.yaml",
+      "bytes": 2478,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "d72d13c0454dcf6916bb25b9c48988490060a793988ac1f182bae9c1819ebafb",
+      "lines": 94
+    },
+    {
+      "path": "factory/domain_checklists.md",
+      "bytes": 2041,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "c554897b0abc2e43f8e5caed1a0bc28e022576799fe488ef960a47287ec843cc",
+      "lines": 19
+    },
+    {
+      "path": "factory/dynamic_rules.md",
+      "bytes": 11534,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "83bb53c3d8e01e19fe4093d2e1438fb17b13032405ca048d893dc3b731f5938b",
+      "lines": 110
+    },
+    {
+      "path": "factory/engine/__init__.py",
+      "bytes": 33,
+      "category": "active_factory_implementation",
+      "review_scope": "producing paths reviewed and challenged; local profile/same-user boundary remains",
+      "sha256": "713fca0bb8ac2d95f2319e5de5584ab516e39aea32c7aed88b73cea5b61e199b",
+      "lines": 1,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/engine/__main__.py",
+      "bytes": 0,
+      "category": "active_factory_implementation",
+      "review_scope": "producing paths reviewed and challenged; local profile/same-user boundary remains",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lines": 0,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/engine/__pycache__/__init__.cpython-312.pyc",
+      "bytes": 164,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/engine/__pycache__/__main__.cpython-312.pyc",
+      "bytes": 123,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/engine/__pycache__/attacks.cpython-312.pyc",
+      "bytes": 7924,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/engine/__pycache__/audit.cpython-312.pyc",
+      "bytes": 58978,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/engine/__pycache__/bundle.cpython-312.pyc",
+      "bytes": 6374,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/engine/__pycache__/contract.cpython-312.pyc",
+      "bytes": 8355,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/engine/__pycache__/io.cpython-312.pyc",
+      "bytes": 12430,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/engine/__pycache__/metrics.cpython-312.pyc",
+      "bytes": 12290,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/engine/__pycache__/plan.cpython-312.pyc",
+      "bytes": 16966,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/engine/__pycache__/schema.cpython-312.pyc",
+      "bytes": 11429,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/engine/__pycache__/supervisor.cpython-312.pyc",
+      "bytes": 13493,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/engine/attacks.py",
+      "bytes": 8892,
+      "category": "active_factory_implementation",
+      "review_scope": "producing paths reviewed and challenged; local profile/same-user boundary remains",
+      "sha256": "c16ea1ea3636b64abefe6944760d8235d053c84920ac20151ce3513f4e0dd2c0",
+      "lines": 193,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/engine/audit.py",
+      "bytes": 33134,
+      "category": "active_factory_implementation",
+      "review_scope": "producing paths reviewed and challenged; local profile/same-user boundary remains",
+      "sha256": "192a57690aadfd9f4b5e125571f638ef4ee928e95410c750ab30874b86723219",
+      "lines": 383,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/engine/bundle.py",
+      "bytes": 3758,
+      "category": "active_factory_implementation",
+      "review_scope": "producing paths reviewed and challenged; local profile/same-user boundary remains",
+      "sha256": "dc15ba7e329b89b267520526d8815cb48441025a1c7b1a3520d74afe133241b3",
+      "lines": 76,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/engine/contract.py",
+      "bytes": 5587,
+      "category": "active_factory_implementation",
+      "review_scope": "producing paths reviewed and challenged; local profile/same-user boundary remains",
+      "sha256": "b5088f88735526724ef000a1b8c4290ec1b54c5828de6f311f34f2ea8a38f019",
+      "lines": 114,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/engine/io.py",
+      "bytes": 7836,
+      "category": "active_factory_implementation",
+      "review_scope": "producing paths reviewed and challenged; local profile/same-user boundary remains",
+      "sha256": "14d18a71b5672517fbe53615cb9fcea475a6339bd003c08d795be6439d4e89c8",
+      "lines": 192,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/engine/metrics.py",
+      "bytes": 5722,
+      "category": "active_factory_implementation",
+      "review_scope": "producing paths reviewed and challenged; local profile/same-user boundary remains",
+      "sha256": "781cc7ca9b9ec59f107ebaa82cbdd8af32e3b013ef25fef779abc9e3e133db1a",
+      "lines": 129,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/engine/plan.py",
+      "bytes": 9865,
+      "category": "active_factory_implementation",
+      "review_scope": "producing paths reviewed and challenged; local profile/same-user boundary remains",
+      "sha256": "543deab61859cdafc08abd239b99ba268867718120b3c7e433462029a79212e9",
+      "lines": 128,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/engine/schema.py",
+      "bytes": 8650,
+      "category": "active_factory_implementation",
+      "review_scope": "producing paths reviewed and challenged; local profile/same-user boundary remains",
+      "sha256": "e3de1e25596418ddef4c34ca39dbd1d19a5702a04340d56d641f4d7cab228e7c",
+      "lines": 211,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/engine/supervisor.py",
+      "bytes": 9515,
+      "category": "active_factory_implementation",
+      "review_scope": "producing paths reviewed and challenged; local profile/same-user boundary remains",
+      "sha256": "35563b3df2c408f301d7234f7661960279d66949235a411bee154b2611d1414b",
+      "lines": 208,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/factory_spec.md",
+      "bytes": 3246,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "7c38e23a96c3271af39b0e9aad6aa743c55d975b2b04434dbd71f7ebcd96a242",
+      "lines": 32
+    },
+    {
+      "path": "factory/gatekeeper.py",
+      "bytes": 69226,
+      "category": "active_factory_implementation",
+      "review_scope": "producing paths reviewed and challenged; local profile/same-user boundary remains",
+      "sha256": "0a98eddd595ecd829c867f75b2e86416ec86443038749634b0ff9f31ee5ed144",
+      "lines": 1053,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/gatekeeper_spec.md",
+      "bytes": 3282,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "59c921a5e7646eeb88bcfcee2423525ebf7f081089582c8aa55bd91308828e4e",
+      "lines": 28
+    },
+    {
+      "path": "factory/gemini_spec.md",
+      "bytes": 104,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "786ceb5e042c3cea05ee1f87e07cef3cffe9e75f5c7b7e046de2b3ea53b8477d",
+      "lines": 1
+    },
+    {
+      "path": "factory/implementor_spec.md",
+      "bytes": 2225,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "a5df9b0f390fce64b167e62c6b86da2bd47665c355b494e424b0f968e25bcbfd",
+      "lines": 34
+    },
+    {
+      "path": "factory/key_facts_TEMPLATE.md",
+      "bytes": 399,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "f70a1362b8342147ca1a5659dccb7f001bdf73e03d3dbbfebee41df9b938e2cc",
+      "lines": 3
+    },
+    {
+      "path": "factory/legacy/v2_6_0/.gitignore",
+      "bytes": 36,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "0ce06523553681c3f31ee0d15df19348a3c2340d590d97e0ae7336d75136f9af",
+      "lines": 5
+    },
+    {
+      "path": "factory/legacy/v2_6_0/LICENSE",
+      "bytes": 1916,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "c97ec7c35c967d232a830fb9de01932c436d79d9ed52d9096314c51ca7c8520f",
+      "lines": 28
+    },
+    {
+      "path": "factory/legacy/v2_6_0/README.md",
+      "bytes": 264,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "f97ba76d2f290c419296cd7a8911801fc5b90ff1fd2d926abdaec345cf1cf78c",
+      "lines": 3
+    },
+    {
+      "path": "factory/legacy/v2_6_0/bootstrap.sh",
+      "bytes": 18880,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "d023d2af29f79fc45f4434d2a444a39c637849182039d053e244fda4ab4db7b3",
+      "lines": 558
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory.md",
+      "bytes": 50536,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "e2896d824092106988d8f2ac9c3d75e730a37ff2da8c2e1ef61610c4e9db699d",
+      "lines": 273
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/CHANGELOG.md",
+      "bytes": 170036,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "d6fce4939cbb29295400837eeca52f0f844fc07207d981d01d6e8826ceadec4d",
+      "lines": 1645
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/ClaudeInitialization.md",
+      "bytes": 799,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "d42e752e91ddde68def66c4b3a8f45043cf09c8808d27c122e550785c2e879a7",
+      "lines": 5
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/VERSION",
+      "bytes": 5,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "e33ccf6527ddb87b2dc894b17dd846206c5d18334710d253f7f366f2c4403fe0",
+      "lines": 1
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/__pycache__/gatekeeper.cpython-312.pyc",
+      "bytes": 358715,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/architect_spec.md",
+      "bytes": 64145,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "eb4eabade2e4a840c9141d83b3bed88e12302f0d1df03068958d65b34f37c6fe",
+      "lines": 331
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/bootstrap_manifest.yaml",
+      "bytes": 22996,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "1d2aa824a98f883a9044a3ce63f4f1e9ff67480f85a6c5e144a7d7ce50cfee48",
+      "lines": 212
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/constitution.md",
+      "bytes": 58161,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "78c05f385c0750569e45665a1487442242312986e7a05c554909c7e55f39ca2f",
+      "lines": 2170
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/domain_checklists.md",
+      "bytes": 23609,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "f62f447506112cf4971cbb63170e42ced2fdf37f20622f3b264d55e0a02340d2",
+      "lines": 109
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/dynamic_rules.md",
+      "bytes": 175283,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "526e910b5ae9b55e4f60e7924b81cca9347a6b2bb4b0571897c4710f7157a4a1",
+      "lines": 4055
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/factory_spec.md",
+      "bytes": 93949,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "542d221fbad7e6c51262486dc632d66b402759cdddfbbcbf81bf511230af7289",
+      "lines": 2002
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/gatekeeper.py",
+      "bytes": 344439,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "a66bbdc8da0e9d89fe49baf8ec2a89d43bba0f7289a70905d4f975c7fb2b479f",
+      "lines": 6943
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/gatekeeper_spec.md",
+      "bytes": 53741,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "810a3b2effef4230c74ffc99c7bf512a645c7e8364d9c85ef670a0ed61858c18",
+      "lines": 847
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/gemini_spec.md",
+      "bytes": 701,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "40db79a933579ead84d2855b41ed1f7da3f1fdaa88a5ccea2028c9c89a202380",
+      "lines": 5
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/implementor_spec.md",
+      "bytes": 50463,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "52aedd3f374e2e17e6786657e4175dbb17d174af336fed856e1f85e2b8e6cf4d",
+      "lines": 517
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/key_facts_TEMPLATE.md",
+      "bytes": 1748,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "49f0975b134a55532c5526db402cab27c8e249351dc85c7d2df44a97f4657043",
+      "lines": 36
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/__pycache__/test_gatekeeper_self_check.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 14999,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/__pycache__/test_gatekeeper_v1_3_4.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 16641,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/__pycache__/test_gatekeeper_v1_4_0.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 18909,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/__pycache__/test_gatekeeper_v1_4_1.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 13448,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/__pycache__/test_gatekeeper_v1_4_2.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 16173,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/__pycache__/test_gatekeeper_v1_4_2_mandatory_gate.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 17244,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/__pycache__/test_gatekeeper_v1_4_2_mechanical_guards.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 24772,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/__pycache__/test_gatekeeper_v2_2_0.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 29347,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/__pycache__/test_gatekeeper_v2_3_0.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 40109,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/__pycache__/test_gatekeeper_v2_4_0.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 13683,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/__pycache__/test_gatekeeper_v2_5_0.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 28321,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/__pycache__/test_gatekeeper_v2_6_0.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 51294,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/test_gatekeeper_self_check.py",
+      "bytes": 8340,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "84fbcba1020a5e8db1c6a1088793520d888b43c14686a9d5bacec45c127a3e5a",
+      "lines": 195
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/test_gatekeeper_v1_3_4.py",
+      "bytes": 11518,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "139034d2dd5288ddb6b41e7387534e946154c59226ebe1c1905cab834b51a3bb",
+      "lines": 293
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/test_gatekeeper_v1_4_0.py",
+      "bytes": 12902,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "580d266490d1938cc9e4b98b2d077adc30fbea15ba73c45fa941ee12d3cba601",
+      "lines": 311
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/test_gatekeeper_v1_4_1.py",
+      "bytes": 9012,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "85801d7c443c9e15e70243e4ef72b4384373c2eb450d7e2db0432385d36ec890",
+      "lines": 207
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/test_gatekeeper_v1_4_2.py",
+      "bytes": 12557,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "273af02e66fae9553cbaa5af32b0b548528072bf454da8904cba484673a8c50e",
+      "lines": 261
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/test_gatekeeper_v1_4_2_mandatory_gate.py",
+      "bytes": 12163,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "6e7ea1c17ceeb4484f46d1629742573b96a1e2972f50e00b301a7acdeaacbcbb",
+      "lines": 296
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/test_gatekeeper_v1_4_2_mechanical_guards.py",
+      "bytes": 15124,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "127cb3eecc86e8b0c2fd396ea619f602bba6489477e8fb47036677fb9ba4cd21",
+      "lines": 338
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/test_gatekeeper_v2_2_0.py",
+      "bytes": 17831,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "8a855364cbc3cf9978acfd7978cc622a2d29a16b1e443fc8acfd82b94a29fb28",
+      "lines": 408
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/test_gatekeeper_v2_3_0.py",
+      "bytes": 24144,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "61ac6e2ae54483e7ed111d805e8476f8050baff1e6fbfec707a5518cc8827fd2",
+      "lines": 514
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/test_gatekeeper_v2_4_0.py",
+      "bytes": 9084,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "f9da71d606bf94c2a1514e1e1d5cb58c92ab8951fbf7a2692d58738cebf0c542",
+      "lines": 202
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/test_gatekeeper_v2_5_0.py",
+      "bytes": 20576,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "39b63611ff5fb103877ed576cc1e75dab25b10dee0efbfa7ebb1fb9bf4f45e04",
+      "lines": 517
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/tests/test_gatekeeper_v2_6_0.py",
+      "bytes": 21413,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "144edf574f4820627f020232615f337475978afc158c5007c382c0646079167c",
+      "lines": 471
+    },
+    {
+      "path": "factory/legacy/v2_6_0/factory/venue_requirements_TEMPLATE.md",
+      "bytes": 21270,
+      "category": "historical_factory_quarantine",
+      "review_scope": "hashed/line-counted; inactive historical code, not semantically revalidated",
+      "sha256": "24a1e19a2ad1e9644eec572d417008d85c7dbe595c228429e82e5081a63a996a",
+      "lines": 376
+    },
+    {
+      "path": "factory/run_self_tests.py",
+      "bytes": 2264,
+      "category": "active_factory_implementation",
+      "review_scope": "producing paths reviewed and challenged; local profile/same-user boundary remains",
+      "sha256": "5b5df0163794fa169db9f024366d569d1eac2e2d712c93a3a1ea70810f41b034",
+      "lines": 40,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/templates/research_plan_TEMPLATE.json",
+      "bytes": 980,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "957105da48f1cc95b14c097764dcbd5590afe24a96d78683b6c8a4af8861ebc7",
+      "lines": 23
+    },
+    {
+      "path": "factory/templates/review_TEMPLATE.json",
+      "bytes": 2560,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "52eded84e8c3552035f1110453856824590e0437443de08211287035aafcb1ca",
+      "lines": 23
+    },
+    {
+      "path": "factory/tests/__pycache__/test_gatekeeper_cli.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 3727,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/__pycache__/test_gatekeeper_cli.cpython-312.pyc",
+      "bytes": 1108,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/__pycache__/test_gatekeeper_v3_0_0.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 7730,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/__pycache__/test_gatekeeper_v3_0_0.cpython-312.pyc",
+      "bytes": 7576,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/__pycache__/test_metrics.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 6320,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/__pycache__/test_metrics.cpython-312.pyc",
+      "bytes": 1674,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/__pycache__/test_research_integrity.cpython-312.pyc",
+      "bytes": 31527,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/__pycache__/test_scientific_gatekeeper.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 2663,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/__pycache__/test_scientific_gatekeeper.cpython-312.pyc",
+      "bytes": 911,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/__pycache__/test_v3.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 28281,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/__pycache__/test_v3.cpython-312.pyc",
+      "bytes": 28333,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/__pycache__/test_v3_1_hardening.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 9009,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/__pycache__/test_v3_1_hardening.cpython-312.pyc",
+      "bytes": 8917,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/__pycache__/test_v3_2_hardening.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 8442,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/__pycache__/test_v3_2_hardening.cpython-312.pyc",
+      "bytes": 8289,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/__pycache__/test_v3_3_hardening.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 59194,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/__pycache__/test_v3_3_hardening.cpython-312.pyc",
+      "bytes": 61793,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/__pycache__/test_v3_3_stress.cpython-312-pytest-9.1.1.pyc",
+      "bytes": 63525,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/__pycache__/test_v3_3_stress.cpython-312.pyc",
+      "bytes": 64117,
+      "category": "generated_local_inventory_only",
+      "review_scope": "path/size only; excluded from review/research"
+    },
+    {
+      "path": "factory/tests/test_gatekeeper_cli.py",
+      "bytes": 414,
+      "category": "active_regression_fixture",
+      "review_scope": "fixture definitions inspected and runner executes supplied tests; no complete branch or adversarial proof",
+      "sha256": "b8949f244afb1c6c74a6669b390925b7f8d799483db6c66e5dbc7a0af9e5c813",
+      "lines": 7,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/tests/test_gatekeeper_v3_0_0.py",
+      "bytes": 2788,
+      "category": "active_regression_fixture",
+      "review_scope": "fixture definitions inspected and runner executes supplied tests; no complete branch or adversarial proof",
+      "sha256": "773ef8102315fa93e037414f15ca5de72a24770f4c04e9cb1c3ec8103306c565",
+      "lines": 37,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/tests/test_metrics.py",
+      "bytes": 794,
+      "category": "active_regression_fixture",
+      "review_scope": "fixture definitions inspected and runner executes supplied tests; no complete branch or adversarial proof",
+      "sha256": "5e3afd4ac4e1eb58a131d0148f32edcccf6564a12828c75903ca99e91f669b45",
+      "lines": 18,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/tests/test_research_integrity.py",
+      "bytes": 15616,
+      "category": "active_regression_fixture",
+      "review_scope": "fixture definitions inspected and runner executes supplied tests; no complete branch or adversarial proof",
+      "sha256": "eefe96789054db6a6251beeffca5dfce5f82dca52927ffca1bb193cc846786d0",
+      "lines": 223,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/tests/test_scientific_gatekeeper.py",
+      "bytes": 312,
+      "category": "active_regression_fixture",
+      "review_scope": "fixture definitions inspected and runner executes supplied tests; no complete branch or adversarial proof",
+      "sha256": "52fbddbceef603e765230ee2089aa50ac00656b60f2b2e5fb8a9ce6e8047aaef",
+      "lines": 6,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/tests/test_v3.py",
+      "bytes": 10682,
+      "category": "active_regression_fixture",
+      "review_scope": "fixture definitions inspected and runner executes supplied tests; no complete branch or adversarial proof",
+      "sha256": "3a68972bdab57bd6fd36b9ac468ca36ebb0fd9d8430d8e4cc82721569ccdc89f",
+      "lines": 133,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/tests/test_v3_1_hardening.py",
+      "bytes": 5474,
+      "category": "active_regression_fixture",
+      "review_scope": "fixture definitions inspected and runner executes supplied tests; no complete branch or adversarial proof",
+      "sha256": "f5f6508f999f975b60cdff33039780ff8acc41fb2751b400752ab3df5b7e127d",
+      "lines": 110,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/tests/test_v3_2_hardening.py",
+      "bytes": 3867,
+      "category": "active_regression_fixture",
+      "review_scope": "fixture definitions inspected and runner executes supplied tests; no complete branch or adversarial proof",
+      "sha256": "269e6e3a3d47b86830612abc6c0f2a10ab7f7381bf6fbf1404932326822c4ea1",
+      "lines": 87,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/tests/test_v3_3_hardening.py",
+      "bytes": 33520,
+      "category": "active_regression_fixture",
+      "review_scope": "fixture definitions inspected and runner executes supplied tests; no complete branch or adversarial proof",
+      "sha256": "98244024db5f2ce9e6beb5edf84f4a097b7b79b6b8d5542d13e716e09fff420e",
+      "lines": 854,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/tests/test_v3_3_stress.py",
+      "bytes": 34732,
+      "category": "active_regression_fixture",
+      "review_scope": "fixture definitions inspected and runner executes supplied tests; no complete branch or adversarial proof",
+      "sha256": "654fbb99c609b4d3a1aba66331c15d4c8512d9462fc72a40dd911bf1c433786a",
+      "lines": 854,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "factory/venue_requirements_TEMPLATE.md",
+      "bytes": 712,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "4be378236162f976a7e2538d12d4317d05fed85032825cb029f5c8784f67413e",
+      "lines": 7
+    },
+    {
+      "path": "factory/verify_bundle_standalone.py",
+      "bytes": 6477,
+      "category": "active_factory_implementation",
+      "review_scope": "producing paths reviewed and challenged; local profile/same-user boundary remains",
+      "sha256": "997638ebc97899190873c1cc4c479ee7d8c1c9dbf0164a3b4a11d656dbe49bde",
+      "lines": 114,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "plan.md",
+      "bytes": 154098,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "fe2c212ad4f1c63289b1c007a5d77c27681589b631fa0ccb87279190828413c0",
+      "lines": 1229
+    },
+    {
+      "path": "project/.factory/operation.lock",
+      "bytes": 0,
+      "category": "empty_placeholder",
+      "review_scope": "empty placeholder, not implemented work or observed data",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lines": 0
+    },
+    {
+      "path": "project/agent_handoff.md",
+      "bytes": 3511,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "8ae06f950121619ca545ce891291a452c20fd4d9d7190c5c6f076c4a93963f89",
+      "lines": 52
+    },
+    {
+      "path": "project/methodology.md",
+      "bytes": 915,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "12be00a61e8419ce7c6f066adea6b69260cf3829fa3d9ce3252c1b16763bc38b",
+      "lines": 14
+    },
+    {
+      "path": "project/research_plan.json",
+      "bytes": 789,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "9ba46b4cb31c79438a44b13f7f2266bd69c3f159fbc2aa832f10f10bea4dd525",
+      "lines": 32
+    },
+    {
+      "path": "source/LICENSE",
+      "bytes": 29292,
+      "category": "policy_plan_license_or_document",
+      "review_scope": "reviewed or historical documentation; source/receipt scope takes precedence over prose",
+      "sha256": "b49861625b59207fd0462eb60d65918918090ecf8eb69d79a3c8756c599ea9bc",
+      "lines": 566
+    },
+    {
+      "path": "source/include/klstream/control/occupancy_controller.hpp",
+      "bytes": 2585,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "2558e2a2d3cf77b0d0402e31d57911750dd968847decebec69e533a9328394ad",
+      "lines": 46
+    },
+    {
+      "path": "source/include/klstream/core/backpressure.hpp",
+      "bytes": 6246,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "0e6a65e4c80fe523177e4245cc0fbf8487c1ac84fea3d6bf6a10bf7473550077",
+      "lines": 124
+    },
+    {
+      "path": "source/include/klstream/core/config.hpp",
+      "bytes": 2958,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "b142aeb6390acf0aba7903a041d4ca988d56b94f9f5772d07eacf59f7e701e6b",
+      "lines": 50
+    },
+    {
+      "path": "source/include/klstream/core/event.hpp",
+      "bytes": 2599,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "42fbb13d81f0220e29ce401c7ceffc992eb93c5513ec21334ad62ee57b296af5",
+      "lines": 58
+    },
+    {
+      "path": "source/include/klstream/core/metrics.hpp",
+      "bytes": 3808,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "f2f6f1d8372449cf6d49877c4f50a4dc4a37969aec809597296f27bc8d933619",
+      "lines": 80
+    },
+    {
+      "path": "source/include/klstream/core/mpmc_queue.hpp",
+      "bytes": 8516,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "9d5d548103f97ba5a566dacb2cb30f85bb7738ea9f6b7bc13787b7bb1b92adf8",
+      "lines": 222
+    },
+    {
+      "path": "source/include/klstream/core/operator.hpp",
+      "bytes": 3383,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "b6eb5416baf125c603135251044f23caf4b81688746fcebfff345306a3fa9a9d",
+      "lines": 75
+    },
+    {
+      "path": "source/include/klstream/core/pinning.hpp",
+      "bytes": 2634,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "3fa1bcaf15659ad89dec3b7ba8d600feb0e9f3bb8a2c52908279f98729350031",
+      "lines": 62
+    },
+    {
+      "path": "source/include/klstream/core/queue_state.hpp",
+      "bytes": 172,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "dea30dfe51088f83b3c674186d118374dbbae8d336ea3e4f0b79f247f5a7a76a",
+      "lines": 6
+    },
+    {
+      "path": "source/include/klstream/core/runtime.hpp",
+      "bytes": 4787,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "df5335f1dbbfc8f5b8ddc850ff66ae9cb7519c0e1495007d73eac7b1c000b214",
+      "lines": 93
+    },
+    {
+      "path": "source/include/klstream/core/spsc_queue.hpp",
+      "bytes": 8532,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "37a9021c17e4ccf84e4f6670e857f0d18e835b1e093a718fc17cab014ac4e883",
+      "lines": 216
+    },
+    {
+      "path": "source/include/klstream/core/worker.hpp",
+      "bytes": 3305,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "8ffe45b4ca3ca6a9f84279bd70c5cab78eac38b6a928a5639d9be6366a6902e3",
+      "lines": 73
+    },
+    {
+      "path": "source/include/klstream/klstream.hpp",
+      "bytes": 628,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "6268a0f1248f7fd293fa4762ca958bb1adc870436aa7d2b14b43e93dc1f234de",
+      "lines": 16
+    },
+    {
+      "path": "source/include/klstream/model/isolation_forest.hpp",
+      "bytes": 5747,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "c01a9583f7fcca3aacc2546630ee9ad5961745d50e7932a122266e4fefc0ef38",
+      "lines": 109
+    },
+    {
+      "path": "source/include/klstream/operators/aggregate.hpp",
+      "bytes": 3833,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "4e11d7b417fb4591f86556552dee3245562bd8574b8852de511c0c768aee3750",
+      "lines": 102
+    },
+    {
+      "path": "source/include/klstream/operators/batch.hpp",
+      "bytes": 2879,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "1c144be5b25681f4ac3cc73c022b2dbca9395116c27e42fac355da71a840ab86",
+      "lines": 63
+    },
+    {
+      "path": "source/include/klstream/operators/filter.hpp",
+      "bytes": 3059,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "6c5c356f06e7071e5eecb957c7575bdbdeef207ef44c299c7d19712828d71248",
+      "lines": 83
+    },
+    {
+      "path": "source/include/klstream/operators/map.hpp",
+      "bytes": 3353,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "9d6707a4067a0484e33e46348b45bbaa3e9603187cf9ebed9bf9f3096b58c83f",
+      "lines": 88
+    },
+    {
+      "path": "source/include/klstream/operators/sink.hpp",
+      "bytes": 2065,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "8965c374e71c3cc9f1ff04d68798d44d745eee79140224cc19b7ad2e0e96108c",
+      "lines": 60
+    },
+    {
+      "path": "source/include/klstream/operators/source.hpp",
+      "bytes": 2833,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "5555b8001334290b53fcbe9e3a4630afa49ab6e696f4d2c7636d0373555367f9",
+      "lines": 63
+    },
+    {
+      "path": "source/include/klstream/operators/window.hpp",
+      "bytes": 2124,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "cbf29e613970ac00537f929cfbf1e755c0a124e242b63bae68b51e211790df97",
+      "lines": 52
+    },
+    {
+      "path": "source/requirements.lock",
+      "bytes": 287,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "6be1ca51ae8d2307b6e06af73ad6fd39c8abaccf09fd90e781e89e059e8afee8",
+      "lines": 4
+    },
+    {
+      "path": "source/tests/check_forest_reference.py",
+      "bytes": 2563,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "f8b305897140f163a35f6a3e1447b7c0577600b8d231389b493a348dfb9d957c",
+      "lines": 48,
+      "python_ast": "parsed"
+    },
+    {
+      "path": "source/tests/engine_tests.cpp",
+      "bytes": 14211,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "f2df685e19d243ee612814b96d773ef9c45cad73c1b2d7d5e02022b9a0139226",
+      "lines": 213
+    },
+    {
+      "path": "source/tests/forest_reference_dump.cpp",
+      "bytes": 1513,
+      "category": "active_engine_or_fixture",
+      "review_scope": "implementation reviewed; fixtures checked/executed; no universal correctness or research acceptance",
+      "sha256": "669c56c34c74c42ae63018cf2a4ffcb48350379dba8f26852fa073c4fc1dab40",
+      "lines": 25
+    }
+  ]
+}
