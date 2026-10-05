@@ -20,8 +20,14 @@ public:
         buffer_.reserve(size_);
     }
     OpStatus tick() override {
-        if (input_->is_cancelled()) throw std::runtime_error("Input cancelled; EOS was not reached");
-        if (!output_->is_running()) throw std::runtime_error("Output closed or cancelled before operator completion");
+        if (input_->is_cancelled()) {
+            abort_partial();
+            throw std::runtime_error("Input cancelled; EOS was not reached");
+        }
+        if (!output_->is_running()) {
+            abort_partial();
+            throw std::runtime_error("Output closed or cancelled before operator completion");
+        }
         if (pending_) {
             if (!output_->try_push(event_)) return OpStatus::Blocked;
             pending_ = false;
@@ -39,7 +45,19 @@ public:
         }
         return OpStatus::Idle;
     }
+    void shutdown() override {
+        abort_partial();
+    }
+    [[nodiscard]] std::size_t dropped_count() const noexcept { return dropped_count_; }
+    [[nodiscard]] std::size_t aborted_count() const noexcept { return dropped_count_; }
 private:
+    void abort_partial() noexcept {
+        if (!buffer_.empty() || pending_) {
+            dropped_count_ += buffer_.size() + (pending_ ? 1 : 0);
+            buffer_.clear();
+            pending_ = false;
+        }
+    }
     void emit() {
         event_ = Event<Out>{buffer_.front().timestamp_ns, 0, buffer_.back().seq, fn_(buffer_)};
         buffer_.clear(); pending_ = true;
@@ -48,5 +66,6 @@ private:
     std::size_t size_; AggrFn fn_;
     std::vector<Event<T>> buffer_;
     Event<Out> event_{}; bool pending_{false};
+    std::size_t dropped_count_{0};
 };
 }

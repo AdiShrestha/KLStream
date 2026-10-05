@@ -42,6 +42,7 @@ public:
     }
     // A timeout leaves the runtime alive and returns false. It is not a success.
     bool wait_until_done(std::chrono::milliseconds timeout) {
+        if (timeout.count() < 0) throw std::invalid_argument("Negative runtime timeout");
         std::lock_guard<std::mutex> lock(mutex_);
         return await_done(timeout);
     }

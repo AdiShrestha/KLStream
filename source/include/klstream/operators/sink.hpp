@@ -51,6 +51,9 @@ public:
         return OpStatus::Processed;
     }
 
+    [[nodiscard]] std::size_t dropped_count() const noexcept { return 0; }
+    [[nodiscard]] std::size_t aborted_count() const noexcept { return 0; }
+
 private:
     Queue*           input_;
     ConsumerFn       consumer_;

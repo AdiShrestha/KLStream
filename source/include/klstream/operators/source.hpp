@@ -27,7 +27,10 @@ public:
     void attach_metrics(OperatorMetrics* m) override { metrics_ = m; }
     void request_finish() noexcept override { finish_.store(true, std::memory_order_release); }
     OpStatus tick() override {
-        if (!output_->is_running()) throw std::runtime_error("Output closed or cancelled before operator completion");
+        if (!output_->is_running()) {
+            if (has_pending_) { ++dropped_count_; has_pending_ = false; }
+            throw std::runtime_error("Output closed or cancelled before operator completion");
+        }
         // A token was consumed on generation; a retry never consumes another.
         if (has_pending_) {
             if (!output_->try_push(pending_)) { if (metrics_) metrics_->events_blocked.increment(); return OpStatus::Blocked; }
@@ -50,12 +53,18 @@ public:
         if (metrics_) metrics_->events_processed.increment();
         return OpStatus::Processed;
     }
+    void shutdown() override {
+        if (has_pending_) { ++dropped_count_; has_pending_ = false; }
+    }
+    [[nodiscard]] std::size_t dropped_count() const noexcept { return dropped_count_; }
+    [[nodiscard]] std::size_t aborted_count() const noexcept { return dropped_count_; }
 private:
     Queue* output_;
     Generator generator_;
     std::uint64_t seq_{0};
     Event<T> pending_{};
     bool has_pending_{false};
+    std::size_t dropped_count_{0};
     std::atomic<bool> finish_{false};
     OperatorMetrics* metrics_{nullptr};
     std::unique_ptr<TokenBucketRateLimiter> limiter_;

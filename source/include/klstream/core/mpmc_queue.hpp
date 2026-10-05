@@ -59,6 +59,7 @@ public:
         if (!is_running()) return false;
         std::size_t pos = enqueue_pos_.load(std::memory_order_relaxed);
         for (;;) {
+            if (!is_running()) return false;
             Slot& slot = buffer_[pos & mask_];
             std::size_t seq = slot.seq.load(std::memory_order_acquire);
             std::size_t diff = seq - pos;
@@ -105,9 +106,10 @@ public:
     // ── Dequeue ───────────────────────────────────────────────────────────
 
     [[nodiscard]] bool try_pop(T* out) noexcept {
-        if (out == nullptr) return false;
+        if (out == nullptr || is_cancelled()) return false;
         std::size_t pos = dequeue_pos_.load(std::memory_order_relaxed);
         for (;;) {
+            if (is_cancelled()) return false;
             Slot& slot = buffer_[pos & mask_];
             std::size_t seq = slot.seq.load(std::memory_order_acquire);
             std::size_t diff = seq - (pos + 1);
@@ -131,9 +133,14 @@ public:
         return try_pop(&out);
     }
 
+    // Blocking pop: spins with backoff until an item is available or stopped/cancelled.
+    // Returns true on success, false if stopped/cancelled while empty or actively draining.
     bool pop(T& out) noexcept {
         int spin = 0, yields = 0;
         while (!try_pop(out)) {
+            if (is_cancelled()) {
+                return false;
+            }
             if (!is_running()) {
                 return try_pop(out);
             }
@@ -155,6 +162,7 @@ public:
         return true;
     }
 
+    // Convenience: returns std::nullopt when empty or cancelled.
     std::optional<T> pop() noexcept {
         T val;
         if (try_pop(&val)) return val;
@@ -164,13 +172,22 @@ public:
     // ── Inspection & Control ──────────────────────────────────────────────
 
     // Publish EOS after all producers are quiescent; cancellation uses stop().
+    // Closing an already cancelled queue must never overwrite the Cancelled state.
     void close() noexcept {
         auto expected = QueueState::Open;
         state_.compare_exchange_strong(expected, QueueState::Closed, std::memory_order_acq_rel);
     }
 
+    [[nodiscard]] QueueState state() const noexcept {
+        auto s = state_.load(std::memory_order_acquire);
+        if (s == QueueState::Closed && empty()) {
+            return QueueState::Drained;
+        }
+        return s;
+    }
+
     [[nodiscard]] bool is_drained() const noexcept {
-        return state_.load(std::memory_order_acquire) == QueueState::Closed && empty();
+        return state() == QueueState::Drained;
     }
     [[nodiscard]] bool is_cancelled() const noexcept {
         return state_.load(std::memory_order_acquire) == QueueState::Cancelled;
@@ -180,18 +197,16 @@ public:
         return state_.load(std::memory_order_acquire) == QueueState::Open;
     }
 
-    // Approximate occupancy in [0.0, 1.0].
+    // Approximate occupancy in [0.0, 1.0]. Strictly bounded in [0.0, 1.0].
     [[nodiscard]] double occupancy() const noexcept {
-        const std::size_t ep = enqueue_pos_.load(std::memory_order_relaxed);
-        const std::size_t dp = dequeue_pos_.load(std::memory_order_relaxed);
-        const std::size_t used = ep - dp;
-        const std::size_t clamped = (used > capacity_) ? capacity_ : used;
-        return static_cast<double>(clamped) / static_cast<double>(capacity_);
+        const std::size_t used = size_approx();
+        return static_cast<double>(used) / static_cast<double>(capacity_);
     }
 
     [[nodiscard]] std::size_t size_approx() const noexcept {
-        const std::size_t ep = enqueue_pos_.load(std::memory_order_relaxed);
-        const std::size_t dp = dequeue_pos_.load(std::memory_order_relaxed);
+        const std::size_t dp = dequeue_pos_.load(std::memory_order_acquire);
+        const std::size_t ep = enqueue_pos_.load(std::memory_order_acquire);
+        if (ep <= dp) return 0;
         const std::size_t used = ep - dp;
         return (used > capacity_) ? capacity_ : used;
     }
@@ -199,9 +214,9 @@ public:
     [[nodiscard]] std::size_t capacity() const noexcept { return capacity_; }
 
     [[nodiscard]] bool empty() const noexcept {
-        const std::size_t ep = enqueue_pos_.load(std::memory_order_acquire);
         const std::size_t dp = dequeue_pos_.load(std::memory_order_acquire);
-        return ep == dp;
+        const std::size_t ep = enqueue_pos_.load(std::memory_order_acquire);
+        return ep <= dp;
     }
 
 private:

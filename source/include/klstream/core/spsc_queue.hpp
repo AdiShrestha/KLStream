@@ -98,9 +98,9 @@ public:
 
     // ── Consumer side ─────────────────────────────────────────────────────
 
-    // try_pop: writes front element into *out and returns true, or false if empty.
+    // try_pop: writes front element into *out and returns true, or false if empty or cancelled.
     [[nodiscard]] bool try_pop(T* out) noexcept {
-        if (out == nullptr) return false;
+        if (out == nullptr || is_cancelled()) return false;
         const std::size_t ri = read_idx_.load(std::memory_order_relaxed);
 
         // Fast path: use cached write index.
@@ -120,11 +120,14 @@ public:
         return try_pop(&out);
     }
 
-    // Blocking pop: spins with backoff until an item is available or stop() called.
-    // Returns true on success, false if stopped while empty.
+    // Blocking pop: spins with backoff until an item is available or stopped/cancelled.
+    // Returns true on success, false if stopped/cancelled while empty or actively draining.
     bool pop(T& out) noexcept {
         int spin = 0, yields = 0;
         while (!try_pop(out)) {
+            if (is_cancelled()) {
+                return false;
+            }
             if (!is_running()) {
                 return try_pop(out);
             }
@@ -146,7 +149,7 @@ public:
         return true;
     }
 
-    // Convenience: returns std::nullopt when empty.
+    // Convenience: returns std::nullopt when empty or cancelled.
     std::optional<T> pop() noexcept {
         T val;
         if (try_pop(&val)) return val;
@@ -156,13 +159,22 @@ public:
     // ── Control & Inspection ──────────────────────────────────────────────
 
     // Close only after producers are quiescent. Consumers may drain existing values.
+    // Closing an already cancelled queue must never overwrite the Cancelled state.
     void close() noexcept {
         auto expected = QueueState::Open;
         state_.compare_exchange_strong(expected, QueueState::Closed, std::memory_order_acq_rel);
     }
 
+    [[nodiscard]] QueueState state() const noexcept {
+        auto s = state_.load(std::memory_order_acquire);
+        if (s == QueueState::Closed && empty()) {
+            return QueueState::Drained;
+        }
+        return s;
+    }
+
     [[nodiscard]] bool is_drained() const noexcept {
-        return state_.load(std::memory_order_acquire) == QueueState::Closed && empty();
+        return state() == QueueState::Drained;
     }
     [[nodiscard]] bool is_cancelled() const noexcept {
         return state_.load(std::memory_order_acquire) == QueueState::Cancelled;
@@ -172,20 +184,20 @@ public:
         return state_.load(std::memory_order_acquire) == QueueState::Open;
     }
 
-    // Approximate occupancy in [0.0, 1.0].
+    // Approximate occupancy in [0.0, 1.0]. Strictly bounded in [0.0, 1.0].
     [[nodiscard]] double occupancy() const noexcept {
-        const std::size_t wi = write_idx_.load(std::memory_order_relaxed);
-        const std::size_t ri = read_idx_.load(std::memory_order_relaxed);
-        const std::size_t used = (wi - ri + capacity_) & mask_;
         const std::size_t max_usable = capacity_ - 1;
         if (max_usable == 0) return 0.0;
+        const std::size_t used = size_approx();
         return static_cast<double>(used) / static_cast<double>(max_usable);
     }
 
     [[nodiscard]] std::size_t size_approx() const noexcept {
-        const std::size_t wi = write_idx_.load(std::memory_order_relaxed);
-        const std::size_t ri = read_idx_.load(std::memory_order_relaxed);
-        return (wi - ri + capacity_) & mask_;
+        const std::size_t ri = read_idx_.load(std::memory_order_acquire);
+        const std::size_t wi = write_idx_.load(std::memory_order_acquire);
+        const std::size_t used = (wi - ri + capacity_) & mask_;
+        const std::size_t max_usable = capacity_ - 1;
+        return (used > max_usable) ? max_usable : used;
     }
 
     [[nodiscard]] std::size_t capacity() const noexcept { return capacity_; }

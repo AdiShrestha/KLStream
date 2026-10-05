@@ -204,10 +204,615 @@ void second_audit_regressions() {
     CHECK(forest.anomaly_score({0})==.5);
 }
 
+void test_tiny_queues_contention() {
+    // SPSC tiny queue: capacity 2 has usable capacity 1.
+    {
+        SPSCQueue<int> s(2);
+        CHECK(s.usable_capacity() == 1);
+        constexpr int N = 10000;
+        std::atomic<int> errors{0};
+        std::thread prod([&] {
+            for (int i = 0; i < N; ++i) {
+                if (!s.push(i)) ++errors;
+            }
+            s.close();
+        });
+        std::thread cons([&] {
+            for (int i = 0; i < N; ++i) {
+                int val = -1;
+                if (!s.pop(val) || val != i) ++errors;
+            }
+        });
+        prod.join();
+        cons.join();
+        CHECK(errors == 0);
+        CHECK(s.is_drained());
+        CHECK(s.state() == QueueState::Drained);
+    }
+
+    // MPMC tiny queue: capacity 2 has 2 usable slots under multi-threaded contention.
+    {
+        MPMCQueue<int> m(2);
+        CHECK(m.capacity() == 2);
+        constexpr int num_producers = 4;
+        constexpr int num_consumers = 4;
+        constexpr int items_per_prod = 5000;
+        constexpr int total_items = num_producers * items_per_prod;
+
+        std::vector<std::atomic<int>> counts(total_items);
+        for (auto& c : counts) c.store(0);
+        std::atomic<int> errors{0};
+        std::atomic<bool> monitor_stop{false};
+        std::atomic<int> bounds_violations{0};
+
+        // Concurrent monitor thread verifying slot boundedness: 0 <= occupancy <= C and 0.0 <= occ <= 1.0
+        std::thread monitor([&] {
+            while (!monitor_stop.load(std::memory_order_relaxed)) {
+                std::size_t sz = m.size_approx();
+                double occ = m.occupancy();
+                if (sz > 2 || occ < 0.0 || occ > 1.0) {
+                    ++bounds_violations;
+                }
+                std::this_thread::yield();
+            }
+        });
+
+        std::vector<std::thread> producers;
+        for (int p = 0; p < num_producers; ++p) {
+            producers.emplace_back([&, p] {
+                int start = p * items_per_prod;
+                int end = start + items_per_prod;
+                for (int i = start; i < end; ++i) {
+                    if (!m.push(i)) ++errors;
+                }
+            });
+        }
+
+        std::vector<std::thread> consumers;
+        for (int c = 0; c < num_consumers; ++c) {
+            consumers.emplace_back([&] {
+                for (int i = 0; i < items_per_prod; ++i) {
+                    int val = -1;
+                    if (!m.pop(val)) {
+                        ++errors;
+                    } else if (val < 0 || val >= total_items) {
+                        ++errors;
+                    } else {
+                        ++counts[val];
+                    }
+                }
+            });
+        }
+
+        for (auto& t : producers) t.join();
+        for (auto& t : consumers) t.join();
+        monitor_stop.store(true);
+        monitor.join();
+
+        m.close();
+        CHECK(errors == 0);
+        CHECK(bounds_violations == 0);
+        CHECK(m.is_drained());
+        CHECK(m.state() == QueueState::Drained);
+        for (int i = 0; i < total_items; ++i) {
+            CHECK(counts[i].load() == 1);
+        }
+    }
+}
+
+void test_blocking_and_waking() {
+    // Full-queue producer blocking, then unblocked by consumer pop.
+    {
+        MPMCQueue<int> m(2);
+        CHECK(m.push(11));
+        CHECK(m.push(22));
+        CHECK(!m.try_push(33)); // Full
+
+        std::atomic<bool> producer_started{false};
+        std::atomic<bool> producer_finished{false};
+        std::thread p([&] {
+            producer_started = true;
+            bool ok = m.push(33);
+            if (ok) producer_finished = true;
+        });
+
+        while (!producer_started.load()) std::this_thread::yield();
+        std::this_thread::sleep_for(10ms);
+        CHECK(!producer_finished.load()); // Producer must be blocked
+
+        int val = 0;
+        CHECK(m.pop(val));
+        CHECK(val == 11);
+
+        p.join();
+        CHECK(producer_finished.load());
+
+        CHECK(m.pop(val));
+        CHECK(val == 22);
+        CHECK(m.pop(val));
+        CHECK(val == 33);
+        CHECK(m.empty());
+    }
+
+    // Empty-queue consumer waiting, then unblocked by producer push.
+    {
+        MPMCQueue<int> m(2);
+        std::atomic<bool> consumer_started{false};
+        std::atomic<bool> consumer_finished{false};
+        std::atomic<int> received{0};
+
+        std::thread c([&] {
+            consumer_started = true;
+            int val = 0;
+            if (m.pop(val)) {
+                received = val;
+                consumer_finished = true;
+            }
+        });
+
+        while (!consumer_started.load()) std::this_thread::yield();
+        std::this_thread::sleep_for(10ms);
+        CHECK(!consumer_finished.load()); // Consumer must be waiting
+
+        CHECK(m.push(777));
+        c.join();
+        CHECK(consumer_finished.load());
+        CHECK(received.load() == 777);
+    }
+}
+
+void test_injected_cancellation() {
+    // 1. Cancellation wakes blocked producer on full queue.
+    {
+        MPMCQueue<int> m(2);
+        CHECK(m.push(1));
+        CHECK(m.push(2));
+        std::atomic<bool> p_done{false};
+        std::atomic<bool> p_ok{true};
+
+        std::thread p([&] {
+            p_ok = m.push(3);
+            p_done = true;
+        });
+
+        std::this_thread::sleep_for(5ms);
+        CHECK(!p_done.load());
+        m.stop();
+        p.join();
+        CHECK(p_done.load());
+        CHECK(!p_ok.load()); // push returned false on cancellation
+    }
+
+    // 2. Cancellation wakes waiting consumer on empty queue.
+    {
+        MPMCQueue<int> m(2);
+        std::atomic<bool> c_done{false};
+        std::atomic<bool> c_ok{true};
+        int val = 0;
+
+        std::thread c([&] {
+            c_ok = m.pop(val);
+            c_done = true;
+        });
+
+        std::this_thread::sleep_for(5ms);
+        CHECK(!c_done.load());
+        m.stop();
+        c.join();
+        CHECK(c_done.load());
+        CHECK(!c_ok.load()); // pop returned false on cancellation
+    }
+
+    // 3. Injected cancellation under active multi-threaded contention.
+    {
+        MPMCQueue<int> m(2);
+        std::atomic<bool> active{true};
+        constexpr int P = 4, C = 4;
+        std::vector<std::thread> threads;
+
+        for (int i = 0; i < P; ++i) {
+            threads.emplace_back([&, i] {
+                int item = i * 1000000;
+                while (active.load(std::memory_order_relaxed)) {
+                    m.push(item++);
+                }
+            });
+        }
+        for (int i = 0; i < C; ++i) {
+            threads.emplace_back([&] {
+                int val = 0;
+                while (active.load(std::memory_order_relaxed)) {
+                    m.pop(val);
+                }
+            });
+        }
+
+        std::this_thread::sleep_for(15ms);
+        m.stop(); // Inject cancellation while threads are actively pushing/pulling
+        active.store(false);
+
+        // Threads must join cleanly without deadlocks
+        for (auto& t : threads) {
+            t.join();
+        }
+
+        // Cancellation invariants
+        CHECK(m.is_cancelled());
+        CHECK(!m.is_drained());
+        CHECK(m.state() == QueueState::Cancelled);
+        CHECK(!m.is_running());
+
+        // Close after cancellation must NOT overwrite Cancelled state
+        m.close();
+        CHECK(m.is_cancelled());
+        CHECK(!m.is_drained());
+        CHECK(m.state() == QueueState::Cancelled);
+
+        // Consumers must fail closed: try_pop and pop must immediately fail
+        int dummy = -1;
+        CHECK(!m.try_pop(dummy));
+        CHECK(!m.pop(dummy));
+        CHECK(!m.try_push(42));
+        CHECK(!m.push(42));
+        CHECK(!m.is_drained());
+
+        // Slot bounds remain strictly valid
+        CHECK(m.occupancy() >= 0.0 && m.occupancy() <= 1.0);
+        CHECK(m.size_approx() <= 2);
+    }
+}
+
+void test_queue_state_invariants() {
+    // Test SPSC state transitions
+    {
+        SPSCQueue<int> s(4);
+        CHECK(s.state() == QueueState::Open);
+        CHECK(!s.is_drained());
+        CHECK(!s.is_cancelled());
+        CHECK(s.is_running());
+
+        CHECK(s.push(10));
+        CHECK(s.state() == QueueState::Open);
+
+        s.close();
+        CHECK(s.state() == QueueState::Closed);
+        CHECK(!s.is_drained());
+        CHECK(!s.is_cancelled());
+        CHECK(!s.is_running());
+
+        // Repeated close is idempotent
+        s.close();
+        CHECK(s.state() == QueueState::Closed);
+
+        int out = 0;
+        CHECK(s.pop(out));
+        CHECK(out == 10);
+
+        // Queue is now empty and was closed -> Drained!
+        CHECK(s.empty());
+        CHECK(s.state() == QueueState::Drained);
+        CHECK(s.is_drained());
+        CHECK(!s.is_cancelled());
+
+        // Stop after drained -> Cancelled!
+        s.stop();
+        CHECK(s.state() == QueueState::Cancelled);
+        CHECK(!s.is_drained());
+        CHECK(s.is_cancelled());
+
+        // Close after stop must not overwrite Cancelled
+        s.close();
+        CHECK(s.state() == QueueState::Cancelled);
+        CHECK(!s.is_drained());
+    }
+
+    // Test SPSC cancellation with remaining items: fail closed
+    {
+        SPSCQueue<int> s(4);
+        CHECK(s.push(1));
+        CHECK(s.push(2));
+        s.stop();
+
+        CHECK(s.state() == QueueState::Cancelled);
+        CHECK(!s.is_drained());
+        CHECK(s.is_cancelled());
+
+        // Consumers must fail closed immediately
+        int out = 0;
+        CHECK(!s.try_pop(out));
+        CHECK(!s.pop(out));
+        CHECK(!s.try_push(3));
+        CHECK(!s.push(3));
+
+        // Close must not overwrite Cancelled
+        s.close();
+        CHECK(s.state() == QueueState::Cancelled);
+        CHECK(!s.is_drained());
+    }
+
+    // Test MPMC state transitions
+    {
+        MPMCQueue<int> m(4);
+        CHECK(m.state() == QueueState::Open);
+        CHECK(m.push(100));
+        m.close();
+        CHECK(m.state() == QueueState::Closed);
+        CHECK(!m.is_drained());
+
+        int out = 0;
+        CHECK(m.pop(out));
+        CHECK(out == 100);
+
+        CHECK(m.empty());
+        CHECK(m.state() == QueueState::Drained);
+        CHECK(m.is_drained());
+
+        m.stop();
+        CHECK(m.state() == QueueState::Cancelled);
+        CHECK(!m.is_drained());
+
+        m.close();
+        CHECK(m.state() == QueueState::Cancelled);
+        CHECK(!m.is_drained());
+    }
+
+    // Test MPMC cancellation with remaining items: fail closed
+    {
+        MPMCQueue<int> m(4);
+        CHECK(m.push(1));
+        CHECK(m.push(2));
+        m.stop();
+
+        CHECK(m.state() == QueueState::Cancelled);
+        CHECK(!m.is_drained());
+
+        int out = 0;
+        CHECK(!m.try_pop(out));
+        CHECK(!m.pop(out));
+        CHECK(!m.try_push(3));
+        CHECK(!m.push(3));
+
+        m.close();
+        CHECK(m.state() == QueueState::Cancelled);
+        CHECK(!m.is_drained());
+    }
+}
+
+void test_batch_and_window_cancellation() {
+    // BatchOperator: flush on EOS vs abort on Cancellation
+    {
+        // 1. Flush on EOS
+        SPSCQueue<Event<int>> in(8);
+        SPSCQueue<EventBatch<int, 4>> out(4);
+        BatchOperator<int, 4> batch_op("batch_eos", &in, &out, [] { return 4; }, 1s);
+
+        CHECK(in.try_push(Event<int>::make(10)));
+        CHECK(in.try_push(Event<int>::make(20)));
+        CHECK(batch_op.tick() == OpStatus::Processed);
+        CHECK(batch_op.tick() == OpStatus::Processed);
+
+        // Normal EOS: close input
+        in.close();
+        CHECK(batch_op.tick() == OpStatus::Processed); // Marks partial batch as pending
+        CHECK(batch_op.tick() == OpStatus::Processed); // Pushes pending batch to output
+        EventBatch<int, 4> b{};
+        CHECK(out.try_pop(b));
+        CHECK(b.count == 2);
+        CHECK(b.events[0].data == 10);
+        CHECK(b.events[1].data == 20);
+        CHECK(batch_op.tick() == OpStatus::Finished);
+        CHECK(batch_op.dropped_count() == 0);
+        CHECK(batch_op.aborted_count() == 0);
+        CHECK(out.is_drained());
+    }
+    {
+        // 2. Abort on Cancellation
+        SPSCQueue<Event<int>> in(8);
+        SPSCQueue<EventBatch<int, 4>> out(4);
+        BatchOperator<int, 4> batch_op("batch_cancel", &in, &out, [] { return 4; }, 1s);
+
+        CHECK(in.try_push(Event<int>::make(10)));
+        CHECK(in.try_push(Event<int>::make(20)));
+        CHECK(batch_op.tick() == OpStatus::Processed);
+        CHECK(batch_op.tick() == OpStatus::Processed);
+
+        // Cancellation injected on input
+        in.stop();
+        rejects([&] { batch_op.tick(); });
+        CHECK(batch_op.dropped_count() == 2);
+        CHECK(batch_op.aborted_count() == 2);
+
+        // Output must not have received the aborted batch
+        EventBatch<int, 4> b{};
+        CHECK(!out.try_pop(b));
+        CHECK(!out.is_drained());
+    }
+
+    // TumblingCountWindow: flush on EOS vs abort on Cancellation
+    {
+        // 1. Flush on EOS
+        SPSCQueue<Event<int>> in(8);
+        SPSCQueue<Event<int>> out(4);
+        TumblingCountWindow<int, int> win("win_eos", &in, &out, 3, [](const auto& vec) {
+            int sum = 0;
+            for (const auto& e : vec) sum += e.data;
+            return sum;
+        });
+
+        CHECK(in.try_push(Event<int>::make(1)));
+        CHECK(in.try_push(Event<int>::make(2)));
+        CHECK(win.tick() == OpStatus::Processed);
+        CHECK(win.tick() == OpStatus::Processed);
+
+        in.close();
+        CHECK(win.tick() == OpStatus::Processed); // Emits partial window
+        CHECK(win.tick() == OpStatus::Processed); // Pushes pending event
+        Event<int> res{};
+        CHECK(out.try_pop(res));
+        CHECK(res.data == 3);
+        CHECK(win.tick() == OpStatus::Finished);
+        CHECK(win.dropped_count() == 0);
+        CHECK(win.aborted_count() == 0);
+        CHECK(out.is_drained());
+    }
+    {
+        // 2. Abort on Cancellation
+        SPSCQueue<Event<int>> in(8);
+        SPSCQueue<Event<int>> out(4);
+        TumblingCountWindow<int, int> win("win_cancel", &in, &out, 3, [](const auto& vec) {
+            int sum = 0;
+            for (const auto& e : vec) sum += e.data;
+            return sum;
+        });
+
+        CHECK(in.try_push(Event<int>::make(1)));
+        CHECK(in.try_push(Event<int>::make(2)));
+        CHECK(win.tick() == OpStatus::Processed);
+        CHECK(win.tick() == OpStatus::Processed);
+
+        in.stop();
+        rejects([&] { win.tick(); });
+        CHECK(win.dropped_count() == 2);
+        CHECK(win.aborted_count() == 2);
+
+        Event<int> res{};
+        CHECK(!out.try_pop(res));
+        CHECK(!out.is_drained());
+    }
+}
+
+void test_token_bucket_and_bounds() {
+    const auto t0 = TokenBucketRateLimiter::Clock::time_point{};
+
+    // Clock monotonicity rejection: negative delta t
+    {
+        TokenBucketRateLimiter b(10, 10, 1, t0);
+        CHECK(b.try_consume_at(t0));
+        // Moving backward in time throws domain_error
+        rejects([&] { b.try_consume_at(t0 - 1s); });
+        rejects([&] { b.set_rate_at(5, t0 - 1s); });
+    }
+
+    // Rate refill monotonic credit calculation before adjustment
+    {
+        TokenBucketRateLimiter b(10, 20, 1, t0);
+        for (int i = 0; i < 20; ++i) CHECK(b.try_consume_at(t0));
+        CHECK(!b.try_consume_at(t0)); // 0 tokens
+
+        // At t0 + 1s, refill adds 10 tokens (rate=10), then rate changes to 2
+        b.set_rate_at(2, t0 + 1s);
+        // We should now have 10 tokens from the first second
+        for (int i = 0; i < 10; ++i) CHECK(b.try_consume_at(t0 + 1s));
+        CHECK(!b.try_consume_at(t0 + 1s)); // exhausted
+
+        // Next second (t0 + 2s), rate is 2, so 2 tokens refilled
+        CHECK(b.try_consume_at(t0 + 2s));
+        CHECK(b.try_consume_at(t0 + 2s));
+        CHECK(!b.try_consume_at(t0 + 2s));
+    }
+
+    // Parameter rejection
+    rejects([] { TokenBucketRateLimiter b(-1); });
+    rejects([] { TokenBucketRateLimiter b(10, -5); });
+    rejects([] { TokenBucketRateLimiter b(10, 5, -1); });
+    rejects([] { TokenBucketRateLimiter b(10, 5, 15); }); // floor > rate
+    rejects([] { TokenBucketRateLimiter b(std::numeric_limits<double>::infinity()); });
+    rejects([] { TokenBucketRateLimiter b(std::numeric_limits<double>::quiet_NaN()); });
+}
+
+void test_operator_parameter_validation() {
+    SPSCQueue<Event<int>> in(4), out(4);
+    SPSCQueue<EventBatch<int, 4>> batch_out(4);
+
+    // Negative timeouts in Runtime
+    {
+        Runtime r;
+        rejects([&] { r.wait_until_done(-1ms); });
+        rejects([&] { r.drain(-5ms); });
+    }
+
+    // BatchOperator null and invalid parameters
+    rejects([&] { BatchOperator<int, 4>("b", nullptr, &batch_out, [] { return 2; }, 1ms); });
+    rejects([&] { BatchOperator<int, 4>("b", &in, nullptr, [] { return 2; }, 1ms); });
+    rejects([&] { BatchOperator<int, 4>("b", &in, &batch_out, nullptr, 1ms); });
+    rejects([&] { BatchOperator<int, 4>("b", &in, &batch_out, [] { return 2; }, 0ms); });
+    rejects([&] { BatchOperator<int, 4>("b", &in, &batch_out, [] { return 2; }, -10ms); });
+
+    // TumblingCountWindow null and invalid parameters
+    rejects([&] { TumblingCountWindow<int, int>("w", nullptr, &out, 2, [](const auto&) { return 0; }); });
+    rejects([&] { TumblingCountWindow<int, int>("w", &in, nullptr, 2, [](const auto&) { return 0; }); });
+    rejects([&] { TumblingCountWindow<int, int>("w", &in, &out, 0, [](const auto&) { return 0; }); });
+    rejects([&] { TumblingCountWindow<int, int>("w", &in, &out, 2, nullptr); });
+
+    // MapOperator null parameters
+    rejects([&] { MapOperator<int, int>("m", nullptr, &out, [](int x) { return x; }); });
+    rejects([&] { MapOperator<int, int>("m", &in, nullptr, [](int x) { return x; }); });
+    rejects([&] { MapOperator<int, int>("m", &in, &out, nullptr); });
+
+    // FilterOperator null parameters
+    rejects([&] { FilterOperator<int>("f", nullptr, &out, [](int) { return true; }); });
+    rejects([&] { FilterOperator<int>("f", &in, nullptr, [](int) { return true; }); });
+    rejects([&] { FilterOperator<int>("f", &in, &out, nullptr); });
+
+    // SinkOperator null parameters
+    rejects([&] { SinkOperator<int>("s", nullptr, [](const auto&) {}); });
+    rejects([&] { SinkOperator<int>("s", &in, nullptr); });
+
+    // SourceOperator null parameters
+    rejects([&] { SourceOperator<int>("src", nullptr, [](auto&, auto) { return true; }); });
+    rejects([&] { SourceOperator<int>("src", &out, nullptr); });
+
+    // AggregateOperator null parameters
+    rejects([&] { AggregateOperator<int, int, int>("a", nullptr, &out, 0, [](int&, int) {}, [](const int&) { return 0; }); });
+    rejects([&] { AggregateOperator<int, int, int>("a", &in, nullptr, 0, [](int&, int) {}, [](const int&) { return 0; }); });
+    rejects([&] { AggregateOperator<int, int, int>("a", &in, &out, 0, nullptr, [](const int&) { return 0; }); });
+    rejects([&] { AggregateOperator<int, int, int>("a", &in, &out, 0, [](int&, int) {}, nullptr); });
+}
+
+void test_clean_shutdown_and_deadlock_free_join() {
+    SPSCQueue<Event<int>> q1(4), q2(4);
+
+    SourceOperator<int> source("src", &q1, [](Event<int>& e, std::uint64_t seq) {
+        e = Event<int>::make(static_cast<int>(seq));
+        std::this_thread::sleep_for(50us);
+        return true; // continuous
+    });
+    MapOperator<int, int> map("map", &q1, &q2, [](int x) { return x * 2; });
+    SinkOperator<int> sink("sink", &q2, [](const Event<int>&) {});
+
+    Runtime r;
+    auto w1 = r.add_worker();
+    auto w2 = r.add_worker();
+    auto w3 = r.add_worker();
+    r.register_op(&source, w1);
+    r.register_op(&map, w2);
+    r.register_op(&sink, w3);
+
+    r.start();
+    std::this_thread::sleep_for(15ms);
+    // Immediate stop while workers are executing tick loops
+    r.stop();
+    // Must join without deadlock and state should be Stopped or Failed
+    auto st = r.state();
+    CHECK(st == RuntimeState::Stopped || st == RuntimeState::Failed);
+
+    // Calling stop again is idempotent
+    r.stop();
+    CHECK(r.state() == st);
+}
+
 int main() {
     try {
         queue_contracts(); concurrent_queues(); runtime_completion(false); runtime_completion(true);
         runtime_failure(); operators_and_partial_batches(); math_and_configuration(); second_audit_regressions();
+        test_tiny_queues_contention();
+        test_blocking_and_waking();
+        test_injected_cancellation();
+        test_queue_state_invariants();
+        test_batch_and_window_cancellation();
+        test_token_bucket_and_bounds();
+        test_operator_parameter_validation();
+        test_clean_shutdown_and_deadlock_free_join();
         std::cout << "Foundation correctness checks passed; test fixtures only.\n";
     } catch (const std::exception& e) { std::cerr << e.what() << '\n'; return 1; }
 }

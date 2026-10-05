@@ -37,8 +37,14 @@ public:
     void attach_metrics(OperatorMetrics* m) override { metrics_ = m; }
 
     OpStatus tick() override {
-        if (input_->is_cancelled()) throw std::runtime_error("Input cancelled; EOS was not reached");
-        if (!output_->is_running()) throw std::runtime_error("Output closed or cancelled before operator completion");
+        if (input_->is_cancelled()) {
+            if (has_pending_) { ++dropped_count_; has_pending_ = false; }
+            throw std::runtime_error("Input cancelled; EOS was not reached");
+        }
+        if (!output_->is_running()) {
+            if (has_pending_) { ++dropped_count_; has_pending_ = false; }
+            throw std::runtime_error("Output closed or cancelled before operator completion");
+        }
         // If we have a pending output from a previous Blocked tick, try again.
         if (has_pending_) {
             if (output_->try_push(pending_)) {
@@ -76,12 +82,19 @@ public:
         return OpStatus::Blocked;
     }
 
+    void shutdown() override {
+        if (has_pending_) { ++dropped_count_; has_pending_ = false; }
+    }
+    [[nodiscard]] std::size_t dropped_count() const noexcept { return dropped_count_; }
+    [[nodiscard]] std::size_t aborted_count() const noexcept { return dropped_count_; }
+
 private:
     InQueue*          input_;
     OutQueue*         output_;
     Fn                fn_;
     Event<Out>        pending_{};
     bool              has_pending_{false};
+    std::size_t       dropped_count_{0};
     OperatorMetrics*  metrics_{nullptr};
 };
 

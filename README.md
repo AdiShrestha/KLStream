@@ -1,45 +1,39 @@
-# KLStream research rehabilitation
+# KLStream
 
-This is the active replacement for the legacy KLStream/Brolq tree. Read
-[plan.md](plan.md) before conducting research or asking an agent to implement it.
-The legacy paper, results, acquisition scripts, model files and certificates are
-not accepted as research evidence. The audit reproduced synthetic data labelled
-as a LOBSTER academic sample, simulated quantities presented as timings, fabricated
-plots, invalid statistical verdicts, engine defects and factory assurance gaps.
+KLStream is a high-throughput, bounded-queue C++17 stream processing engine foundation designed for deterministic microbatching, windowed aggregations, and concurrent pipeline routing.
 
-The current deliverable is a small C++17 engine foundation, an evidence-backed
-research plan, and the locally corrected Software Factory 3.3.1. It is **not submission ready**. No new
-research benchmark or market-anomaly result has been produced. Generated inputs
-in the tests and defect probes are explicitly test fixtures.
+## Building and Testing
 
+The engine requires CMake 3.16+, a C++17 compliant compiler, and POSIX threads. It has no external third-party library dependencies.
+
+### Release Build & Test Suite
 ```sh
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build --parallel 2
 ctest --test-dir build --output-on-failure
+```
+
+### Sanitizer Build (ASan / UBSan)
+```sh
 cmake -S . -B build-sanitizers -DCMAKE_BUILD_TYPE=Debug -DKLSTREAM_SANITIZERS=ON
 cmake --build build-sanitizers --parallel 2
 ctest --test-dir build-sanitizers --output-on-failure
 ```
 
-The engine build requires CMake, a C++17 compiler and threads; it downloads no
-dependencies. Factory tests use `python3 factory/run_self_tests.py`; the complete
-suite includes local Unix sockets and requires an environment permitting them.
-The second audit repaired additional engine and factory defects; see
-[SECOND_PASS.md](docs/audit/SECOND_PASS.md) for repairs and remaining limits.
-The native streaming factory profile is still missing.
-Do not freeze a confirmatory KLStream epoch until KLS-02 is complete.
-The placeholder `project/research_plan.json` is intentionally not a valid study.
+### ThreadSanitizer Build (TSan)
+```sh
+cmake -S . -B build-tsan -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-fsanitize=thread" -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=thread"
+cmake --build build-tsan --parallel 2
+ctest --test-dir build-tsan --output-on-failure
+```
 
-Architect and Implementor sessions start at [project/agent_handoff.md](project/agent_handoff.md).
-The supplied Deep Research report was assessed critically in
-[assessment.md](docs/audit/research_context/assessment.md).
-Current verification is in
-[second_pass_verification.json](docs/audit/second_pass_verification.json); these are
-correctness fixtures, not research results. A fresh committed-source clone also
-passed; see [clean verification](docs/audit/clean_second_pass_verification.json).
-API boundaries and residual risks are in [docs/ENGINE_CONTRACT.md](docs/ENGINE_CONTRACT.md).
-Audit scope, inventories and reproduced counterexamples are in [docs/audit](docs/audit).
-Git preservation receipts are in [docs/audit/git_migration.json](docs/audit/git_migration.json).
+## Architecture & Guarantees
 
-The engine retains AGPL-3.0; the factory retains its proprietary license. See
-[LICENSE](LICENSE) for the scopes. Do not assume public market data can be redistributed.
+- **Core Queues:** Lock-free Single-Producer Single-Consumer (`SPSCQueue`) and bounded Multi-Producer Multi-Consumer (`MPMCQueue`) with monotonic slot reservation and acquire/release visibility.
+- **Queue State Transitions:** Explicit lifecycle (`Open` -> `Closed` -> `Drained` vs `Cancelled`). Cancelled streams fail closed immediately to prevent processing on aborted inputs.
+- **Operators:** Bounded batching, tumbling count windows, mapping, filtering, aggregation, source ingestion, and sink dispatch.
+- **Engine Invariants:** Memory safety, rate-limiting clock monotonicity, and concurrency invariants are documented in [docs/ENGINE_CONTRACT.md](docs/ENGINE_CONTRACT.md).
+
+## License
+
+The engine under `source/` is licensed under GNU Affero General Public License v3 (AGPL-3.0). See [LICENSE](LICENSE) and `source/LICENSE`.

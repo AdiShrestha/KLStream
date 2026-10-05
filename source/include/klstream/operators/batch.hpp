@@ -27,8 +27,14 @@ public:
         if (!input_ || !output_ || !selector_ || deadline_.count() <= 0) throw std::invalid_argument("Invalid batch operator");
     }
     OpStatus tick() override {
-        if (input_->is_cancelled()) throw std::runtime_error("Input cancelled; EOS was not reached");
-        if (!output_->is_running()) throw std::runtime_error("Output closed or cancelled before operator completion");
+        if (input_->is_cancelled()) {
+            abort_partial();
+            throw std::runtime_error("Input cancelled; EOS was not reached");
+        }
+        if (!output_->is_running()) {
+            abort_partial();
+            throw std::runtime_error("Output closed or cancelled before operator completion");
+        }
         if (pending_) {
             if (!output_->try_push(batch_)) return OpStatus::Blocked;
             pending_ = false; batch_.count = 0;
@@ -54,10 +60,23 @@ public:
         }
         return OpStatus::Idle;
     }
+    void shutdown() override {
+        abort_partial();
+    }
+    [[nodiscard]] std::size_t dropped_count() const noexcept { return dropped_count_; }
+    [[nodiscard]] std::size_t aborted_count() const noexcept { return dropped_count_; }
 private:
+    void abort_partial() noexcept {
+        if (batch_.count > 0 || pending_) {
+            dropped_count_ += batch_.count;
+            batch_.count = 0;
+            pending_ = false;
+        }
+    }
     InQueue* input_; OutQueue* output_; Selector selector_;
     std::chrono::nanoseconds deadline_;
     std::chrono::steady_clock::time_point opened_{};
     std::size_t target_{0}; Batch batch_{}; bool pending_{false};
+    std::size_t dropped_count_{0};
 };
 }
