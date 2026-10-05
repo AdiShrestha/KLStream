@@ -1,0 +1,34 @@
+{
+  "dataset_identifier": "https://data.binance.vision/data/spot/daily/trades/BTCUSDT/",
+  "retrieval_date": "2026-10-05",
+  "license": "CC-BY-4.0",
+  "source_records_sha256": "3754da4d952e9eeee2c48bfeda9edc138fe99b188c1364d36d9fbdcfaf96d6b7",
+  "cohort_sha256": "5e2c5ed3ccc47c9da95c6918c9a65d252f22b28ae9a3d0f6ebe1f9bb7c7d9496",
+  "provenance_basis": "author_declared",
+  "raw_records": {
+    "rec_20170817": {
+      "filename": "BTCUSDT-trades-2017-08-17.zip",
+      "url": "https://data.binance.vision/data/spot/daily/trades/BTCUSDT/BTCUSDT-trades-2017-08-17.zip",
+      "sha256": "a23fe0dae54b7143d5cffb42184e1a05afe7124aaca641cd438297ce83c9f9ec",
+      "provider_checksum_verified": true,
+      "date": "2017-08-17",
+      "split": "train"
+    },
+    "rec_20170818": {
+      "filename": "BTCUSDT-trades-2017-08-18.zip",
+      "url": "https://data.binance.vision/data/spot/daily/trades/BTCUSDT/BTCUSDT-trades-2017-08-18.zip",
+      "sha256": "7f1328d09ff839d498506be281306305f453da632e18a7a15437b78df14bc198",
+      "provider_checksum_verified": true,
+      "date": "2017-08-18",
+      "split": "validation"
+    },
+    "rec_20170819": {
+      "filename": "BTCUSDT-trades-2017-08-19.zip",
+      "url": "https://data.binance.vision/data/spot/daily/trades/BTCUSDT/BTCUSDT-trades-2017-08-19.zip",
+      "sha256": "ff74fae2822aea541f55e68c9b3c7c6387f636827f403239869aa2be7578d6a6",
+      "provider_checksum_verified": true,
+      "date": "2017-08-19",
+      "split": "test"
+    }
+  }
+}

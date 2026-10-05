@@ -43,6 +43,8 @@ if(KLSTREAM_BUILD_TESTS)
   if(Python3_Interpreter_FOUND)
     add_test(NAME experiment_runner_test COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/source/tests/test_runner.py)
     set_tests_properties(experiment_runner_test PROPERTIES TIMEOUT 45)
+    add_test(NAME data_provenance_test COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/source/tests/test_data_provenance.py)
+    set_tests_properties(data_provenance_test PROPERTIES TIMEOUT 30)
   endif()
 
   add_test(NAME engine_correctness COMMAND engine_tests)
