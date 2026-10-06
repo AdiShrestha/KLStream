@@ -53,6 +53,8 @@ if(KLSTREAM_BUILD_TESTS)
     set_tests_properties(model_serialization_test PROPERTIES TIMEOUT 45)
     add_test(NAME pilot_grid_test COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/source/tests/test_pilot_grid.py)
     set_tests_properties(pilot_grid_test PROPERTIES TIMEOUT 30)
+    add_test(NAME sensitivity_test COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/source/tests/test_sensitivity.py)
+    set_tests_properties(sensitivity_test PROPERTIES TIMEOUT 30)
   endif()
 
   add_test(NAME engine_correctness COMMAND engine_tests)
