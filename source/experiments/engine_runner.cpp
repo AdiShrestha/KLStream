@@ -8,6 +8,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <memory>
 #include <sstream>
 #include <string>
 #include <thread>
@@ -27,14 +28,21 @@ struct Options {
     std::string eval_path;
     std::string output_path;
     std::string trace_path;
+    std::string policy{"adaptive_grow"};
     std::uint32_t seed{42};
     std::size_t trees{100};
     std::size_t subsample{256};
+    std::size_t batch_size{4};
     std::size_t batch_min{1};
     std::size_t batch_max{32};
     std::size_t batch_init{4};
     std::size_t queue_capacity{512};
     std::uint64_t deadline_us{500};
+    double alpha{0.2};
+    double low_threshold{0.2};
+    double high_threshold{0.8};
+    double grow_factor{1.25};
+    double shrink_factor{0.8};
 };
 
 struct DataRow {
@@ -57,6 +65,7 @@ struct ScoredItem {
     std::uint64_t event_id{0};
     std::size_t batch_id{0};
     std::size_t batch_size{0};
+    std::string policy_id{"adaptive_grow"};
     std::uint64_t t_offered_ns{0};
     std::uint64_t t_released_ns{0};
     std::uint64_t t_admitted_ns{0};
@@ -157,19 +166,26 @@ double nearest_rank_quantile(const std::vector<double>& sorted_vals, double q) {
 void print_usage(const char* prog) {
     std::cout << "Usage: " << prog << " [options]\n"
               << "Options:\n"
-              << "  --train <path>           Path to training data CSV (sample_id, f0, f1, ...)\n"
-              << "  --eval <path>            Path to evaluation data CSV (sample_id, f0, f1, ...)\n"
-              << "  --output <path>          Path to output predictions CSV (sample_id, score)\n"
-              << "  --trace-log <path>       Path to output event telemetry trace CSV\n"
-              << "  --seed <int>             Random seed for isolation forest (default: 42)\n"
-              << "  --trees <int>            Number of isolation trees (default: 100)\n"
-              << "  --subsample <int>        Subsample size for tree construction (default: 256)\n"
-              << "  --batch-min <int>        Minimum batch size (default: 1)\n"
-              << "  --batch-max <int>        Maximum batch size (default: 32)\n"
-              << "  --batch-init <int>       Initial batch size (default: 4)\n"
-              << "  --queue-capacity <int>   SPSC Queue capacity (default: 512)\n"
-              << "  --deadline-us <int>      Microbatch deadline in microseconds (default: 500)\n"
-              << "  --help                   Display this usage message\n";
+              << "  --train <path>             Path to training data CSV (sample_id, f0, f1, ...)\n"
+              << "  --eval <path>              Path to evaluation data CSV (sample_id, f0, f1, ...)\n"
+              << "  --output <path>            Path to output predictions CSV (sample_id, score)\n"
+              << "  --trace-log <path>         Path to output event telemetry trace CSV\n"
+              << "  --policy <name>            Microbatching policy: fixed_w1, fixed_w_grid, fixed_w4..64, deadline_flush, adaptive_grow, adaptive_shrink (default: adaptive_grow)\n"
+              << "  --batch-size <int>         Fixed batch size (default: 4)\n"
+              << "  --batch-min <int>          Minimum batch size (default: 1)\n"
+              << "  --batch-max <int>          Maximum batch size (default: 32)\n"
+              << "  --batch-init <int>         Initial batch size (default: 4)\n"
+              << "  --queue-capacity <int>     SPSC Queue capacity (default: 512)\n"
+              << "  --deadline-us <int>        Microbatch deadline in microseconds (default: 500)\n"
+              << "  --alpha <float>            EMA smoothing factor (default: 0.2)\n"
+              << "  --low-threshold <float>    Low queue occupancy threshold (default: 0.2)\n"
+              << "  --high-threshold <float>   High queue occupancy threshold (default: 0.8)\n"
+              << "  --grow-factor <float>      Batch growth multiplier (default: 1.25)\n"
+              << "  --shrink-factor <float>    Batch shrink multiplier (default: 0.8)\n"
+              << "  --seed <int>               Random seed for isolation forest (default: 42)\n"
+              << "  --trees <int>              Number of isolation trees (default: 100)\n"
+              << "  --subsample <int>          Subsample size for tree construction (default: 256)\n"
+              << "  --help                     Display this usage message\n";
 }
 
 Options parse_arguments(int argc, char* argv[]) {
@@ -187,6 +203,10 @@ Options parse_arguments(int argc, char* argv[]) {
             opt.output_path = argv[++i];
         } else if (arg == "--trace-log" && i + 1 < argc) {
             opt.trace_path = argv[++i];
+        } else if (arg == "--policy" && i + 1 < argc) {
+            opt.policy = argv[++i];
+        } else if (arg == "--batch-size" && i + 1 < argc) {
+            opt.batch_size = std::stoul(argv[++i]);
         } else if (arg == "--seed" && i + 1 < argc) {
             opt.seed = static_cast<std::uint32_t>(std::stoul(argv[++i]));
         } else if (arg == "--trees" && i + 1 < argc) {
@@ -203,6 +223,16 @@ Options parse_arguments(int argc, char* argv[]) {
             opt.queue_capacity = std::stoul(argv[++i]);
         } else if (arg == "--deadline-us" && i + 1 < argc) {
             opt.deadline_us = std::stoull(argv[++i]);
+        } else if (arg == "--alpha" && i + 1 < argc) {
+            opt.alpha = std::stod(argv[++i]);
+        } else if (arg == "--low-threshold" && i + 1 < argc) {
+            opt.low_threshold = std::stod(argv[++i]);
+        } else if (arg == "--high-threshold" && i + 1 < argc) {
+            opt.high_threshold = std::stod(argv[++i]);
+        } else if (arg == "--grow-factor" && i + 1 < argc) {
+            opt.grow_factor = std::stod(argv[++i]);
+        } else if (arg == "--shrink-factor" && i + 1 < argc) {
+            opt.shrink_factor = std::stod(argv[++i]);
         } else {
             throw std::invalid_argument("Unknown argument: " + arg);
         }
@@ -251,26 +281,104 @@ int main(int argc, char* argv[]) {
         klstream::DynamicIsolationForest forest(opt.trees, opt.subsample, opt.seed);
         forest.fit(train_points);
 
-        // 3. Setup Streaming Pipeline with Microbatching.
+        // 3. Setup Policy and Microbatching Pipeline.
         constexpr std::size_t MaxBatch = 256;
+        enum class PolicyType {
+            FixedW1,
+            FixedWGrid,
+            DeadlineFlush,
+            AdaptiveGrow,
+            AdaptiveShrink
+        };
+
+        PolicyType policy_type;
+        std::string resolved_policy_id;
+        std::size_t effective_batch_size = opt.batch_size;
+
+        if (opt.policy == "fixed_w1") {
+            policy_type = PolicyType::FixedW1;
+            resolved_policy_id = "fixed_w1";
+            effective_batch_size = 1;
+        } else if (opt.policy == "fixed_w4") {
+            policy_type = PolicyType::FixedWGrid;
+            resolved_policy_id = "fixed_w4";
+            effective_batch_size = 4;
+        } else if (opt.policy == "fixed_w8") {
+            policy_type = PolicyType::FixedWGrid;
+            resolved_policy_id = "fixed_w8";
+            effective_batch_size = 8;
+        } else if (opt.policy == "fixed_w16") {
+            policy_type = PolicyType::FixedWGrid;
+            resolved_policy_id = "fixed_w16";
+            effective_batch_size = 16;
+        } else if (opt.policy == "fixed_w32") {
+            policy_type = PolicyType::FixedWGrid;
+            resolved_policy_id = "fixed_w32";
+            effective_batch_size = 32;
+        } else if (opt.policy == "fixed_w64") {
+            policy_type = PolicyType::FixedWGrid;
+            resolved_policy_id = "fixed_w64";
+            effective_batch_size = 64;
+        } else if (opt.policy == "fixed_w_grid") {
+            policy_type = PolicyType::FixedWGrid;
+            resolved_policy_id = "fixed_w_grid";
+            effective_batch_size = opt.batch_size;
+        } else if (opt.policy == "deadline_flush") {
+            policy_type = PolicyType::DeadlineFlush;
+            resolved_policy_id = "deadline_flush";
+        } else if (opt.policy == "adaptive_grow") {
+            policy_type = PolicyType::AdaptiveGrow;
+            resolved_policy_id = "adaptive_grow";
+        } else if (opt.policy == "adaptive_shrink") {
+            policy_type = PolicyType::AdaptiveShrink;
+            resolved_policy_id = "adaptive_shrink";
+        } else {
+            throw std::invalid_argument("Unknown policy: " + opt.policy);
+        }
+
         std::size_t batch_min = std::max<std::size_t>(1, opt.batch_min);
-        std::size_t batch_max = std::min<std::size_t>(MaxBatch, std::max(batch_min, opt.batch_max));
+        std::size_t batch_max = std::min<std::size_t>(MaxBatch, std::max(batch_min, std::max(opt.batch_max, effective_batch_size)));
         std::size_t batch_init = std::max(batch_min, std::min(batch_max, opt.batch_init));
+
+        if (policy_type == PolicyType::DeadlineFlush) {
+            effective_batch_size = batch_max;
+        }
 
         klstream::SPSCQueue<klstream::Event<TraceRecord>> in_queue(opt.queue_capacity);
         klstream::SPSCQueue<klstream::EventBatch<TraceRecord, MaxBatch>> batch_queue(opt.queue_capacity);
 
-        klstream::OccupancyBatchController controller(
-            batch_min, batch_max, batch_init,
-            0.2, 0.2, 0.8, 0.8, 1.25,
-            klstream::FeedbackDirection::GrowUnderPressure);
+        std::unique_ptr<klstream::OccupancyBatchController> controller;
+        std::function<std::size_t()> selector;
 
+        if (policy_type == PolicyType::FixedW1) {
+            selector = []() -> std::size_t { return 1; };
+        } else if (policy_type == PolicyType::FixedWGrid) {
+            selector = [effective_batch_size]() -> std::size_t { return effective_batch_size; };
+        } else if (policy_type == PolicyType::DeadlineFlush) {
+            selector = [batch_max]() -> std::size_t { return batch_max; };
+        } else if (policy_type == PolicyType::AdaptiveGrow) {
+            controller = std::make_unique<klstream::OccupancyBatchController>(
+                batch_min, batch_max, batch_init,
+                opt.alpha, opt.low_threshold, opt.high_threshold,
+                opt.shrink_factor, opt.grow_factor,
+                klstream::FeedbackDirection::GrowUnderPressure);
+            selector = [&ctrl = *controller, &in_queue]() -> std::size_t {
+                return ctrl.update(in_queue.occupancy());
+            };
+        } else if (policy_type == PolicyType::AdaptiveShrink) {
+            controller = std::make_unique<klstream::OccupancyBatchController>(
+                batch_min, batch_max, batch_init,
+                opt.alpha, opt.low_threshold, opt.high_threshold,
+                opt.shrink_factor, opt.grow_factor,
+                klstream::FeedbackDirection::ShrinkUnderPressure);
+            selector = [&ctrl = *controller, &in_queue]() -> std::size_t {
+                return ctrl.update(in_queue.occupancy());
+            };
+        }
+
+        auto deadline_ns = std::chrono::nanoseconds(std::max<std::uint64_t>(1, opt.deadline_us * 1000ULL));
         klstream::BatchOperator<TraceRecord, MaxBatch> batch_op(
-            "microbatcher", &in_queue, &batch_queue,
-            [&controller, &in_queue]() {
-                return controller.update(in_queue.occupancy());
-            },
-            std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::microseconds(opt.deadline_us)));
+            "microbatcher", &in_queue, &batch_queue, selector, deadline_ns);
 
         std::size_t offered_count = eval_data.size();
         std::size_t admitted_count = 0;
@@ -375,6 +483,7 @@ int main(int argc, char* argv[]) {
                         scored.event_id = item.event_id;
                         scored.batch_id = batch_counter;
                         scored.batch_size = batch.count;
+                        scored.policy_id = resolved_policy_id;
                         scored.t_offered_ns = item.t_offered_ns;
                         scored.t_released_ns = item.t_released_ns;
                         scored.t_admitted_ns = item.t_admitted_ns;
@@ -434,7 +543,7 @@ int main(int argc, char* argv[]) {
             if (!trace_file.is_open()) {
                 throw std::runtime_error("Cannot write trace log to: " + opt.trace_path);
             }
-            trace_file << "event_id,sample_id,batch_id,batch_size,"
+            trace_file << "event_id,sample_id,batch_id,batch_size,policy_id,"
                        << "t_offered_ns,t_released_ns,t_admitted_ns,t_batch_ready_ns,"
                        << "t_service_start_ns,t_inference_finish_ns,t_emitted_ns,"
                        << "queue_wait_ns,service_time_ns,end_to_end_latency_ns,"
@@ -445,6 +554,7 @@ int main(int argc, char* argv[]) {
                            << res.sample_id << ","
                            << res.batch_id << ","
                            << res.batch_size << ","
+                           << res.policy_id << ","
                            << res.t_offered_ns << ","
                            << res.t_released_ns << ","
                            << res.t_admitted_ns << ","
@@ -504,6 +614,8 @@ int main(int argc, char* argv[]) {
         // Output summary JSON to stdout.
         std::cout << "{\n"
                   << "  \"status\": \"SUCCESS\",\n"
+                  << "  \"policy_id\": \"" << resolved_policy_id << "\",\n"
+                  << "  \"effective_batch_size\": " << effective_batch_size << ",\n"
                   << "  \"events_offered\": " << offered_count << ",\n"
                   << "  \"events_admitted\": " << admitted_count << ",\n"
                   << "  \"events_emitted\": " << emitted_count << ",\n"

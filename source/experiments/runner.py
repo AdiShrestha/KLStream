@@ -30,6 +30,9 @@ def parse_args():
     parser.add_argument("--cohort", default=None, help="Path to cohort CSV")
     parser.add_argument("--source-records", default=None, help="Path to source records CSV")
     parser.add_argument("--eval-splits", default=None, help="Comma-separated evaluation splits")
+    parser.add_argument("--policy", default=None, help="Microbatching policy name")
+    parser.add_argument("--batch-size", type=int, default=None, help="Fixed batch size")
+    parser.add_argument("--deadline-us", type=int, default=None, help="Microbatch deadline in microseconds")
     parser.add_argument("positional", nargs="*", help="Positional arguments fallback")
     args = parser.parse_args()
 
@@ -318,10 +321,18 @@ def main():
 
     trees = int(config.get("trees", 100))
     subsample = int(config.get("subsample", 256))
+    policy = args.policy or config.get("policy", "adaptive_grow")
+    batch_size = args.batch_size if args.batch_size is not None else int(config.get("batch_size", 4))
     batch_min = int(config.get("batch_min", 1))
     batch_max = int(config.get("batch_max", 32))
+    batch_init = int(config.get("batch_init", 4))
     queue_cap = int(config.get("queue_capacity", 512))
-    deadline_us = int(config.get("deadline_us", 500))
+    deadline_us = args.deadline_us if args.deadline_us is not None else int(config.get("deadline_us", 500))
+    alpha = float(config.get("alpha", 0.2))
+    low_threshold = float(config.get("low_threshold", 0.2))
+    high_threshold = float(config.get("high_threshold", 0.8))
+    grow_factor = float(config.get("grow_factor", 1.25))
+    shrink_factor = float(config.get("shrink_factor", 0.8))
 
     cmd = [
         str(engine_bin),
@@ -332,10 +343,18 @@ def main():
         "--seed", str(seed),
         "--trees", str(trees),
         "--subsample", str(subsample),
+        "--policy", str(policy),
+        "--batch-size", str(batch_size),
         "--batch-min", str(batch_min),
         "--batch-max", str(batch_max),
+        "--batch-init", str(batch_init),
         "--queue-capacity", str(queue_cap),
         "--deadline-us", str(deadline_us),
+        "--alpha", str(alpha),
+        "--low-threshold", str(low_threshold),
+        "--high-threshold", str(high_threshold),
+        "--grow-factor", str(grow_factor),
+        "--shrink-factor", str(shrink_factor),
     ]
 
     proc = subprocess.run(cmd, cwd=str(root), capture_output=True, text=True)
@@ -396,8 +415,24 @@ def main():
             e2e = [float(r["end_to_end_latency_ns"]) for r in trace_rows if "end_to_end_latency_ns" in r]
             qw = [float(r["queue_wait_ns"]) for r in trace_rows if "queue_wait_ns" in r]
             st = [float(r["service_time_ns"]) for r in trace_rows if "service_time_ns" in r]
+            policy_id = trace_rows[0].get("policy_id", policy)
             telemetry_quantiles = {
                 "events_recorded": len(trace_rows),
+                "policy_id": policy_id,
+                "configured_parameters": {
+                    "policy": policy_id,
+                    "batch_size": int(batch_size),
+                    "batch_min": int(batch_min),
+                    "batch_max": int(batch_max),
+                    "batch_init": int(batch_init),
+                    "deadline_us": int(deadline_us),
+                    "alpha": float(alpha),
+                    "low_threshold": float(low_threshold),
+                    "high_threshold": float(high_threshold),
+                    "grow_factor": float(grow_factor),
+                    "shrink_factor": float(shrink_factor),
+                    "queue_capacity": int(queue_cap),
+                },
                 "exact_quantiles_ns": {
                     "end_to_end_latency": {
                         "p50": nearest_rank_quantile(e2e, 0.50),
@@ -425,6 +460,7 @@ def main():
     e2e_q = telemetry_quantiles.get("exact_quantiles_ns", {}).get("end_to_end_latency", {})
     qw_q = telemetry_quantiles.get("exact_quantiles_ns", {}).get("queue_wait", {})
     st_q = telemetry_quantiles.get("exact_quantiles_ns", {}).get("service_time", {})
+    reported_policy = telemetry_quantiles.get("policy_id", policy)
     evidence_text = (
         f"KLStream Native Execution Engine Evidence\n"
         f"=========================================\n"
@@ -432,8 +468,10 @@ def main():
         f"Seed: {seed}\n"
         f"Engine Binary: {engine_bin.name}\n"
         f"Binary SHA-256: {engine_hash}\n"
+        f"Policy: {reported_policy}\n"
         f"Isolation Forest Config: trees={trees}, subsample={subsample}\n"
-        f"Microbatch Config: min={batch_min}, max={batch_max}, deadline_us={deadline_us}\n"
+        f"Microbatch Config: policy={reported_policy}, batch_size={batch_size}, min={batch_min}, max={batch_max}, deadline_us={deadline_us}\n"
+        f"Controller Config: alpha={alpha}, low={low_threshold}, high={high_threshold}, grow={grow_factor}, shrink={shrink_factor}\n"
         f"Queue Capacity: {queue_cap}\n"
         f"Evaluated Splits: {eval_splits}\n"
         f"Offered Events: {len(eval_rows)}\n"
