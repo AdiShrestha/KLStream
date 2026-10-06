@@ -40,9 +40,10 @@ class WorkloadGenerator:
 class ReplayWorkloadGenerator(WorkloadGenerator):
     """Replays authentic interarrival deltas from Binance trade cohort."""
 
-    def __init__(self, cohort_path: pathlib.Path, time_scale: float = 1.0):
+    def __init__(self, cohort_path: pathlib.Path, time_scale: float = 1.0, max_delay_us: float | None = None):
         self.cohort_path = cohort_path
-        self.time_scale = max(0.001, float(time_scale))
+        self.time_scale = max(1e-9, float(time_scale))
+        self.max_delay_us = float(max_delay_us) if max_delay_us is not None else None
 
     def generate(self, count: int, sample_ids: Sequence[str] | None = None) -> list[SchedulePoint]:
         points = []
@@ -52,14 +53,17 @@ class ReplayWorkloadGenerator(WorkloadGenerator):
         with open(self.cohort_path, "r", encoding="utf-8") as f:
             reader = list(csv.DictReader(f))
 
-        total = min(count, len(reader)) if count > 0 else len(reader)
+        row_by_id = {r["sample_id"]: r for r in reader if "sample_id" in r}
+        total = len(sample_ids) if sample_ids else (min(count, len(reader)) if count > 0 else len(reader))
         accum_ns = 0
 
         for i in range(total):
-            row = reader[i]
-            sid = sample_ids[i] if (sample_ids and i < len(sample_ids)) else row.get("sample_id", f"ev_{i+1}")
+            sid = sample_ids[i] if (sample_ids and i < len(sample_ids)) else (reader[i].get("sample_id", f"ev_{i+1}") if i < len(reader) else f"ev_{i+1}")
+            row = row_by_id.get(sid, reader[i] if i < len(reader) else {})
             inter_ms = float(row.get("interarrival_ms", 0.0))
             delay_ns = int(round(inter_ms * 1_000_000.0 * self.time_scale))
+            if self.max_delay_us is not None:
+                delay_ns = min(delay_ns, int(round(self.max_delay_us * 1000.0)))
             if delay_ns < 0:
                 delay_ns = 0
             accum_ns += delay_ns
@@ -188,22 +192,33 @@ def create_generator(
     workload_type: str,
     cohort_path: pathlib.Path | None = None,
     rate_hz: float = 200.0,
+    time_scale: float | None = None,
+    max_delay_us: float | None = None,
     alpha: float = 1.5,
     rate_low_hz: float = 50.0,
     rate_high_hz: float = 2000.0,
+    low_count: int = 50,
+    high_count: int = 200,
     seed: int = 42,
 ) -> WorkloadGenerator:
     wtype = workload_type.lower().strip()
     if wtype == "replay":
         if cohort_path is None:
             raise ValueError("Replay workload generator requires cohort_path")
-        return ReplayWorkloadGenerator(cohort_path=cohort_path)
+        scale = time_scale if time_scale is not None else (1.0 if rate_hz == 1.0 else (1.0 / rate_hz))
+        return ReplayWorkloadGenerator(cohort_path=cohort_path, time_scale=scale, max_delay_us=max_delay_us)
     elif wtype == "poisson":
         return PoissonWorkloadGenerator(rate_hz=rate_hz, seed=seed)
     elif wtype == "pareto":
         return ParetoWorkloadGenerator(alpha=alpha, mean_rate_hz=rate_hz, seed=seed)
     elif wtype in ("burst_step", "burst"):
-        return BurstStepWorkloadGenerator(rate_low_hz=rate_low_hz, rate_high_hz=rate_high_hz, seed=seed)
+        return BurstStepWorkloadGenerator(
+            rate_low_hz=rate_low_hz,
+            rate_high_hz=rate_high_hz,
+            low_count=low_count,
+            high_count=high_count,
+            seed=seed,
+        )
     else:
         raise ValueError(f"Unknown workload type: {workload_type}. Must be replay, poisson, pareto, or burst_step.")
 

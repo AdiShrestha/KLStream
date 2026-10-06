@@ -38,6 +38,12 @@ def parse_args():
     parser.add_argument("--schedule", default=None, help="Explicit path to arrival schedule CSV")
     parser.add_argument("--model-save", default=None, help="Path to save trained model .iforest")
     parser.add_argument("--model-load", default=None, help="Path to load pre-trained model .iforest")
+    parser.add_argument("--max-delay-us", type=float, default=None, help="Cap max interarrival delay in microseconds")
+    parser.add_argument("--time-scale", type=float, default=None, help="Workload replay time scale factor")
+    parser.add_argument("--rate-low-hz", type=float, default=None, help="Low arrival rate for burst_step in Hz")
+    parser.add_argument("--rate-high-hz", type=float, default=None, help="High arrival rate for burst_step in Hz")
+    parser.add_argument("--low-count", type=int, default=None, help="Event count in low-rate phase for burst_step")
+    parser.add_argument("--high-count", type=int, default=None, help="Event count in high-rate burst phase for burst_step")
     parser.add_argument("positional", nargs="*", help="Positional arguments fallback")
     args = parser.parse_args()
 
@@ -346,10 +352,22 @@ def main():
         from workload_generator import create_generator, write_schedule_csv
         w_rate = float(args.workload_rate if args.workload_rate is not None else config.get("workload_rate", 200.0))
         eval_sample_ids = [r["sample_id"] for r in eval_rows]
+        max_del_us = args.max_delay_us if args.max_delay_us is not None else config.get("max_delay_us")
+        t_scale = args.time_scale if args.time_scale is not None else config.get("time_scale")
+        r_low = float(args.rate_low_hz if args.rate_low_hz is not None else config.get("rate_low_hz", 50.0))
+        r_high = float(args.rate_high_hz if args.rate_high_hz is not None else config.get("rate_high_hz", 2000.0))
+        l_cnt = int(args.low_count if args.low_count is not None else config.get("low_count", 50))
+        h_cnt = int(args.high_count if args.high_count is not None else config.get("high_count", 200))
         gen = create_generator(
             workload_type=workload_type,
             cohort_path=cohort_path,
             rate_hz=w_rate,
+            time_scale=t_scale,
+            max_delay_us=max_del_us,
+            rate_low_hz=r_low,
+            rate_high_hz=r_high,
+            low_count=l_cnt,
+            high_count=h_cnt,
             seed=seed,
         )
         points = gen.generate(count=len(eval_sample_ids), sample_ids=eval_sample_ids)

@@ -1,0 +1,1595 @@
+{
+  "contract": "KLS-09",
+  "description": "Exploratory Calibration & Prospective Precision Pilot Grid",
+  "timestamp_utc": "2026-10-06T16:05:06.405000+00:00",
+  "platform": {
+    "system": "Darwin",
+    "release": "27.0.0",
+    "machine": "arm64",
+    "python": "3.12.8"
+  },
+  "isolation_boundary": {
+    "cohort_path": "data/cohort.csv",
+    "cohort_sha256": "5e2c5ed3ccc47c9da95c6918c9a65d252f22b28ae9a3d0f6ebe1f9bb7c7d9496",
+    "evaluated_split": "validation",
+    "evaluated_records": 5233,
+    "source_day": "rec_20170818",
+    "test_holdout_sealed": true,
+    "test_holdout_records": 2153,
+    "test_holdout_day": "rec_20170819"
+  },
+  "model_reference": {
+    "path": "data/model_checkpoint.iforest",
+    "sha256": "4321190fc2b197eb997931c5fe3a56f055b58c67c5d6ac789b637de00cab3b12",
+    "trees": 200,
+    "subsample": 128
+  },
+  "regime_a_replay": {
+    "description": "Authentic market interarrival spacing with ceiling max_delay_us=500",
+    "workload": "replay",
+    "results": {
+      "fixed_w1": {
+        "policy": "fixed_w1",
+        "workload": "replay",
+        "events_offered": 5233,
+        "events_admitted": 5233,
+        "events_emitted": 5233,
+        "events_dropped": 0,
+        "conservation_delta": 0,
+        "duration_sec": 2.621,
+        "exact_quantiles_ns": {
+          "end_to_end_latency": {
+            "p50": 42292.0,
+            "p90": 89209.0,
+            "p99": 1401750.0,
+            "p99.9": 9705167.0
+          },
+          "queue_wait": {
+            "p50": 14833.0,
+            "p90": 57375.0,
+            "p99": 1350708.0,
+            "p99.9": 9680583.0
+          },
+          "service_time": {
+            "p50": 22959.0,
+            "p90": 43792.0,
+            "p99": 82416.0,
+            "p99.9": 178667.0
+          }
+        },
+        "queue_wait_dominance_ratio": 16.389,
+        "configured_parameters": {
+          "policy": "fixed_w1",
+          "batch_size": 4,
+          "batch_min": 1,
+          "batch_max": 32,
+          "batch_init": 4,
+          "deadline_us": 500,
+          "alpha": 0.2,
+          "low_threshold": 0.2,
+          "high_threshold": 0.8,
+          "grow_factor": 1.25,
+          "shrink_factor": 0.8,
+          "queue_capacity": 512
+        }
+      },
+      "fixed_w4": {
+        "policy": "fixed_w4",
+        "workload": "replay",
+        "events_offered": 5233,
+        "events_admitted": 5233,
+        "events_emitted": 5233,
+        "events_dropped": 0,
+        "conservation_delta": 0,
+        "duration_sec": 2.601,
+        "exact_quantiles_ns": {
+          "end_to_end_latency": {
+            "p50": 535500.0,
+            "p90": 574791.0,
+            "p99": 716458.0,
+            "p99.9": 5612833.0
+          },
+          "queue_wait": {
+            "p50": 506334.0,
+            "p90": 519292.0,
+            "p99": 639792.0,
+            "p99.9": 5456583.0
+          },
+          "service_time": {
+            "p50": 39083.0,
+            "p90": 81041.0,
+            "p99": 138792.0,
+            "p99.9": 237167.0
+          }
+        },
+        "queue_wait_dominance_ratio": 4.61,
+        "configured_parameters": {
+          "policy": "fixed_w4",
+          "batch_size": 4,
+          "batch_min": 1,
+          "batch_max": 32,
+          "batch_init": 4,
+          "deadline_us": 500,
+          "alpha": 0.2,
+          "low_threshold": 0.2,
+          "high_threshold": 0.8,
+          "grow_factor": 1.25,
+          "shrink_factor": 0.8,
+          "queue_capacity": 512
+        }
+      },
+      "fixed_w8": {
+        "policy": "fixed_w8",
+        "workload": "replay",
+        "events_offered": 5233,
+        "events_admitted": 5233,
+        "events_emitted": 5233,
+        "events_dropped": 0,
+        "conservation_delta": 0,
+        "duration_sec": 2.62,
+        "exact_quantiles_ns": {
+          "end_to_end_latency": {
+            "p50": 536166.0,
+            "p90": 586625.0,
+            "p99": 3362625.0,
+            "p99.9": 9809083.0
+          },
+          "queue_wait": {
+            "p50": 506500.0,
+            "p90": 521417.0,
+            "p99": 3244375.0,
+            "p99.9": 9768584.0
+          },
+          "service_time": {
+            "p50": 37292.0,
+            "p90": 84625.0,
+            "p99": 158792.0,
+            "p99.9": 249917.0
+          }
+        },
+        "queue_wait_dominance_ratio": 20.432,
+        "configured_parameters": {
+          "policy": "fixed_w8",
+          "batch_size": 4,
+          "batch_min": 1,
+          "batch_max": 32,
+          "batch_init": 4,
+          "deadline_us": 500,
+          "alpha": 0.2,
+          "low_threshold": 0.2,
+          "high_threshold": 0.8,
+          "grow_factor": 1.25,
+          "shrink_factor": 0.8,
+          "queue_capacity": 512
+        }
+      },
+      "fixed_w16": {
+        "policy": "fixed_w16",
+        "workload": "replay",
+        "events_offered": 5233,
+        "events_admitted": 5233,
+        "events_emitted": 5233,
+        "events_dropped": 0,
+        "conservation_delta": 0,
+        "duration_sec": 2.729,
+        "exact_quantiles_ns": {
+          "end_to_end_latency": {
+            "p50": 535250.0,
+            "p90": 580709.0,
+            "p99": 2115250.0,
+            "p99.9": 33005541.0
+          },
+          "queue_wait": {
+            "p50": 506417.0,
+            "p90": 521291.0,
+            "p99": 1902084.0,
+            "p99.9": 20145959.0
+          },
+          "service_time": {
+            "p50": 36791.0,
+            "p90": 81708.0,
+            "p99": 178334.0,
+            "p99.9": 14331500.0
+          }
+        },
+        "queue_wait_dominance_ratio": 10.666,
+        "configured_parameters": {
+          "policy": "fixed_w16",
+          "batch_size": 4,
+          "batch_min": 1,
+          "batch_max": 32,
+          "batch_init": 4,
+          "deadline_us": 500,
+          "alpha": 0.2,
+          "low_threshold": 0.2,
+          "high_threshold": 0.8,
+          "grow_factor": 1.25,
+          "shrink_factor": 0.8,
+          "queue_capacity": 512
+        }
+      },
+      "fixed_w32": {
+        "policy": "fixed_w32",
+        "workload": "replay",
+        "events_offered": 5233,
+        "events_admitted": 5233,
+        "events_emitted": 5233,
+        "events_dropped": 0,
+        "conservation_delta": 0,
+        "duration_sec": 2.554,
+        "exact_quantiles_ns": {
+          "end_to_end_latency": {
+            "p50": 534292.0,
+            "p90": 570584.0,
+            "p99": 864500.0,
+            "p99.9": 14352583.0
+          },
+          "queue_wait": {
+            "p50": 505917.0,
+            "p90": 519584.0,
+            "p99": 741000.0,
+            "p99.9": 14249333.0
+          },
+          "service_time": {
+            "p50": 33125.0,
+            "p90": 78000.0,
+            "p99": 162625.0,
+            "p99.9": 395542.0
+          }
+        },
+        "queue_wait_dominance_ratio": 4.556,
+        "configured_parameters": {
+          "policy": "fixed_w32",
+          "batch_size": 4,
+          "batch_min": 1,
+          "batch_max": 32,
+          "batch_init": 4,
+          "deadline_us": 500,
+          "alpha": 0.2,
+          "low_threshold": 0.2,
+          "high_threshold": 0.8,
+          "grow_factor": 1.25,
+          "shrink_factor": 0.8,
+          "queue_capacity": 512
+        }
+      },
+      "fixed_w64": {
+        "policy": "fixed_w64",
+        "workload": "replay",
+        "events_offered": 5233,
+        "events_admitted": 5233,
+        "events_emitted": 5233,
+        "events_dropped": 0,
+        "conservation_delta": 0,
+        "duration_sec": 2.598,
+        "exact_quantiles_ns": {
+          "end_to_end_latency": {
+            "p50": 534083.0,
+            "p90": 567666.0,
+            "p99": 660417.0,
+            "p99.9": 12410334.0
+          },
+          "queue_wait": {
+            "p50": 505875.0,
+            "p90": 518250.0,
+            "p99": 591375.0,
+            "p99.9": 12095083.0
+          },
+          "service_time": {
+            "p50": 32583.0,
+            "p90": 73125.0,
+            "p99": 125667.0,
+            "p99.9": 334875.0
+          }
+        },
+        "queue_wait_dominance_ratio": 4.706,
+        "configured_parameters": {
+          "policy": "fixed_w64",
+          "batch_size": 4,
+          "batch_min": 1,
+          "batch_max": 32,
+          "batch_init": 4,
+          "deadline_us": 500,
+          "alpha": 0.2,
+          "low_threshold": 0.2,
+          "high_threshold": 0.8,
+          "grow_factor": 1.25,
+          "shrink_factor": 0.8,
+          "queue_capacity": 512
+        }
+      },
+      "deadline_flush": {
+        "policy": "deadline_flush",
+        "workload": "replay",
+        "events_offered": 5233,
+        "events_admitted": 5233,
+        "events_emitted": 5233,
+        "events_dropped": 0,
+        "conservation_delta": 0,
+        "duration_sec": 2.606,
+        "exact_quantiles_ns": {
+          "end_to_end_latency": {
+            "p50": 534750.0,
+            "p90": 574000.0,
+            "p99": 958166.0,
+            "p99.9": 3902750.0
+          },
+          "queue_wait": {
+            "p50": 505875.0,
+            "p90": 519500.0,
+            "p99": 784667.0,
+            "p99.9": 3842458.0
+          },
+          "service_time": {
+            "p50": 33042.0,
+            "p90": 77083.0,
+            "p99": 146708.0,
+            "p99.9": 799417.0
+          }
+        },
+        "queue_wait_dominance_ratio": 5.348,
+        "configured_parameters": {
+          "policy": "deadline_flush",
+          "batch_size": 4,
+          "batch_min": 1,
+          "batch_max": 32,
+          "batch_init": 4,
+          "deadline_us": 500,
+          "alpha": 0.2,
+          "low_threshold": 0.2,
+          "high_threshold": 0.8,
+          "grow_factor": 1.25,
+          "shrink_factor": 0.8,
+          "queue_capacity": 512
+        }
+      },
+      "adaptive_grow": {
+        "policy": "adaptive_grow",
+        "workload": "replay",
+        "events_offered": 5233,
+        "events_admitted": 5233,
+        "events_emitted": 5233,
+        "events_dropped": 0,
+        "conservation_delta": 0,
+        "duration_sec": 2.646,
+        "exact_quantiles_ns": {
+          "end_to_end_latency": {
+            "p50": 42291.0,
+            "p90": 82125.0,
+            "p99": 167125.0,
+            "p99.9": 1094625.0
+          },
+          "queue_wait": {
+            "p50": 15125.0,
+            "p90": 48208.0,
+            "p99": 119833.0,
+            "p99.9": 642000.0
+          },
+          "service_time": {
+            "p50": 22792.0,
+            "p90": 45583.0,
+            "p99": 82291.0,
+            "p99.9": 265750.0
+          }
+        },
+        "queue_wait_dominance_ratio": 1.456,
+        "configured_parameters": {
+          "policy": "adaptive_grow",
+          "batch_size": 4,
+          "batch_min": 1,
+          "batch_max": 32,
+          "batch_init": 4,
+          "deadline_us": 500,
+          "alpha": 0.2,
+          "low_threshold": 0.2,
+          "high_threshold": 0.8,
+          "grow_factor": 1.25,
+          "shrink_factor": 0.8,
+          "queue_capacity": 512
+        }
+      },
+      "adaptive_shrink": {
+        "policy": "adaptive_shrink",
+        "workload": "replay",
+        "events_offered": 5233,
+        "events_admitted": 5233,
+        "events_emitted": 5233,
+        "events_dropped": 0,
+        "conservation_delta": 0,
+        "duration_sec": 2.706,
+        "exact_quantiles_ns": {
+          "end_to_end_latency": {
+            "p50": 539541.0,
+            "p90": 597125.0,
+            "p99": 1587750.0,
+            "p99.9": 14320291.0
+          },
+          "queue_wait": {
+            "p50": 507958.0,
+            "p90": 523750.0,
+            "p99": 1356834.0,
+            "p99.9": 14188125.0
+          },
+          "service_time": {
+            "p50": 40084.0,
+            "p90": 93375.0,
+            "p99": 200833.0,
+            "p99.9": 811375.0
+          }
+        },
+        "queue_wait_dominance_ratio": 6.756,
+        "configured_parameters": {
+          "policy": "adaptive_shrink",
+          "batch_size": 4,
+          "batch_min": 1,
+          "batch_max": 32,
+          "batch_init": 4,
+          "deadline_us": 500,
+          "alpha": 0.2,
+          "low_threshold": 0.2,
+          "high_threshold": 0.8,
+          "grow_factor": 1.25,
+          "shrink_factor": 0.8,
+          "queue_capacity": 512
+        }
+      }
+    }
+  },
+  "regime_b_burst": {
+    "description": "Non-stationary dual-state surge: 500 Hz low -> 5000 Hz high",
+    "workload": "burst_step",
+    "results": {
+      "fixed_w1": {
+        "policy": "fixed_w1",
+        "workload": "burst_step",
+        "events_offered": 5233,
+        "events_admitted": 5233,
+        "events_emitted": 5233,
+        "events_dropped": 0,
+        "conservation_delta": 0,
+        "duration_sec": 4.132,
+        "exact_quantiles_ns": {
+          "end_to_end_latency": {
+            "p50": 43709.0,
+            "p90": 96792.0,
+            "p99": 684917.0,
+            "p99.9": 8973417.0
+          },
+          "queue_wait": {
+            "p50": 16084.0,
+            "p90": 38042.0,
+            "p99": 541584.0,
+            "p99.9": 8653125.0
+          },
+          "service_time": {
+            "p50": 24416.0,
+            "p90": 60750.0,
+            "p99": 150667.0,
+            "p99.9": 622625.0
+          }
+        },
+        "queue_wait_dominance_ratio": 3.595,
+        "configured_parameters": {
+          "policy": "fixed_w1",
+          "batch_size": 4,
+          "batch_min": 1,
+          "batch_max": 32,
+          "batch_init": 4,
+          "deadline_us": 500,
+          "alpha": 0.2,
+          "low_threshold": 0.2,
+          "high_threshold": 0.8,
+          "grow_factor": 1.25,
+          "shrink_factor": 0.8,
+          "queue_capacity": 512
+        }
+      },
+      "fixed_w4": {
+        "policy": "fixed_w4",
+        "workload": "burst_step",
+        "events_offered": 5233,
+        "events_admitted": 5233,
+        "events_emitted": 5233,
+        "events_dropped": 0,
+        "conservation_delta": 0,
+        "duration_sec": 4.068,
+        "exact_quantiles_ns": {
+          "end_to_end_latency": {
+            "p50": 424542.0,
+            "p90": 569375.0,
+            "p99": 737875.0,
+            "p99.9": 4631667.0
+          },
+          "queue_wait": {
+            "p50": 371333.0,
+            "p90": 517625.0,
+            "p99": 644292.0,
+            "p99.9": 3906750.0
+          },
+          "service_time": {
+            "p50": 49000.0,
+            "p90": 96417.0,
+            "p99": 155084.0,
+            "p99.9": 337833.0
+          }
+        },
+        "queue_wait_dominance_ratio": 4.154,
+        "configured_parameters": {
+          "policy": "fixed_w4",
+          "batch_size": 4,
+          "batch_min": 1,
+          "batch_max": 32,
+          "batch_init": 4,
+          "deadline_us": 500,
+          "alpha": 0.2,
+          "low_threshold": 0.2,
+          "high_threshold": 0.8,
+          "grow_factor": 1.25,
+          "shrink_factor": 0.8,
+          "queue_capacity": 512
+        }
+      },
+      "fixed_w8": {
+        "policy": "fixed_w8",
+        "workload": "burst_step",
+        "events_offered": 5233,
+        "events_admitted": 5233,
+        "events_emitted": 5233,
+        "events_dropped": 0,
+        "conservation_delta": 0,
+        "duration_sec": 4.097,
+        "exact_quantiles_ns": {
+          "end_to_end_latency": {
+            "p50": 523375.0,
+            "p90": 576834.0,
+            "p99": 810333.0,
+            "p99.9": 3610625.0
+          },
+          "queue_wait": {
+            "p50": 473083.0,
+            "p90": 519875.0,
+            "p99": 735834.0,
+            "p99.9": 3489167.0
+          },
+          "service_time": {
+            "p50": 51000.0,
+            "p90": 110292.0,
+            "p99": 190209.0,
+            "p99.9": 276500.0
+          }
+        },
+        "queue_wait_dominance_ratio": 3.869,
+        "configured_parameters": {
+          "policy": "fixed_w8",
+          "batch_size": 4,
+          "batch_min": 1,
+          "batch_max": 32,
+          "batch_init": 4,
+          "deadline_us": 500,
+          "alpha": 0.2,
+          "low_threshold": 0.2,
+          "high_threshold": 0.8,
+          "grow_factor": 1.25,
+          "shrink_factor": 0.8,
+          "queue_capacity": 512
+        }
+      },
+      "fixed_w16": {
+        "policy": "fixed_w16",
+        "workload": "burst_step",
+        "events_offered": 5233,
+        "events_admitted": 5233,
+        "events_emitted": 5233,
+        "events_dropped": 0,
+        "conservation_delta": 0,
+        "duration_sec": 4.025,
+        "exact_quantiles_ns": {
+          "end_to_end_latency": {
+            "p50": 522458.0,
+            "p90": 566125.0,
+            "p99": 819458.0,
+            "p99.9": 10727583.0
+          },
+          "queue_wait": {
+            "p50": 472500.0,
+            "p90": 518708.0,
+            "p99": 725250.0,
+            "p99.9": 10293792.0
+          },
+          "service_time": {
+            "p50": 46250.0,
+            "p90": 101500.0,
+            "p99": 179709.0,
+            "p99.9": 475916.0
+          }
+        },
+        "queue_wait_dominance_ratio": 4.036,
+        "configured_parameters": {
+          "policy": "fixed_w16",
+          "batch_size": 4,
+          "batch_min": 1,
+          "batch_max": 32,
+          "batch_init": 4,
+          "deadline_us": 500,
+          "alpha": 0.2,
+          "low_threshold": 0.2,
+          "high_threshold": 0.8,
+          "grow_factor": 1.25,
+          "shrink_factor": 0.8,
+          "queue_capacity": 512
+        }
+      },
+      "fixed_w32": {
+        "policy": "fixed_w32",
+        "workload": "burst_step",
+        "events_offered": 5233,
+        "events_admitted": 5233,
+        "events_emitted": 5233,
+        "events_dropped": 0,
+        "conservation_delta": 0,
+        "duration_sec": 4.133,
+        "exact_quantiles_ns": {
+          "end_to_end_latency": {
+            "p50": 525458.0,
+            "p90": 605125.0,
+            "p99": 2797500.0,
+            "p99.9": 9032500.0
+          },
+          "queue_wait": {
+            "p50": 488750.0,
+            "p90": 525708.0,
+            "p99": 2737208.0,
+            "p99.9": 8923625.0
+          },
+          "service_time": {
+            "p50": 56125.0,
+            "p90": 121625.0,
+            "p99": 225083.0,
+            "p99.9": 999458.0
+          }
+        },
+        "queue_wait_dominance_ratio": 12.161,
+        "configured_parameters": {
+          "policy": "fixed_w32",
+          "batch_size": 4,
+          "batch_min": 1,
+          "batch_max": 32,
+          "batch_init": 4,
+          "deadline_us": 500,
+          "alpha": 0.2,
+          "low_threshold": 0.2,
+          "high_threshold": 0.8,
+          "grow_factor": 1.25,
+          "shrink_factor": 0.8,
+          "queue_capacity": 512
+        }
+      },
+      "fixed_w64": {
+        "policy": "fixed_w64",
+        "workload": "burst_step",
+        "events_offered": 5233,
+        "events_admitted": 5233,
+        "events_emitted": 5233,
+        "events_dropped": 0,
+        "conservation_delta": 0,
+        "duration_sec": 4.327,
+        "exact_quantiles_ns": {
+          "end_to_end_latency": {
+            "p50": 530208.0,
+            "p90": 694209.0,
+            "p99": 17137916.0,
+            "p99.9": 26985083.0
+          },
+          "queue_wait": {
+            "p50": 502708.0,
+            "p90": 585833.0,
+            "p99": 17015750.0,
+            "p99.9": 26186917.0
+          },
+          "service_time": {
+            "p50": 60875.0,
+            "p90": 143291.0,
+            "p99": 391167.0,
+            "p99.9": 5603500.0
+          }
+        },
+        "queue_wait_dominance_ratio": 43.5,
+        "configured_parameters": {
+          "policy": "fixed_w64",
+          "batch_size": 4,
+          "batch_min": 1,
+          "batch_max": 32,
+          "batch_init": 4,
+          "deadline_us": 500,
+          "alpha": 0.2,
+          "low_threshold": 0.2,
+          "high_threshold": 0.8,
+          "grow_factor": 1.25,
+          "shrink_factor": 0.8,
+          "queue_capacity": 512
+        }
+      },
+      "deadline_flush": {
+        "policy": "deadline_flush",
+        "workload": "burst_step",
+        "events_offered": 5233,
+        "events_admitted": 5233,
+        "events_emitted": 5233,
+        "events_dropped": 0,
+        "conservation_delta": 0,
+        "duration_sec": 4.104,
+        "exact_quantiles_ns": {
+          "end_to_end_latency": {
+            "p50": 524125.0,
+            "p90": 578417.0,
+            "p99": 833292.0,
+            "p99.9": 1674000.0
+          },
+          "queue_wait": {
+            "p50": 473708.0,
+            "p90": 520417.0,
+            "p99": 735042.0,
+            "p99.9": 1622709.0
+          },
+          "service_time": {
+            "p50": 51875.0,
+            "p90": 111958.0,
+            "p99": 196792.0,
+            "p99.9": 291083.0
+          }
+        },
+        "queue_wait_dominance_ratio": 3.735,
+        "configured_parameters": {
+          "policy": "deadline_flush",
+          "batch_size": 4,
+          "batch_min": 1,
+          "batch_max": 32,
+          "batch_init": 4,
+          "deadline_us": 500,
+          "alpha": 0.2,
+          "low_threshold": 0.2,
+          "high_threshold": 0.8,
+          "grow_factor": 1.25,
+          "shrink_factor": 0.8,
+          "queue_capacity": 512
+        }
+      },
+      "adaptive_grow": {
+        "policy": "adaptive_grow",
+        "workload": "burst_step",
+        "events_offered": 5233,
+        "events_admitted": 5233,
+        "events_emitted": 5233,
+        "events_dropped": 0,
+        "conservation_delta": 0,
+        "duration_sec": 4.085,
+        "exact_quantiles_ns": {
+          "end_to_end_latency": {
+            "p50": 41000.0,
+            "p90": 85666.0,
+            "p99": 825250.0,
+            "p99.9": 8673666.0
+          },
+          "queue_wait": {
+            "p50": 16167.0,
+            "p90": 34000.0,
+            "p99": 755750.0,
+            "p99.9": 8653750.0
+          },
+          "service_time": {
+            "p50": 22375.0,
+            "p90": 52458.0,
+            "p99": 112833.0,
+            "p99.9": 202875.0
+          }
+        },
+        "queue_wait_dominance_ratio": 6.698,
+        "configured_parameters": {
+          "policy": "adaptive_grow",
+          "batch_size": 4,
+          "batch_min": 1,
+          "batch_max": 32,
+          "batch_init": 4,
+          "deadline_us": 500,
+          "alpha": 0.2,
+          "low_threshold": 0.2,
+          "high_threshold": 0.8,
+          "grow_factor": 1.25,
+          "shrink_factor": 0.8,
+          "queue_capacity": 512
+        }
+      },
+      "adaptive_shrink": {
+        "policy": "adaptive_shrink",
+        "workload": "burst_step",
+        "events_offered": 5233,
+        "events_admitted": 5233,
+        "events_emitted": 5233,
+        "events_dropped": 0,
+        "conservation_delta": 0,
+        "duration_sec": 4.04,
+        "exact_quantiles_ns": {
+          "end_to_end_latency": {
+            "p50": 523458.0,
+            "p90": 573625.0,
+            "p99": 888167.0,
+            "p99.9": 7289125.0
+          },
+          "queue_wait": {
+            "p50": 471708.0,
+            "p90": 519167.0,
+            "p99": 732417.0,
+            "p99.9": 6931625.0
+          },
+          "service_time": {
+            "p50": 50458.0,
+            "p90": 109084.0,
+            "p99": 210666.0,
+            "p99.9": 746334.0
+          }
+        },
+        "queue_wait_dominance_ratio": 3.477,
+        "configured_parameters": {
+          "policy": "adaptive_shrink",
+          "batch_size": 4,
+          "batch_min": 1,
+          "batch_max": 32,
+          "batch_init": 4,
+          "deadline_us": 500,
+          "alpha": 0.2,
+          "low_threshold": 0.2,
+          "high_threshold": 0.8,
+          "grow_factor": 1.25,
+          "shrink_factor": 0.8,
+          "queue_capacity": 512
+        }
+      }
+    }
+  },
+  "operating_region_burst_sweep": {
+    "description": "Operating-region boundary sweep across burst factors B in {2, 5, 10, 20}",
+    "results": {
+      "B_2": {
+        "fixed_w1": {
+          "policy": "fixed_w1",
+          "workload": "burst_step",
+          "events_offered": 5233,
+          "events_admitted": 5233,
+          "events_emitted": 5233,
+          "events_dropped": 0,
+          "conservation_delta": 0,
+          "duration_sec": 8.22,
+          "exact_quantiles_ns": {
+            "end_to_end_latency": {
+              "p50": 46167.0,
+              "p90": 101333.0,
+              "p99": 270208.0,
+              "p99.9": 5401708.0
+            },
+            "queue_wait": {
+              "p50": 16625.0,
+              "p90": 28375.0,
+              "p99": 167958.0,
+              "p99.9": 5376750.0
+            },
+            "service_time": {
+              "p50": 27334.0,
+              "p90": 76417.0,
+              "p99": 133791.0,
+              "p99.9": 239459.0
+            }
+          },
+          "queue_wait_dominance_ratio": 1.255,
+          "configured_parameters": {
+            "policy": "fixed_w1",
+            "batch_size": 4,
+            "batch_min": 1,
+            "batch_max": 32,
+            "batch_init": 4,
+            "deadline_us": 500,
+            "alpha": 0.2,
+            "low_threshold": 0.2,
+            "high_threshold": 0.8,
+            "grow_factor": 1.25,
+            "shrink_factor": 0.8,
+            "queue_capacity": 512
+          }
+        },
+        "fixed_w8": {
+          "policy": "fixed_w8",
+          "workload": "burst_step",
+          "events_offered": 5233,
+          "events_admitted": 5233,
+          "events_emitted": 5233,
+          "events_dropped": 0,
+          "conservation_delta": 0,
+          "duration_sec": 8.203,
+          "exact_quantiles_ns": {
+            "end_to_end_latency": {
+              "p50": 537917.0,
+              "p90": 600292.0,
+              "p99": 804542.0,
+              "p99.9": 5460208.0
+            },
+            "queue_wait": {
+              "p50": 506250.0,
+              "p90": 521250.0,
+              "p99": 683625.0,
+              "p99.9": 5321833.0
+            },
+            "service_time": {
+              "p50": 42041.0,
+              "p90": 98834.0,
+              "p99": 169417.0,
+              "p99.9": 287542.0
+            }
+          },
+          "queue_wait_dominance_ratio": 4.035,
+          "configured_parameters": {
+            "policy": "fixed_w8",
+            "batch_size": 4,
+            "batch_min": 1,
+            "batch_max": 32,
+            "batch_init": 4,
+            "deadline_us": 500,
+            "alpha": 0.2,
+            "low_threshold": 0.2,
+            "high_threshold": 0.8,
+            "grow_factor": 1.25,
+            "shrink_factor": 0.8,
+            "queue_capacity": 512
+          }
+        },
+        "fixed_w32": {
+          "policy": "fixed_w32",
+          "workload": "burst_step",
+          "events_offered": 5233,
+          "events_admitted": 5233,
+          "events_emitted": 5233,
+          "events_dropped": 0,
+          "conservation_delta": 0,
+          "duration_sec": 8.215,
+          "exact_quantiles_ns": {
+            "end_to_end_latency": {
+              "p50": 539083.0,
+              "p90": 603292.0,
+              "p99": 841458.0,
+              "p99.9": 5053125.0
+            },
+            "queue_wait": {
+              "p50": 507333.0,
+              "p90": 521791.0,
+              "p99": 707750.0,
+              "p99.9": 4917458.0
+            },
+            "service_time": {
+              "p50": 42666.0,
+              "p90": 100583.0,
+              "p99": 172542.0,
+              "p99.9": 413583.0
+            }
+          },
+          "queue_wait_dominance_ratio": 4.102,
+          "configured_parameters": {
+            "policy": "fixed_w32",
+            "batch_size": 4,
+            "batch_min": 1,
+            "batch_max": 32,
+            "batch_init": 4,
+            "deadline_us": 500,
+            "alpha": 0.2,
+            "low_threshold": 0.2,
+            "high_threshold": 0.8,
+            "grow_factor": 1.25,
+            "shrink_factor": 0.8,
+            "queue_capacity": 512
+          }
+        },
+        "adaptive_grow": {
+          "policy": "adaptive_grow",
+          "workload": "burst_step",
+          "events_offered": 5233,
+          "events_admitted": 5233,
+          "events_emitted": 5233,
+          "events_dropped": 0,
+          "conservation_delta": 0,
+          "duration_sec": 8.205,
+          "exact_quantiles_ns": {
+            "end_to_end_latency": {
+              "p50": 46917.0,
+              "p90": 105709.0,
+              "p99": 266042.0,
+              "p99.9": 2584667.0
+            },
+            "queue_wait": {
+              "p50": 16667.0,
+              "p90": 28042.0,
+              "p99": 165917.0,
+              "p99.9": 2355458.0
+            },
+            "service_time": {
+              "p50": 28459.0,
+              "p90": 79042.0,
+              "p99": 137292.0,
+              "p99.9": 254833.0
+            }
+          },
+          "queue_wait_dominance_ratio": 1.208,
+          "configured_parameters": {
+            "policy": "adaptive_grow",
+            "batch_size": 4,
+            "batch_min": 1,
+            "batch_max": 32,
+            "batch_init": 4,
+            "deadline_us": 500,
+            "alpha": 0.2,
+            "low_threshold": 0.2,
+            "high_threshold": 0.8,
+            "grow_factor": 1.25,
+            "shrink_factor": 0.8,
+            "queue_capacity": 512
+          }
+        }
+      },
+      "B_5": {
+        "fixed_w1": {
+          "policy": "fixed_w1",
+          "workload": "burst_step",
+          "events_offered": 5233,
+          "events_admitted": 5233,
+          "events_emitted": 5233,
+          "events_dropped": 0,
+          "conservation_delta": 0,
+          "duration_sec": 5.129,
+          "exact_quantiles_ns": {
+            "end_to_end_latency": {
+              "p50": 41917.0,
+              "p90": 92208.0,
+              "p99": 615916.0,
+              "p99.9": 14037333.0
+            },
+            "queue_wait": {
+              "p50": 16125.0,
+              "p90": 31042.0,
+              "p99": 527958.0,
+              "p99.9": 14011750.0
+            },
+            "service_time": {
+              "p50": 23875.0,
+              "p90": 61833.0,
+              "p99": 126041.0,
+              "p99.9": 461834.0
+            }
+          },
+          "queue_wait_dominance_ratio": 4.189,
+          "configured_parameters": {
+            "policy": "fixed_w1",
+            "batch_size": 4,
+            "batch_min": 1,
+            "batch_max": 32,
+            "batch_init": 4,
+            "deadline_us": 500,
+            "alpha": 0.2,
+            "low_threshold": 0.2,
+            "high_threshold": 0.8,
+            "grow_factor": 1.25,
+            "shrink_factor": 0.8,
+            "queue_capacity": 512
+          }
+        },
+        "fixed_w8": {
+          "policy": "fixed_w8",
+          "workload": "burst_step",
+          "events_offered": 5233,
+          "events_admitted": 5233,
+          "events_emitted": 5233,
+          "events_dropped": 0,
+          "conservation_delta": 0,
+          "duration_sec": 5.093,
+          "exact_quantiles_ns": {
+            "end_to_end_latency": {
+              "p50": 530541.0,
+              "p90": 586375.0,
+              "p99": 920083.0,
+              "p99.9": 7866709.0
+            },
+            "queue_wait": {
+              "p50": 504291.0,
+              "p90": 521292.0,
+              "p99": 772458.0,
+              "p99.9": 5062959.0
+            },
+            "service_time": {
+              "p50": 43708.0,
+              "p90": 99667.0,
+              "p99": 194375.0,
+              "p99.9": 1059833.0
+            }
+          },
+          "queue_wait_dominance_ratio": 3.974,
+          "configured_parameters": {
+            "policy": "fixed_w8",
+            "batch_size": 4,
+            "batch_min": 1,
+            "batch_max": 32,
+            "batch_init": 4,
+            "deadline_us": 500,
+            "alpha": 0.2,
+            "low_threshold": 0.2,
+            "high_threshold": 0.8,
+            "grow_factor": 1.25,
+            "shrink_factor": 0.8,
+            "queue_capacity": 512
+          }
+        },
+        "fixed_w32": {
+          "policy": "fixed_w32",
+          "workload": "burst_step",
+          "events_offered": 5233,
+          "events_admitted": 5233,
+          "events_emitted": 5233,
+          "events_dropped": 0,
+          "conservation_delta": 0,
+          "duration_sec": 5.09,
+          "exact_quantiles_ns": {
+            "end_to_end_latency": {
+              "p50": 530000.0,
+              "p90": 584000.0,
+              "p99": 943417.0,
+              "p99.9": 4730792.0
+            },
+            "queue_wait": {
+              "p50": 504250.0,
+              "p90": 520917.0,
+              "p99": 794708.0,
+              "p99.9": 3564625.0
+            },
+            "service_time": {
+              "p50": 43375.0,
+              "p90": 97625.0,
+              "p99": 181250.0,
+              "p99.9": 439750.0
+            }
+          },
+          "queue_wait_dominance_ratio": 4.385,
+          "configured_parameters": {
+            "policy": "fixed_w32",
+            "batch_size": 4,
+            "batch_min": 1,
+            "batch_max": 32,
+            "batch_init": 4,
+            "deadline_us": 500,
+            "alpha": 0.2,
+            "low_threshold": 0.2,
+            "high_threshold": 0.8,
+            "grow_factor": 1.25,
+            "shrink_factor": 0.8,
+            "queue_capacity": 512
+          }
+        },
+        "adaptive_grow": {
+          "policy": "adaptive_grow",
+          "workload": "burst_step",
+          "events_offered": 5233,
+          "events_admitted": 5233,
+          "events_emitted": 5233,
+          "events_dropped": 0,
+          "conservation_delta": 0,
+          "duration_sec": 5.134,
+          "exact_quantiles_ns": {
+            "end_to_end_latency": {
+              "p50": 42291.0,
+              "p90": 89209.0,
+              "p99": 557916.0,
+              "p99.9": 6420083.0
+            },
+            "queue_wait": {
+              "p50": 16709.0,
+              "p90": 32375.0,
+              "p99": 506709.0,
+              "p99.9": 6352125.0
+            },
+            "service_time": {
+              "p50": 23542.0,
+              "p90": 59708.0,
+              "p99": 109042.0,
+              "p99.9": 192041.0
+            }
+          },
+          "queue_wait_dominance_ratio": 4.647,
+          "configured_parameters": {
+            "policy": "adaptive_grow",
+            "batch_size": 4,
+            "batch_min": 1,
+            "batch_max": 32,
+            "batch_init": 4,
+            "deadline_us": 500,
+            "alpha": 0.2,
+            "low_threshold": 0.2,
+            "high_threshold": 0.8,
+            "grow_factor": 1.25,
+            "shrink_factor": 0.8,
+            "queue_capacity": 512
+          }
+        }
+      },
+      "B_10": {
+        "fixed_w1": {
+          "policy": "fixed_w1",
+          "workload": "burst_step",
+          "events_offered": 5233,
+          "events_admitted": 5233,
+          "events_emitted": 5233,
+          "events_dropped": 0,
+          "conservation_delta": 0,
+          "duration_sec": 4.023,
+          "exact_quantiles_ns": {
+            "end_to_end_latency": {
+              "p50": 38750.0,
+              "p90": 70292.0,
+              "p99": 241708.0,
+              "p99.9": 805792.0
+            },
+            "queue_wait": {
+              "p50": 15458.0,
+              "p90": 30000.0,
+              "p99": 157667.0,
+              "p99.9": 686125.0
+            },
+            "service_time": {
+              "p50": 21417.0,
+              "p90": 47000.0,
+              "p99": 89917.0,
+              "p99.9": 154041.0
+            }
+          },
+          "queue_wait_dominance_ratio": 1.753,
+          "configured_parameters": {
+            "policy": "fixed_w1",
+            "batch_size": 4,
+            "batch_min": 1,
+            "batch_max": 32,
+            "batch_init": 4,
+            "deadline_us": 500,
+            "alpha": 0.2,
+            "low_threshold": 0.2,
+            "high_threshold": 0.8,
+            "grow_factor": 1.25,
+            "shrink_factor": 0.8,
+            "queue_capacity": 512
+          }
+        },
+        "fixed_w8": {
+          "policy": "fixed_w8",
+          "workload": "burst_step",
+          "events_offered": 5233,
+          "events_admitted": 5233,
+          "events_emitted": 5233,
+          "events_dropped": 0,
+          "conservation_delta": 0,
+          "duration_sec": 4.128,
+          "exact_quantiles_ns": {
+            "end_to_end_latency": {
+              "p50": 522625.0,
+              "p90": 569125.0,
+              "p99": 762958.0,
+              "p99.9": 10435583.0
+            },
+            "queue_wait": {
+              "p50": 472458.0,
+              "p90": 518667.0,
+              "p99": 677667.0,
+              "p99.9": 10353042.0
+            },
+            "service_time": {
+              "p50": 47875.0,
+              "p90": 104375.0,
+              "p99": 180250.0,
+              "p99.9": 533666.0
+            }
+          },
+          "queue_wait_dominance_ratio": 3.76,
+          "configured_parameters": {
+            "policy": "fixed_w8",
+            "batch_size": 4,
+            "batch_min": 1,
+            "batch_max": 32,
+            "batch_init": 4,
+            "deadline_us": 500,
+            "alpha": 0.2,
+            "low_threshold": 0.2,
+            "high_threshold": 0.8,
+            "grow_factor": 1.25,
+            "shrink_factor": 0.8,
+            "queue_capacity": 512
+          }
+        },
+        "fixed_w32": {
+          "policy": "fixed_w32",
+          "workload": "burst_step",
+          "events_offered": 5233,
+          "events_admitted": 5233,
+          "events_emitted": 5233,
+          "events_dropped": 0,
+          "conservation_delta": 0,
+          "duration_sec": 4.039,
+          "exact_quantiles_ns": {
+            "end_to_end_latency": {
+              "p50": 522292.0,
+              "p90": 564875.0,
+              "p99": 695583.0,
+              "p99.9": 1773417.0
+            },
+            "queue_wait": {
+              "p50": 468500.0,
+              "p90": 517500.0,
+              "p99": 604208.0,
+              "p99.9": 1752458.0
+            },
+            "service_time": {
+              "p50": 47333.0,
+              "p90": 101667.0,
+              "p99": 158292.0,
+              "p99.9": 265500.0
+            }
+          },
+          "queue_wait_dominance_ratio": 3.817,
+          "configured_parameters": {
+            "policy": "fixed_w32",
+            "batch_size": 4,
+            "batch_min": 1,
+            "batch_max": 32,
+            "batch_init": 4,
+            "deadline_us": 500,
+            "alpha": 0.2,
+            "low_threshold": 0.2,
+            "high_threshold": 0.8,
+            "grow_factor": 1.25,
+            "shrink_factor": 0.8,
+            "queue_capacity": 512
+          }
+        },
+        "adaptive_grow": {
+          "policy": "adaptive_grow",
+          "workload": "burst_step",
+          "events_offered": 5233,
+          "events_admitted": 5233,
+          "events_emitted": 5233,
+          "events_dropped": 0,
+          "conservation_delta": 0,
+          "duration_sec": 4.038,
+          "exact_quantiles_ns": {
+            "end_to_end_latency": {
+              "p50": 38875.0,
+              "p90": 70167.0,
+              "p99": 165875.0,
+              "p99.9": 2998750.0
+            },
+            "queue_wait": {
+              "p50": 15334.0,
+              "p90": 28208.0,
+              "p99": 106125.0,
+              "p99.9": 2694250.0
+            },
+            "service_time": {
+              "p50": 21541.0,
+              "p90": 45041.0,
+              "p99": 91125.0,
+              "p99.9": 310542.0
+            }
+          },
+          "queue_wait_dominance_ratio": 1.165,
+          "configured_parameters": {
+            "policy": "adaptive_grow",
+            "batch_size": 4,
+            "batch_min": 1,
+            "batch_max": 32,
+            "batch_init": 4,
+            "deadline_us": 500,
+            "alpha": 0.2,
+            "low_threshold": 0.2,
+            "high_threshold": 0.8,
+            "grow_factor": 1.25,
+            "shrink_factor": 0.8,
+            "queue_capacity": 512
+          }
+        }
+      },
+      "B_20": {
+        "fixed_w1": {
+          "policy": "fixed_w1",
+          "workload": "burst_step",
+          "events_offered": 5233,
+          "events_admitted": 5233,
+          "events_emitted": 5233,
+          "events_dropped": 0,
+          "conservation_delta": 0,
+          "duration_sec": 3.518,
+          "exact_quantiles_ns": {
+            "end_to_end_latency": {
+              "p50": 38875.0,
+              "p90": 74458.0,
+              "p99": 247459.0,
+              "p99.9": 1651458.0
+            },
+            "queue_wait": {
+              "p50": 14708.0,
+              "p90": 34958.0,
+              "p99": 199125.0,
+              "p99.9": 1083042.0
+            },
+            "service_time": {
+              "p50": 21209.0,
+              "p90": 43625.0,
+              "p99": 100542.0,
+              "p99.9": 184958.0
+            }
+          },
+          "queue_wait_dominance_ratio": 1.981,
+          "configured_parameters": {
+            "policy": "fixed_w1",
+            "batch_size": 4,
+            "batch_min": 1,
+            "batch_max": 32,
+            "batch_init": 4,
+            "deadline_us": 500,
+            "alpha": 0.2,
+            "low_threshold": 0.2,
+            "high_threshold": 0.8,
+            "grow_factor": 1.25,
+            "shrink_factor": 0.8,
+            "queue_capacity": 512
+          }
+        },
+        "fixed_w8": {
+          "policy": "fixed_w8",
+          "workload": "burst_step",
+          "events_offered": 5233,
+          "events_admitted": 5233,
+          "events_emitted": 5233,
+          "events_dropped": 0,
+          "conservation_delta": 0,
+          "duration_sec": 3.516,
+          "exact_quantiles_ns": {
+            "end_to_end_latency": {
+              "p50": 445500.0,
+              "p90": 564250.0,
+              "p99": 834292.0,
+              "p99.9": 5124667.0
+            },
+            "queue_wait": {
+              "p50": 378209.0,
+              "p90": 516041.0,
+              "p99": 704750.0,
+              "p99.9": 5011292.0
+            },
+            "service_time": {
+              "p50": 62875.0,
+              "p90": 137833.0,
+              "p99": 212584.0,
+              "p99.9": 353000.0
+            }
+          },
+          "queue_wait_dominance_ratio": 3.315,
+          "configured_parameters": {
+            "policy": "fixed_w8",
+            "batch_size": 4,
+            "batch_min": 1,
+            "batch_max": 32,
+            "batch_init": 4,
+            "deadline_us": 500,
+            "alpha": 0.2,
+            "low_threshold": 0.2,
+            "high_threshold": 0.8,
+            "grow_factor": 1.25,
+            "shrink_factor": 0.8,
+            "queue_capacity": 512
+          }
+        },
+        "fixed_w32": {
+          "policy": "fixed_w32",
+          "workload": "burst_step",
+          "events_offered": 5233,
+          "events_admitted": 5233,
+          "events_emitted": 5233,
+          "events_dropped": 0,
+          "conservation_delta": 0,
+          "duration_sec": 3.505,
+          "exact_quantiles_ns": {
+            "end_to_end_latency": {
+              "p50": 468333.0,
+              "p90": 566250.0,
+              "p99": 700500.0,
+              "p99.9": 3192625.0
+            },
+            "queue_wait": {
+              "p50": 393458.0,
+              "p90": 516083.0,
+              "p99": 601625.0,
+              "p99.9": 2998042.0
+            },
+            "service_time": {
+              "p50": 63417.0,
+              "p90": 142291.0,
+              "p99": 239584.0,
+              "p99.9": 552917.0
+            }
+          },
+          "queue_wait_dominance_ratio": 2.511,
+          "configured_parameters": {
+            "policy": "fixed_w32",
+            "batch_size": 4,
+            "batch_min": 1,
+            "batch_max": 32,
+            "batch_init": 4,
+            "deadline_us": 500,
+            "alpha": 0.2,
+            "low_threshold": 0.2,
+            "high_threshold": 0.8,
+            "grow_factor": 1.25,
+            "shrink_factor": 0.8,
+            "queue_capacity": 512
+          }
+        },
+        "adaptive_grow": {
+          "policy": "adaptive_grow",
+          "workload": "burst_step",
+          "events_offered": 5233,
+          "events_admitted": 5233,
+          "events_emitted": 5233,
+          "events_dropped": 0,
+          "conservation_delta": 0,
+          "duration_sec": 3.525,
+          "exact_quantiles_ns": {
+            "end_to_end_latency": {
+              "p50": 38166.0,
+              "p90": 71084.0,
+              "p99": 167166.0,
+              "p99.9": 566208.0
+            },
+            "queue_wait": {
+              "p50": 14750.0,
+              "p90": 33875.0,
+              "p99": 126542.0,
+              "p99.9": 270708.0
+            },
+            "service_time": {
+              "p50": 20958.0,
+              "p90": 41583.0,
+              "p99": 91833.0,
+              "p99.9": 176375.0
+            }
+          },
+          "queue_wait_dominance_ratio": 1.378,
+          "configured_parameters": {
+            "policy": "adaptive_grow",
+            "batch_size": 4,
+            "batch_min": 1,
+            "batch_max": 32,
+            "batch_init": 4,
+            "deadline_us": 500,
+            "alpha": 0.2,
+            "low_threshold": 0.2,
+            "high_threshold": 0.8,
+            "grow_factor": 1.25,
+            "shrink_factor": 0.8,
+            "queue_capacity": 512
+          }
+        }
+      }
+    }
+  },
+  "prospective_precision_design": {
+    "target_epoch": "KLS-10",
+    "primary_endpoint": "Paired log-ratio of trial-level p99 end-to-end latency",
+    "practical_threshold_delta_us": 500.0,
+    "independent_units": "5 trial blocks with distinct PRNG seeds [42, 43, 44, 45, 46]",
+    "thermal_drift_mitigation": "Randomized / counterbalanced policy dispatch within blocks",
+    "falsification_margins": {
+      "equivalence_margin_pct": 5.0,
+      "max_controller_overhead_pct": 10.0,
+      "min_conservation_integrity": 1.0
+    },
+    "stopping_plan": "Fixed sample design (N=5 seeds x 9 policies x 2 regimes = 90 confirmatory trials), no early stopping"
+  }
+}
