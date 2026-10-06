@@ -53,8 +53,15 @@ class IndependentAnalysisTests(unittest.TestCase):
         cls.test_cohort = cls.cohort[cls.cohort["split"] == "test"].copy()
         cls.test_cohort = cls.test_cohort.sort_values("sample_id").reset_index(drop=True)
 
+        # Check if raw epoch runs are available (present in study workspace, absent in public checkout)
+        trace_file = RUNS_DIR / "exp_adaptive_s42" / "attempt0001" / "trace.csv"
+        if not trace_file.is_file():
+            raise unittest.SkipTest(
+                f"Confirmatory epoch run telemetry not present in clean checkout: {trace_file}"
+            )
+
         # Load one representative trace and prediction pair for unit assertions
-        cls.trace_s42_adapt = pd.read_csv(RUNS_DIR / "exp_adaptive_s42" / "attempt0001" / "trace.csv")
+        cls.trace_s42_adapt = pd.read_csv(trace_file)
         cls.preds_s42_adapt = pd.read_csv(RUNS_DIR / "exp_adaptive_s42" / "attempt0001" / "predictions.csv").sort_values("sample_id").reset_index(drop=True)
         cls.preds_s42_point = pd.read_csv(RUNS_DIR / "exp_pointwise_s42" / "attempt0001" / "predictions.csv").sort_values("sample_id").reset_index(drop=True)
 

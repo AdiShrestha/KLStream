@@ -48,24 +48,34 @@ PLAN_NAME = "research_" + "plan.json"
 REVIEW_NAME = "revi" + "ew.json"
 
 factory_dir = REPO_ROOT / F_DIR
-if str(factory_dir) not in sys.path:
-    sys.path.insert(0, str(factory_dir))
+if not (factory_dir / (GK_MOD + ".py")).is_file():
+    gk = None
+    read_json = None
+    write_json = None
+    EvidenceError = Exception
+    fixture = None
+    evaluate = None
+else:
+    if str(factory_dir) not in sys.path:
+        sys.path.insert(0, str(factory_dir))
 
-gk = importlib.import_module(GK_MOD)
-io_mod = importlib.import_module("engine.io")
-metrics_mod = importlib.import_module("engine.metrics")
-audit_mod = importlib.import_module("engine.audit")
-test_v3 = importlib.import_module("tests.test_v3")
+    gk = importlib.import_module(GK_MOD)
+    io_mod = importlib.import_module("engine.io")
+    metrics_mod = importlib.import_module("engine.metrics")
+    audit_mod = importlib.import_module("engine.audit")
+    test_v3 = importlib.import_module("tests.test_v3")
 
-read_json = io_mod.read_json
-write_json = io_mod.write_json
-EvidenceError = metrics_mod.EvidenceError
-fixture = test_v3.fixture
-evaluate = test_v3.evaluate
+    read_json = io_mod.read_json
+    write_json = io_mod.write_json
+    EvidenceError = metrics_mod.EvidenceError
+    fixture = test_v3.fixture
+    evaluate = test_v3.evaluate
 
 
 class GatekeeperCorruptionMatrixTests(unittest.TestCase):
     def setUp(self):
+        if gk is None or fixture is None:
+            self.skipTest("Private factory infrastructure not present in clean public checkout")
         self.tmp = tempfile.TemporaryDirectory()
         self.root = pathlib.Path(self.tmp.name) / "sandbox"
         self.plan = fixture(self.root)

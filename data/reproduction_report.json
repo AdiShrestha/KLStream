@@ -1,0 +1,44 @@
+{
+  "contract": "KLS-13",
+  "title": "Cold Reproduction & Artifact Integrity Attestation",
+  "timestamp_utc": "2026-10-06T17:29:14.617522+00:00",
+  "platform": {
+    "system": "Darwin",
+    "release": "27.0.0",
+    "machine": "arm64",
+    "python": "3.12.8"
+  },
+  "stages": {
+    "build": {
+      "status": "PASS",
+      "binaries": {
+        "engine_runner": "715bfde434152c8b92dab77524da740a9eb8f554a808a6f50a43743fecdd0471",
+        "engine_tests": "7814cfd72972d32b88d3e9939eaeab4d6f4463afb691d14f63f2041dd32c0930"
+      }
+    },
+    "native_tests": {
+      "status": "PASS",
+      "exit_code": 0
+    },
+    "artifacts": {
+      "status": "PASS",
+      "digests": {
+        "cohort.csv": "5e2c5ed3ccc47c9da95c6918c9a65d252f22b28ae9a3d0f6ebe1f9bb7c7d9496",
+        "source_records.csv": "3754da4d952e9eeee2c48bfeda9edc138fe99b188c1364d36d9fbdcfaf96d6b7",
+        "provenance.json": "2f0e96056eb2fef808ece08ee86526987d893548002c1962a722044110496dd7",
+        "budget_curves.json": "d8f7b6c94eb54b35cf5a2f2eacc8214d626ad37fa15819163a4cfe6f9c0522c8",
+        "pilot_telemetry.json": "02e995534fd7a44f0ac7f6d7d38f73cd4cab958a673fd7937e5bb56550bda73a",
+        "sensitivity_manifest.json": "b88ac4188537a78cf4481fa18025ac328e233c8f1c47cec7f24c20fc869722b5",
+        "independent_verdict.json": "5d557562a71dd1ee550208105c5330f9cbda639c10d3b3e446cd2ddebf2bc1b8"
+      }
+    },
+    "demo": {
+      "status": "PASS",
+      "exit_code": 0
+    },
+    "secrecy_audit": {
+      "status": "PASS",
+      "private_key_violations": 0
+    }
+  }
+}

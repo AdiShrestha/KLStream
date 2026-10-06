@@ -57,6 +57,8 @@ if(KLSTREAM_BUILD_TESTS)
     set_tests_properties(sensitivity_test PROPERTIES TIMEOUT 30)
     add_test(NAME independent_analysis_test COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/source/tests/test_independent_analysis.py)
     set_tests_properties(independent_analysis_test PROPERTIES TIMEOUT 45)
+    add_test(NAME demo_quickstart_test COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/source/experiments/demo.py)
+    set_tests_properties(demo_quickstart_test PROPERTIES TIMEOUT 30)
   endif()
 
   add_test(NAME engine_correctness COMMAND engine_tests)
