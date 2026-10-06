@@ -33,6 +33,9 @@ def parse_args():
     parser.add_argument("--policy", default=None, help="Microbatching policy name")
     parser.add_argument("--batch-size", type=int, default=None, help="Fixed batch size")
     parser.add_argument("--deadline-us", type=int, default=None, help="Microbatch deadline in microseconds")
+    parser.add_argument("--workload", default=None, choices=["replay", "poisson", "pareto", "burst_step", None], help="Workload arrival schedule type")
+    parser.add_argument("--workload-rate", type=float, default=None, help="Workload rate in Hz")
+    parser.add_argument("--schedule", default=None, help="Explicit path to arrival schedule CSV")
     parser.add_argument("positional", nargs="*", help="Positional arguments fallback")
     args = parser.parse_args()
 
@@ -334,6 +337,24 @@ def main():
     grow_factor = float(config.get("grow_factor", 1.25))
     shrink_factor = float(config.get("shrink_factor", 0.8))
 
+    schedule_path = args.schedule
+    workload_type = args.workload or config.get("workload")
+    if not schedule_path and workload_type:
+        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+        from workload_generator import create_generator, write_schedule_csv
+        w_rate = float(args.workload_rate if args.workload_rate is not None else config.get("workload_rate", 200.0))
+        eval_sample_ids = [r["sample_id"] for r in eval_rows]
+        gen = create_generator(
+            workload_type=workload_type,
+            cohort_path=cohort_path,
+            rate_hz=w_rate,
+            seed=seed,
+        )
+        points = gen.generate(count=len(eval_sample_ids), sample_ids=eval_sample_ids)
+        sched_file = output_dir / "schedule.csv"
+        write_schedule_csv(points, sched_file)
+        schedule_path = str(sched_file)
+
     cmd = [
         str(engine_bin),
         "--train", str(train_feat_path),
@@ -356,6 +377,8 @@ def main():
         "--grow-factor", str(grow_factor),
         "--shrink-factor", str(shrink_factor),
     ]
+    if schedule_path:
+        cmd.extend(["--schedule", str(schedule_path)])
 
     proc = subprocess.run(cmd, cwd=str(root), capture_output=True, text=True)
 

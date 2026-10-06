@@ -47,6 +47,8 @@ if(KLSTREAM_BUILD_TESTS)
     set_tests_properties(data_provenance_test PROPERTIES TIMEOUT 30)
     add_test(NAME corruption_matrix_test COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/source/tests/test_gatekeeper_corruption_matrix.py)
     set_tests_properties(corruption_matrix_test PROPERTIES TIMEOUT 60)
+    add_test(NAME causal_parser_test COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/source/tests/test_causal_parser.py)
+    set_tests_properties(causal_parser_test PROPERTIES TIMEOUT 30)
   endif()
 
   add_test(NAME engine_correctness COMMAND engine_tests)

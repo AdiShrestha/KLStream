@@ -28,6 +28,7 @@ struct Options {
     std::string eval_path;
     std::string output_path;
     std::string trace_path;
+    std::string schedule_path;
     std::string policy{"adaptive_grow"};
     std::uint32_t seed{42};
     std::size_t trees{100};
@@ -170,6 +171,7 @@ void print_usage(const char* prog) {
               << "  --eval <path>              Path to evaluation data CSV (sample_id, f0, f1, ...)\n"
               << "  --output <path>            Path to output predictions CSV (sample_id, score)\n"
               << "  --trace-log <path>         Path to output event telemetry trace CSV\n"
+              << "  --schedule <path>          Path to arrival schedule CSV (event_id, sample_id, delay_ns, ...)\n"
               << "  --policy <name>            Microbatching policy: fixed_w1, fixed_w_grid, fixed_w4..64, deadline_flush, adaptive_grow, adaptive_shrink (default: adaptive_grow)\n"
               << "  --batch-size <int>         Fixed batch size (default: 4)\n"
               << "  --batch-min <int>          Minimum batch size (default: 1)\n"
@@ -203,6 +205,8 @@ Options parse_arguments(int argc, char* argv[]) {
             opt.output_path = argv[++i];
         } else if (arg == "--trace-log" && i + 1 < argc) {
             opt.trace_path = argv[++i];
+        } else if (arg == "--schedule" && i + 1 < argc) {
+            opt.schedule_path = argv[++i];
         } else if (arg == "--policy" && i + 1 < argc) {
             opt.policy = argv[++i];
         } else if (arg == "--batch-size" && i + 1 < argc) {
@@ -386,9 +390,57 @@ int main(int argc, char* argv[]) {
         std::vector<ScoredItem> scored_results;
         scored_results.reserve(offered_count);
 
+        // Load arrival schedule if specified
+        std::vector<std::uint64_t> schedule_delays_ns;
+        if (!opt.schedule_path.empty()) {
+            std::ifstream sfile(opt.schedule_path);
+            if (!sfile.is_open()) {
+                throw std::runtime_error("Cannot open schedule file: " + opt.schedule_path);
+            }
+            std::string sline;
+            bool sfirst = true;
+            while (std::getline(sfile, sline)) {
+                if (sline.empty()) continue;
+                auto stokens = split_csv_line(sline);
+                if (stokens.empty()) continue;
+                if (sfirst) {
+                    sfirst = false;
+                    if (stokens[0] == "event_id") continue;
+                }
+                if (stokens.size() >= 3) {
+                    try {
+                        schedule_delays_ns.push_back(std::stoull(stokens[2]));
+                    } catch (...) {
+                        schedule_delays_ns.push_back(0);
+                    }
+                } else if (stokens.size() >= 2) {
+                    try {
+                        schedule_delays_ns.push_back(std::stoull(stokens[1]));
+                    } catch (...) {
+                        schedule_delays_ns.push_back(0);
+                    }
+                }
+            }
+        }
+
         // Thread 1: Ingestion / Source thread
         std::thread producer([&]() {
             for (std::size_t i = 0; i < offered_count; ++i) {
+                if (i < schedule_delays_ns.size() && schedule_delays_ns[i] > 0) {
+                    uint64_t d_ns = schedule_delays_ns[i];
+                    if (d_ns >= 50'000) {
+                        std::this_thread::sleep_for(std::chrono::nanoseconds(d_ns));
+                    } else {
+                        auto start_wait = std::chrono::steady_clock::now();
+                        while (true) {
+                            auto elapsed = static_cast<uint64_t>(
+                                std::chrono::duration_cast<std::chrono::nanoseconds>(
+                                    std::chrono::steady_clock::now() - start_wait).count());
+                            if (elapsed >= d_ns) break;
+                        }
+                    }
+                }
+
                 auto now_offered = std::chrono::steady_clock::now();
                 uint64_t t_offered_ns = static_cast<uint64_t>(
                     std::chrono::duration_cast<std::chrono::nanoseconds>(
