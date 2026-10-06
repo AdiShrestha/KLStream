@@ -1,0 +1,313 @@
+{
+  "contract": "KLS-12",
+  "title": "Independent Statistical Analysis & Verdicts",
+  "timestamp_utc": "2026-10-06T17:08:15.824371+00:00",
+  "platform": {
+    "system": "Darwin",
+    "release": "27.0.0",
+    "machine": "arm64",
+    "python": "3.12.8"
+  },
+  "cohort_summary": {
+    "cohort_path": "data/cohort.csv",
+    "test_events": 2153,
+    "test_positives": 46,
+    "test_prevalence": 0.021365536460752437,
+    "test_groups": 48
+  },
+  "per_seed_telemetry": {
+    "adaptive": {
+      "42": {
+        "ap": 0.9164149130530128,
+        "auroc": 0.9973277480860898,
+        "quantiles": {
+          "p50": 18770167.0,
+          "p90": 33597291.0,
+          "p99": 36776083.0,
+          "p999": 37115875.0,
+          "p99_wait": 36321916.0,
+          "p99_svc": 581541.0
+        },
+        "events_offered": 2153,
+        "events_emitted": 2153,
+        "events_dropped": 0
+      },
+      "43": {
+        "ap": 0.9164149130530128,
+        "auroc": 0.9973277480860898,
+        "quantiles": {
+          "p50": 18159292.0,
+          "p90": 32416459.0,
+          "p99": 35525667.0,
+          "p999": 35810917.0,
+          "p99_wait": 35234459.0,
+          "p99_svc": 568459.0
+        },
+        "events_offered": 2153,
+        "events_emitted": 2153,
+        "events_dropped": 0
+      },
+      "44": {
+        "ap": 0.9164149130530128,
+        "auroc": 0.9973277480860898,
+        "quantiles": {
+          "p50": 19581791.0,
+          "p90": 34108958.0,
+          "p99": 37309625.0,
+          "p999": 37608625.0,
+          "p99_wait": 37214375.0,
+          "p99_svc": 532625.0
+        },
+        "events_offered": 2153,
+        "events_emitted": 2153,
+        "events_dropped": 0
+      },
+      "45": {
+        "ap": 0.9164149130530128,
+        "auroc": 0.9973277480860898,
+        "quantiles": {
+          "p50": 19948959.0,
+          "p90": 35243750.0,
+          "p99": 38318125.0,
+          "p999": 38603541.0,
+          "p99_wait": 37886167.0,
+          "p99_svc": 586291.0
+        },
+        "events_offered": 2153,
+        "events_emitted": 2153,
+        "events_dropped": 0
+      },
+      "46": {
+        "ap": 0.9164149130530128,
+        "auroc": 0.9973277480860898,
+        "quantiles": {
+          "p50": 19617000.0,
+          "p90": 35026167.0,
+          "p99": 38497500.0,
+          "p999": 38805666.0,
+          "p99_wait": 38230667.0,
+          "p99_svc": 596084.0
+        },
+        "events_offered": 2153,
+        "events_emitted": 2153,
+        "events_dropped": 0
+      }
+    },
+    "pointwise": {
+      "42": {
+        "ap": 0.9164149130530128,
+        "auroc": 0.9973277480860898,
+        "quantiles": {
+          "p50": 14396458.0,
+          "p90": 19355834.0,
+          "p99": 19674500.0,
+          "p999": 19871292.0,
+          "p99_wait": 19638250.0,
+          "p99_svc": 33083.0
+        },
+        "events_offered": 2153,
+        "events_emitted": 2153,
+        "events_dropped": 0
+      },
+      "43": {
+        "ap": 0.9164149130530128,
+        "auroc": 0.9973277480860898,
+        "quantiles": {
+          "p50": 19526625.0,
+          "p90": 20075375.0,
+          "p99": 20157042.0,
+          "p999": 20165083.0,
+          "p99_wait": 20121375.0,
+          "p99_svc": 30041.0
+        },
+        "events_offered": 2153,
+        "events_emitted": 2153,
+        "events_dropped": 0
+      },
+      "44": {
+        "ap": 0.9164149130530128,
+        "auroc": 0.9973277480860898,
+        "quantiles": {
+          "p50": 20039250.0,
+          "p90": 20874667.0,
+          "p99": 21894667.0,
+          "p999": 21900500.0,
+          "p99_wait": 21859083.0,
+          "p99_svc": 40250.0
+        },
+        "events_offered": 2153,
+        "events_emitted": 2153,
+        "events_dropped": 0
+      },
+      "45": {
+        "ap": 0.9164149130530128,
+        "auroc": 0.9973277480860898,
+        "quantiles": {
+          "p50": 14117375.0,
+          "p90": 19222834.0,
+          "p99": 19382542.0,
+          "p999": 19456250.0,
+          "p99_wait": 19347167.0,
+          "p99_svc": 20792.0
+        },
+        "events_offered": 2153,
+        "events_emitted": 2153,
+        "events_dropped": 0
+      },
+      "46": {
+        "ap": 0.9164149130530128,
+        "auroc": 0.9973277480860898,
+        "quantiles": {
+          "p50": 18388750.0,
+          "p90": 18999000.0,
+          "p99": 19205083.0,
+          "p999": 19234333.0,
+          "p99_wait": 19170541.0,
+          "p99_svc": 28625.0
+        },
+        "events_offered": 2153,
+        "events_emitted": 2153,
+        "events_dropped": 0
+      }
+    }
+  },
+  "paired_contrast": {
+    "n_pairs": 5,
+    "differences_ns": [
+      17101583.0,
+      15368625.0,
+      15414958.0,
+      18935583.0,
+      19292417.0
+    ],
+    "mean_difference_ns": 17222633.2,
+    "log_ratios": [
+      0.6255243343881176,
+      0.5667017430697605,
+      0.5330082450719829,
+      0.6815502578311516,
+      0.6954183205406999
+    ],
+    "mean_log_ratio": 0.6204405801803425,
+    "geometric_mean_ratio": 1.859747229143855
+  },
+  "bootstrap_intervals": {
+    "tail_difference_ns": {
+      "point_estimate": 17222633.2,
+      "ci_lower": 15733749.8,
+      "ci_upper": 18711516.6,
+      "alpha": 0.05,
+      "n_resamples": 10000,
+      "degenerate_variance": false
+    },
+    "geometric_mean_ratio": {
+      "point_estimate": 1.859747229143855,
+      "ci_lower": 1.759428186337873,
+      "ci_upper": 1.9657862612211559,
+      "alpha": 0.05,
+      "n_resamples": 10000,
+      "degenerate_variance": false
+    },
+    "fidelity_ap_difference": {
+      "point_estimate": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0,
+      "alpha": 0.05,
+      "n_resamples": 10000,
+      "degenerate_variance": true
+    }
+  },
+  "hypothesis_tests": {
+    "exact_paired_sign_flip": {
+      "cmp_tail_latency_p99": 0.0625,
+      "cmp_fidelity_ap": 1.0
+    },
+    "multiplicity_correction": {
+      "cmp_tail_latency_p99": {
+        "rank": 1,
+        "p_raw": 0.0625,
+        "p_adjusted": 0.125,
+        "threshold": 0.025,
+        "significant": false
+      },
+      "cmp_fidelity_ap": {
+        "rank": 2,
+        "p_raw": 1.0,
+        "p_adjusted": 1.0,
+        "threshold": 0.05,
+        "significant": false
+      }
+    }
+  },
+  "practical_significance": {
+    "delta_practical_us": 500.0,
+    "delta_practical_ns": 500000.0,
+    "mean_difference_us": 17222.63,
+    "verdict": "POINTWISE_PRACTICALLY_SUPERIOR_ON_SPARSE_REPLAY",
+    "concordance": {
+      "audit_report_checked": true,
+      "audit_decision": "inconclusive",
+      "audit_effect": 0.0,
+      "audit_ci": [
+        0.0,
+        0.0
+      ],
+      "audit_p_raw": 1.0,
+      "audit_degenerate_variance": true,
+      "concordant": true
+    }
+  },
+  "claim_graph": {
+    "claim_benchmark_feasibility": {
+      "status": "SUPPORTED",
+      "evidence": {
+        "total_events_evaluated": 21530,
+        "conservation_delta": 0,
+        "dropped_events": 0,
+        "memory_or_concurrency_faults": 0
+      },
+      "interpretation": "Adaptive microbatching processes authentic market order flow with 100% event conservation."
+    },
+    "claim_fidelity_preservation": {
+      "status": "SUPPORTED",
+      "evidence": {
+        "max_score_difference": 0.0,
+        "delta_average_precision": 0.0,
+        "delta_auroc": 0.0,
+        "bootstrap_ci": {
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "alpha": 0.05,
+          "n_resamples": 10000,
+          "degenerate_variance": true
+        }
+      },
+      "interpretation": "Adaptive microbatching maintains identical pointwise anomaly scoring fidelity across all independent seeds."
+    },
+    "tail_latency_regime_characterization": {
+      "status": "CHARACTERIZED",
+      "evidence": {
+        "mean_p99_difference_us": 17222.63,
+        "bootstrap_95ci_us": [
+          15733.75,
+          18711.52
+        ],
+        "geometric_mean_ratio": 1.8597,
+        "gmr_95ci": [
+          1.7594,
+          1.9658
+        ],
+        "exact_sign_flip_p": 0.0625,
+        "practical_verdict": "POINTWISE_PRACTICALLY_SUPERIOR_ON_SPARSE_REPLAY"
+      },
+      "interpretation": "On sparse authentic replay pacing (interarrivals > 10 ms), batching waiting time increases tail queue wait relative to pointwise dispatch, while high burst rates (evaluated in KLS-11) favor adaptive microbatching by up to 7.1x."
+    }
+  },
+  "mermaid_claim_graph": "graph TD\n    RawCohort[\"data/cohort.csv (Test Split N=2,153, 48 groups)\"] --> Runner[\"Confirmatory Epoch 4 (seeds: 42..46)\"]\n    Runner --> RawRuns[\"10 Execution Runs (trace.csv, predictions.csv)\"]\n    RawRuns --> InvCheck[\"Fail-Closed Invariants: E3 Conservation & Latency Identity\"]\n    InvCheck --> Estimators[\"Independent Estimators: Nearest-Rank Quantiles & AP/AUROC\"]\n    Estimators --> Fidelity[\"Scoring Fidelity (Delta Score == 0.0, Delta AP == 0.0)\"]\n    Estimators --> TailContrast[\"Paired Tail Latency Contrast (p99 GMR, Bootstrap CI)\"]\n    Fidelity --> ClaimFid[\"claim_fidelity_preservation: SUPPORTED\"]\n    InvCheck --> ClaimFeas[\"claim_benchmark_feasibility: SUPPORTED\"]\n    TailContrast --> RegimeChar[\"Regime Limits: Burst vs Sparse Characterization\"]",
+  "figures": {
+    "latency_comparison_svg": "docs/figures/latency_quantiles_comparison.svg",
+    "queue_wait_breakdown_svg": "docs/figures/queue_wait_breakdown.svg",
+    "scoring_fidelity_svg": "docs/figures/scoring_fidelity_parity.svg"
+  }
+}
