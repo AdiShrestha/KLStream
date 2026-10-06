@@ -78,6 +78,31 @@ class ExperimentRunnerTests(unittest.TestCase):
                 self.assertEqual(row["status"], "OK")
                 self.assertGreater(float(row["latency_us"]), 0.0)
 
+                # Verify 7-timestamp per-event schema
+                t_offered = int(row["t_offered_ns"])
+                t_released = int(row["t_released_ns"])
+                t_admitted = int(row["t_admitted_ns"])
+                t_ready = int(row["t_batch_ready_ns"])
+                t_service = int(row["t_service_start_ns"])
+                t_finish = int(row["t_inference_finish_ns"])
+                t_emitted = int(row["t_emitted_ns"])
+
+                self.assertGreater(t_offered, 0)
+                self.assertGreaterEqual(t_released, t_offered)
+                self.assertGreaterEqual(t_admitted, t_released)
+                self.assertGreaterEqual(t_finish, t_service)
+                self.assertGreaterEqual(t_emitted, t_finish)
+
+                # Verify latency decomposition columns
+                q_wait = int(row["queue_wait_ns"])
+                svc_time = int(row["service_time_ns"])
+                e2e_lat = int(row["end_to_end_latency_ns"])
+
+                self.assertEqual(q_wait, t_service - t_admitted)
+                self.assertEqual(svc_time, t_finish - t_service)
+                self.assertEqual(e2e_lat, t_emitted - t_offered)
+                self.assertGreater(e2e_lat, 0)
+
         # Check result JSON
         result_file = run_dir / "result.json"
         self.assertTrue(result_file.is_file())
@@ -87,6 +112,13 @@ class ExperimentRunnerTests(unittest.TestCase):
             self.assertEqual(result["seed"], 42)
             self.assertEqual(result["predictions"], "predictions.csv")
             self.assertEqual(result["method_evidence"], "method_evidence.txt")
+            self.assertIn("telemetry_summary", result)
+            quantiles = result["telemetry_summary"]["exact_quantiles_ns"]
+            for metric in ("end_to_end_latency", "queue_wait", "service_time"):
+                self.assertIn(metric, quantiles)
+                for q in ("p50", "p90", "p99", "p99.9"):
+                    self.assertIn(q, quantiles[metric])
+                    self.assertGreaterEqual(quantiles[metric][q], 0.0)
 
         # Check method evidence text
         evidence_file = run_dir / "method_evidence.txt"
@@ -94,6 +126,8 @@ class ExperimentRunnerTests(unittest.TestCase):
         text = evidence_file.read_text(encoding="utf-8")
         self.assertIn("Isolation Forest", text)
         self.assertIn("Event Conservation", text)
+        self.assertIn("7-Timestamp Telemetry", text)
+        self.assertIn("Exact Offline Quantiles", text)
 
 
 if __name__ == "__main__":

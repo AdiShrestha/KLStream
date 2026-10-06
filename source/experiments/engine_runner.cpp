@@ -46,7 +46,9 @@ struct DataRow {
 struct TraceRecord {
     std::uint64_t sample_index{0};
     std::uint64_t event_id{0};
-    std::uint64_t ingest_time_ns{0};
+    std::uint64_t t_offered_ns{0};
+    std::uint64_t t_released_ns{0};
+    std::uint64_t t_admitted_ns{0};
 };
 static_assert(std::is_trivially_copyable_v<TraceRecord>, "TraceRecord must be trivially copyable");
 
@@ -55,8 +57,16 @@ struct ScoredItem {
     std::uint64_t event_id{0};
     std::size_t batch_id{0};
     std::size_t batch_size{0};
-    std::uint64_t ingest_time_ns{0};
-    std::uint64_t emit_time_ns{0};
+    std::uint64_t t_offered_ns{0};
+    std::uint64_t t_released_ns{0};
+    std::uint64_t t_admitted_ns{0};
+    std::uint64_t t_batch_ready_ns{0};
+    std::uint64_t t_service_start_ns{0};
+    std::uint64_t t_inference_finish_ns{0};
+    std::uint64_t t_emitted_ns{0};
+    std::uint64_t queue_wait_ns{0};
+    std::uint64_t service_time_ns{0};
+    std::uint64_t end_to_end_latency_ns{0};
     double latency_us{0.0};
     double queue_depth_frac{0.0};
     double score{0.0};
@@ -101,7 +111,7 @@ std::vector<DataRow> load_csv_data(const std::string& path) {
             if (tokens.size() > 1) {
                 try {
                     std::size_t idx = 0;
-                    std::stof(tokens[1], &idx);
+                    (void)std::stof(tokens[1], &idx);
                     if (idx == tokens[1].size()) {
                         // First line is numeric data, not header.
                     } else {
@@ -135,6 +145,13 @@ std::vector<DataRow> load_csv_data(const std::string& path) {
     }
 
     return rows;
+}
+
+double nearest_rank_quantile(const std::vector<double>& sorted_vals, double q) {
+    if (sorted_vals.empty()) return 0.0;
+    std::size_t rank = static_cast<std::size_t>(std::ceil(q * sorted_vals.size()));
+    std::size_t idx = (rank == 0) ? 0 : std::min(sorted_vals.size() - 1, rank - 1);
+    return sorted_vals[idx];
 }
 
 void print_usage(const char* prog) {
@@ -264,22 +281,38 @@ int main(int argc, char* argv[]) {
         // Thread 1: Ingestion / Source thread
         std::thread producer([&]() {
             for (std::size_t i = 0; i < offered_count; ++i) {
-                auto now = std::chrono::steady_clock::now();
-                uint64_t ingest_ns = static_cast<uint64_t>(
+                auto now_offered = std::chrono::steady_clock::now();
+                uint64_t t_offered_ns = static_cast<uint64_t>(
                     std::chrono::duration_cast<std::chrono::nanoseconds>(
-                        now.time_since_epoch()).count());
+                        now_offered.time_since_epoch()).count());
+
+                auto now_released = std::chrono::steady_clock::now();
+                uint64_t t_released_ns = static_cast<uint64_t>(
+                    std::chrono::duration_cast<std::chrono::nanoseconds>(
+                        now_released.time_since_epoch()).count());
 
                 TraceRecord rec;
                 rec.sample_index = i;
                 rec.event_id = i + 1;
-                rec.ingest_time_ns = ingest_ns;
+                rec.t_offered_ns = t_offered_ns;
+                rec.t_released_ns = t_released_ns;
+                rec.t_admitted_ns = 0;
 
-                klstream::Event<TraceRecord> ev{ingest_ns, 0, i + 1, rec};
+                klstream::Event<TraceRecord> ev{t_offered_ns, 0, i + 1, rec};
 
-                while (!in_queue.try_push(ev)) {
+                while (true) {
+                    auto now_admitted = std::chrono::steady_clock::now();
+                    uint64_t t_admitted_ns = static_cast<uint64_t>(
+                        std::chrono::duration_cast<std::chrono::nanoseconds>(
+                            now_admitted.time_since_epoch()).count());
+                    ev.data.t_admitted_ns = t_admitted_ns;
+
+                    if (in_queue.try_push(ev)) {
+                        ++admitted_count;
+                        break;
+                    }
                     std::this_thread::yield();
                 }
-                ++admitted_count;
             }
             in_queue.close();
         });
@@ -304,10 +337,14 @@ int main(int argc, char* argv[]) {
                 klstream::EventBatch<TraceRecord, MaxBatch> batch;
                 if (batch_queue.try_pop(batch)) {
                     ++batch_counter;
-                    auto emit_time = std::chrono::steady_clock::now();
-                    uint64_t emit_ns = static_cast<uint64_t>(
+                    auto service_start = std::chrono::steady_clock::now();
+                    uint64_t t_service_start_ns = static_cast<uint64_t>(
                         std::chrono::duration_cast<std::chrono::nanoseconds>(
-                            emit_time.time_since_epoch()).count());
+                            service_start.time_since_epoch()).count());
+                    uint64_t t_batch_ready_ns = batch.ready_time_ns;
+                    if (t_batch_ready_ns == 0) {
+                        t_batch_ready_ns = t_service_start_ns;
+                    }
                     double q_occupancy = in_queue.occupancy();
 
                     for (std::size_t b = 0; b < batch.count; ++b) {
@@ -315,18 +352,39 @@ int main(int argc, char* argv[]) {
                         const auto& eval_row = eval_data[item.sample_index];
                         double score = forest.anomaly_score(eval_row.features);
 
-                        uint64_t ingest_ns = item.ingest_time_ns;
-                        double latency_us = (emit_ns >= ingest_ns)
-                            ? static_cast<double>(emit_ns - ingest_ns) / 1000.0
-                            : 0.0;
+                        auto inference_finish = std::chrono::steady_clock::now();
+                        uint64_t t_inference_finish_ns = static_cast<uint64_t>(
+                            std::chrono::duration_cast<std::chrono::nanoseconds>(
+                                inference_finish.time_since_epoch()).count());
+
+                        auto emit_time = std::chrono::steady_clock::now();
+                        uint64_t t_emitted_ns = static_cast<uint64_t>(
+                            std::chrono::duration_cast<std::chrono::nanoseconds>(
+                                emit_time.time_since_epoch()).count());
+
+                        uint64_t queue_wait_ns = (t_service_start_ns >= item.t_admitted_ns)
+                            ? (t_service_start_ns - item.t_admitted_ns) : 0;
+                        uint64_t service_time_ns = (t_inference_finish_ns >= t_service_start_ns)
+                            ? (t_inference_finish_ns - t_service_start_ns) : 0;
+                        uint64_t end_to_end_latency_ns = (t_emitted_ns >= item.t_offered_ns)
+                            ? (t_emitted_ns - item.t_offered_ns) : 0;
+                        double latency_us = static_cast<double>(end_to_end_latency_ns) / 1000.0;
 
                         ScoredItem scored;
                         scored.sample_id = eval_row.sample_id;
                         scored.event_id = item.event_id;
                         scored.batch_id = batch_counter;
                         scored.batch_size = batch.count;
-                        scored.ingest_time_ns = ingest_ns;
-                        scored.emit_time_ns = emit_ns;
+                        scored.t_offered_ns = item.t_offered_ns;
+                        scored.t_released_ns = item.t_released_ns;
+                        scored.t_admitted_ns = item.t_admitted_ns;
+                        scored.t_batch_ready_ns = t_batch_ready_ns;
+                        scored.t_service_start_ns = t_service_start_ns;
+                        scored.t_inference_finish_ns = t_inference_finish_ns;
+                        scored.t_emitted_ns = t_emitted_ns;
+                        scored.queue_wait_ns = queue_wait_ns;
+                        scored.service_time_ns = service_time_ns;
+                        scored.end_to_end_latency_ns = end_to_end_latency_ns;
                         scored.latency_us = latency_us;
                         scored.queue_depth_frac = q_occupancy;
                         scored.score = score;
@@ -376,15 +434,27 @@ int main(int argc, char* argv[]) {
             if (!trace_file.is_open()) {
                 throw std::runtime_error("Cannot write trace log to: " + opt.trace_path);
             }
-            trace_file << "event_id,sample_id,batch_id,batch_size,ingest_time_ns,emit_time_ns,latency_us,queue_depth,score,status\n";
+            trace_file << "event_id,sample_id,batch_id,batch_size,"
+                       << "t_offered_ns,t_released_ns,t_admitted_ns,t_batch_ready_ns,"
+                       << "t_service_start_ns,t_inference_finish_ns,t_emitted_ns,"
+                       << "queue_wait_ns,service_time_ns,end_to_end_latency_ns,"
+                       << "latency_us,queue_depth,score,status\n";
             trace_file << std::fixed << std::setprecision(6);
             for (const auto& res : scored_results) {
                 trace_file << res.event_id << ","
                            << res.sample_id << ","
                            << res.batch_id << ","
                            << res.batch_size << ","
-                           << res.ingest_time_ns << ","
-                           << res.emit_time_ns << ","
+                           << res.t_offered_ns << ","
+                           << res.t_released_ns << ","
+                           << res.t_admitted_ns << ","
+                           << res.t_batch_ready_ns << ","
+                           << res.t_service_start_ns << ","
+                           << res.t_inference_finish_ns << ","
+                           << res.t_emitted_ns << ","
+                           << res.queue_wait_ns << ","
+                           << res.service_time_ns << ","
+                           << res.end_to_end_latency_ns << ","
                            << res.latency_us << ","
                            << res.queue_depth_frac << ","
                            << res.score << ","
@@ -393,14 +463,43 @@ int main(int argc, char* argv[]) {
             trace_file.close();
         }
 
-        // 7. Compute latency percentiles for execution report.
-        std::vector<double> latencies;
-        latencies.reserve(scored_results.size());
-        for (const auto& s : scored_results) latencies.push_back(s.latency_us);
-        std::sort(latencies.begin(), latencies.end());
+        // 7. Compute exact nearest-rank offline quantiles for decomposed latencies.
+        std::vector<double> e2e_latencies;
+        std::vector<double> queue_waits;
+        std::vector<double> service_times;
+        std::vector<double> latencies_us;
+        e2e_latencies.reserve(scored_results.size());
+        queue_waits.reserve(scored_results.size());
+        service_times.reserve(scored_results.size());
+        latencies_us.reserve(scored_results.size());
+        for (const auto& s : scored_results) {
+            e2e_latencies.push_back(static_cast<double>(s.end_to_end_latency_ns));
+            queue_waits.push_back(static_cast<double>(s.queue_wait_ns));
+            service_times.push_back(static_cast<double>(s.service_time_ns));
+            latencies_us.push_back(s.latency_us);
+        }
+        std::sort(e2e_latencies.begin(), e2e_latencies.end());
+        std::sort(queue_waits.begin(), queue_waits.end());
+        std::sort(service_times.begin(), service_times.end());
+        std::sort(latencies_us.begin(), latencies_us.end());
 
-        double p50 = latencies.empty() ? 0.0 : latencies[latencies.size() / 2];
-        double p99 = latencies.empty() ? 0.0 : latencies[static_cast<std::size_t>(latencies.size() * 0.99)];
+        double e2e_p50 = nearest_rank_quantile(e2e_latencies, 0.50);
+        double e2e_p90 = nearest_rank_quantile(e2e_latencies, 0.90);
+        double e2e_p99 = nearest_rank_quantile(e2e_latencies, 0.99);
+        double e2e_p999 = nearest_rank_quantile(e2e_latencies, 0.999);
+
+        double qw_p50 = nearest_rank_quantile(queue_waits, 0.50);
+        double qw_p90 = nearest_rank_quantile(queue_waits, 0.90);
+        double qw_p99 = nearest_rank_quantile(queue_waits, 0.99);
+        double qw_p999 = nearest_rank_quantile(queue_waits, 0.999);
+
+        double st_p50 = nearest_rank_quantile(service_times, 0.50);
+        double st_p90 = nearest_rank_quantile(service_times, 0.90);
+        double st_p99 = nearest_rank_quantile(service_times, 0.99);
+        double st_p999 = nearest_rank_quantile(service_times, 0.999);
+
+        double p50_us = nearest_rank_quantile(latencies_us, 0.50);
+        double p99_us = nearest_rank_quantile(latencies_us, 0.99);
 
         // Output summary JSON to stdout.
         std::cout << "{\n"
@@ -410,8 +509,13 @@ int main(int argc, char* argv[]) {
                   << "  \"events_emitted\": " << emitted_count << ",\n"
                   << "  \"events_dropped\": " << dropped_count << ",\n"
                   << "  \"conservation_verified\": true,\n"
-                  << "  \"p50_latency_us\": " << p50 << ",\n"
-                  << "  \"p99_latency_us\": " << p99 << ",\n"
+                  << "  \"p50_latency_us\": " << p50_us << ",\n"
+                  << "  \"p99_latency_us\": " << p99_us << ",\n"
+                  << "  \"quantiles_ns\": {\n"
+                  << "    \"end_to_end\": {\"p50\": " << e2e_p50 << ", \"p90\": " << e2e_p90 << ", \"p99\": " << e2e_p99 << ", \"p99.9\": " << e2e_p999 << "},\n"
+                  << "    \"queue_wait\": {\"p50\": " << qw_p50 << ", \"p90\": " << qw_p90 << ", \"p99\": " << qw_p99 << ", \"p99.9\": " << qw_p999 << "},\n"
+                  << "    \"service_time\": {\"p50\": " << st_p50 << ", \"p90\": " << st_p90 << ", \"p99\": " << st_p99 << ", \"p99.9\": " << st_p999 << "}\n"
+                  << "  },\n"
                   << "  \"trees\": " << opt.trees << ",\n"
                   << "  \"subsample\": " << opt.subsample << ",\n"
                   << "  \"dimension\": " << feature_dim << "\n"

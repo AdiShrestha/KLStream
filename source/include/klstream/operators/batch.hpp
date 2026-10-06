@@ -11,6 +11,7 @@ template <typename T, std::size_t Max> struct EventBatch {
     static_assert(Max > 0, "Batch maximum must be positive");
     std::array<Event<T>, Max> events{};
     std::size_t count{0};
+    std::uint64_t ready_time_ns{0};
 };
 // The selector is evaluated once after the first input of each batch arrives.
 // A processing-time deadline requests partial-batch readiness; scheduler and
@@ -37,10 +38,13 @@ public:
         }
         if (pending_) {
             if (!output_->try_push(batch_)) return OpStatus::Blocked;
-            pending_ = false; batch_.count = 0;
+            pending_ = false; batch_.count = 0; batch_.ready_time_ns = 0;
             return OpStatus::Processed;
         }
         if (batch_.count && std::chrono::steady_clock::now() - opened_ >= deadline_) {
+            batch_.ready_time_ns = static_cast<std::uint64_t>(
+                std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::steady_clock::now().time_since_epoch()).count());
             pending_ = true; return OpStatus::Processed;
         }
         Event<T> input{};
@@ -51,11 +55,21 @@ public:
                 if (!target_ || target_ > Max) throw std::out_of_range("Batch selector outside storage bound");
             }
             batch_.events[batch_.count++] = input;
-            if (batch_.count == target_) pending_ = true;
+            if (batch_.count == target_) {
+                batch_.ready_time_ns = static_cast<std::uint64_t>(
+                    std::chrono::duration_cast<std::chrono::nanoseconds>(
+                        std::chrono::steady_clock::now().time_since_epoch()).count());
+                pending_ = true;
+            }
             return OpStatus::Processed;
         }
         if (input_->is_drained()) {
-            if (batch_.count) { pending_ = true; return OpStatus::Processed; }
+            if (batch_.count) {
+                batch_.ready_time_ns = static_cast<std::uint64_t>(
+                    std::chrono::duration_cast<std::chrono::nanoseconds>(
+                        std::chrono::steady_clock::now().time_since_epoch()).count());
+                pending_ = true; return OpStatus::Processed;
+            }
             output_->close(); return OpStatus::Finished;
         }
         return OpStatus::Idle;
@@ -70,6 +84,7 @@ private:
         if (batch_.count > 0 || pending_) {
             dropped_count_ += batch_.count;
             batch_.count = 0;
+            batch_.ready_time_ns = 0;
             pending_ = false;
         }
     }
