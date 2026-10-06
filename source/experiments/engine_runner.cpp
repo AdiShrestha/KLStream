@@ -29,6 +29,8 @@ struct Options {
     std::string output_path;
     std::string trace_path;
     std::string schedule_path;
+    std::string model_save_path;
+    std::string model_load_path;
     std::string policy{"adaptive_grow"};
     std::uint32_t seed{42};
     std::size_t trees{100};
@@ -172,6 +174,8 @@ void print_usage(const char* prog) {
               << "  --output <path>            Path to output predictions CSV (sample_id, score)\n"
               << "  --trace-log <path>         Path to output event telemetry trace CSV\n"
               << "  --schedule <path>          Path to arrival schedule CSV (event_id, sample_id, delay_ns, ...)\n"
+              << "  --model-save <path>        Path to save trained model .iforest\n"
+              << "  --model-load <path>        Path to load pre-trained model .iforest\n"
               << "  --policy <name>            Microbatching policy: fixed_w1, fixed_w_grid, fixed_w4..64, deadline_flush, adaptive_grow, adaptive_shrink (default: adaptive_grow)\n"
               << "  --batch-size <int>         Fixed batch size (default: 4)\n"
               << "  --batch-min <int>          Minimum batch size (default: 1)\n"
@@ -207,6 +211,10 @@ Options parse_arguments(int argc, char* argv[]) {
             opt.trace_path = argv[++i];
         } else if (arg == "--schedule" && i + 1 < argc) {
             opt.schedule_path = argv[++i];
+        } else if (arg == "--model-save" && i + 1 < argc) {
+            opt.model_save_path = argv[++i];
+        } else if (arg == "--model-load" && i + 1 < argc) {
+            opt.model_load_path = argv[++i];
         } else if (arg == "--policy" && i + 1 < argc) {
             opt.policy = argv[++i];
         } else if (arg == "--batch-size" && i + 1 < argc) {
@@ -254,36 +262,64 @@ int main(int argc, char* argv[]) {
             return 1;
         }
 
-        // 1. Load training data if provided, or fit on eval data if train not specified.
-        std::vector<DataRow> train_data;
-        if (!opt.train_path.empty()) {
-            train_data = load_csv_data(opt.train_path);
+        // 1. Load evaluation data.
+        if (opt.eval_path.empty()) {
+            throw std::runtime_error("Evaluation data path (--eval) must be specified");
         }
         auto eval_data = load_csv_data(opt.eval_path);
-
-        if (train_data.empty()) {
-            // Unsupervised fitting on evaluation data features if train partition omitted.
-            train_data = eval_data;
+        if (eval_data.empty()) {
+            throw std::runtime_error("Evaluation dataset is empty");
         }
 
-        if (train_data.size() < 2) {
-            throw std::runtime_error("Training dataset must contain at least 2 rows for Isolation Forest");
+        std::size_t feature_dim = 0;
+        std::unique_ptr<klstream::DynamicIsolationForest> forest_ptr;
+
+        if (!opt.model_load_path.empty()) {
+            // Load pre-trained model from disk.
+            auto loaded = klstream::DynamicIsolationForest::load_from_file(opt.model_load_path);
+            feature_dim = loaded.dimension();
+            if (eval_data.front().features.size() != feature_dim) {
+                throw std::runtime_error("Evaluation features dimension (" +
+                    std::to_string(eval_data.front().features.size()) +
+                    ") does not match loaded model dimension (" +
+                    std::to_string(feature_dim) + ")");
+            }
+            forest_ptr = std::make_unique<klstream::DynamicIsolationForest>(std::move(loaded));
+        } else {
+            // Fit model on training data.
+            std::vector<DataRow> train_data;
+            if (!opt.train_path.empty()) {
+                train_data = load_csv_data(opt.train_path);
+            } else {
+                train_data = eval_data;
+            }
+            if (train_data.size() < 2) {
+                throw std::runtime_error("Training dataset must contain at least 2 rows for Isolation Forest");
+            }
+            feature_dim = train_data.front().features.size();
+            if (feature_dim == 0) {
+                throw std::runtime_error("Features must have positive dimension");
+            }
+            if (eval_data.front().features.size() != feature_dim) {
+                throw std::runtime_error("Evaluation features dimension does not match training dimension");
+            }
+
+            std::vector<std::vector<float>> train_points;
+            train_points.reserve(train_data.size());
+            for (const auto& r : train_data) {
+                train_points.push_back(r.features);
+            }
+
+            auto model = std::make_unique<klstream::DynamicIsolationForest>(opt.trees, opt.subsample, opt.seed);
+            model->fit(train_points);
+            forest_ptr = std::move(model);
         }
 
-        std::size_t feature_dim = train_data.front().features.size();
-        if (feature_dim == 0) {
-            throw std::runtime_error("Features must have positive dimension");
+        if (!opt.model_save_path.empty()) {
+            forest_ptr->save_to_file(opt.model_save_path);
         }
 
-        // 2. Train Isolation Forest model.
-        std::vector<std::vector<float>> train_points;
-        train_points.reserve(train_data.size());
-        for (const auto& r : train_data) {
-            train_points.push_back(r.features);
-        }
-
-        klstream::DynamicIsolationForest forest(opt.trees, opt.subsample, opt.seed);
-        forest.fit(train_points);
+        auto& forest = *forest_ptr;
 
         // 3. Setup Policy and Microbatching Pipeline.
         constexpr std::size_t MaxBatch = 256;
@@ -680,9 +716,11 @@ int main(int argc, char* argv[]) {
                   << "    \"queue_wait\": {\"p50\": " << qw_p50 << ", \"p90\": " << qw_p90 << ", \"p99\": " << qw_p99 << ", \"p99.9\": " << qw_p999 << "},\n"
                   << "    \"service_time\": {\"p50\": " << st_p50 << ", \"p90\": " << st_p90 << ", \"p99\": " << st_p99 << ", \"p99.9\": " << st_p999 << "}\n"
                   << "  },\n"
-                  << "  \"trees\": " << opt.trees << ",\n"
-                  << "  \"subsample\": " << opt.subsample << ",\n"
-                  << "  \"dimension\": " << feature_dim << "\n"
+                  << "  \"trees\": " << forest.n_trees() << ",\n"
+                  << "  \"subsample\": " << forest.subsample_size() << ",\n"
+                  << "  \"dimension\": " << feature_dim << ",\n"
+                  << "  \"model_loaded\": " << (!opt.model_load_path.empty() ? "true" : "false") << ",\n"
+                  << "  \"model_saved\": " << (!opt.model_save_path.empty() ? "true" : "false") << "\n"
                   << "}\n";
 
         return 0;

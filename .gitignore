@@ -102,6 +102,7 @@ __MACOSX/
 htmlcov/
 
 # Data and artifacts
+*.iforest
 /data/raw/
 /data/processed/
 /artifacts/

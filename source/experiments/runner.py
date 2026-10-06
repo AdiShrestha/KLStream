@@ -36,6 +36,8 @@ def parse_args():
     parser.add_argument("--workload", default=None, choices=["replay", "poisson", "pareto", "burst_step", None], help="Workload arrival schedule type")
     parser.add_argument("--workload-rate", type=float, default=None, help="Workload rate in Hz")
     parser.add_argument("--schedule", default=None, help="Explicit path to arrival schedule CSV")
+    parser.add_argument("--model-save", default=None, help="Path to save trained model .iforest")
+    parser.add_argument("--model-load", default=None, help="Path to load pre-trained model .iforest")
     parser.add_argument("positional", nargs="*", help="Positional arguments fallback")
     args = parser.parse_args()
 
@@ -379,6 +381,13 @@ def main():
     ]
     if schedule_path:
         cmd.extend(["--schedule", str(schedule_path)])
+
+    model_save = args.model_save or config.get("model_save")
+    model_load = args.model_load or config.get("model_load")
+    if model_save:
+        cmd.extend(["--model-save", str(model_save)])
+    if model_load:
+        cmd.extend(["--model-load", str(model_load)])
 
     proc = subprocess.run(cmd, cwd=str(root), capture_output=True, text=True)
 
