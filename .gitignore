@@ -64,6 +64,7 @@
 !/components/
 !/packages/
 !/.github/
+!/paper/
 # Local configuration, caches and build output
 **/.env
 **/.env.*
